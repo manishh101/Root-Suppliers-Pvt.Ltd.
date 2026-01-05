@@ -46,7 +46,7 @@ Building a **custom dynamic website with CMS** for Roots Suppliers Pvt. Ltd., a 
 | Phase | Status | Progress | Tasks | Est. Days |
 |-------|--------|----------|-------|-----------|
 | **Phase 1: Project Setup** | 🚧 In Progress | 8/20 | 20 | 2-3 |
-| **Phase 2: Design System** | 🚧 In Progress | 19/35 | 35 | 3-4 |
+| **Phase 2: Design System** | 🚧 In Progress | 33/35 | 35 | 3-4 |
 | **Phase 3: Backend & CMS** | ⏳ Not Started | 0/48 | 48 | 5-7 |
 | **Phase 4: Frontend Pages** | ⏳ Not Started | 0/70 | 70 | 10-14 |
 | **Phase 5: API Integration** | ⏳ Not Started | 0/20 | 20 | 3-4 |
@@ -341,12 +341,12 @@ SMTP_PASS=
 | Button | `components/ui/Button.tsx` | 🔴 High | ✅ | Variants: primary, secondary, outline, ghost |
 | Input | `components/ui/Input.tsx` | 🔴 High | ✅ | With label, error state |
 | Textarea | `components/ui/Textarea.tsx` | 🔴 High | ✅ | With label, error state |
-| Select | `components/ui/Select.tsx` | 🟡 Medium | ⏳ | Dropdown select |
-| Checkbox | `components/ui/Checkbox.tsx` | 🟡 Medium | ⏳ | For filters |
+| Select | `components/ui/Select.tsx` | 🟡 Medium | ✅ | Dropdown select |
+| Checkbox | `components/ui/Checkbox.tsx` | 🟡 Medium | ✅ | For filters |
 | Badge | `components/ui/Badge.tsx` | 🟡 Medium | ✅ | Category badges |
 | Card | `components/ui/Card.tsx` | 🔴 High | ✅ | Base card wrapper |
 | Modal | `components/ui/Modal.tsx` | 🔴 High | ✅ | Inquiry modal, lightbox |
-| Toast | `components/ui/Toast.tsx` | 🟡 Medium | ⏳ | Success/error notifications |
+| Toast | `components/ui/Toast.tsx` | 🟡 Medium | ✅ | Success/error notifications |
 | Spinner | `components/ui/Spinner.tsx` | 🟡 Medium | ✅ | Loading indicator |
 | Skeleton | `components/ui/Skeleton.tsx` | 🟢 Low | ✅ | Loading placeholders |
 | Breadcrumb | `components/ui/Breadcrumb.tsx` | 🟡 Medium | ✅ | Navigation breadcrumbs |
@@ -355,20 +355,20 @@ SMTP_PASS=
 ### 2.6 Layout Components
 | Component | File Path | Priority | Status | Description |
 |-----------|-----------|----------|--------|-------------|
-| **Header** | `components/layout/Header.tsx` | 🔴 High | ⏳ | Main navigation |
-| └─ Logo & tagline | | 🔴 High | ⏳ | Left side |
-| └─ Navigation menu | | 🔴 High | ⏳ | HOME, CATEGORIES, BLOGS, etc. |
-| └─ Contact info | | 🔴 High | ⏳ | Phone, location |
-| └─ Search bar | | 🟡 Medium | ⏳ | Product search |
-| └─ Mobile hamburger | | 🔴 High | ⏳ | Mobile toggle |
-| **MobileMenu** | `components/layout/MobileMenu.tsx` | 🔴 High | ⏳ | Slide-out menu |
+| **Header** | `components/layout/Header.tsx` | 🔴 High | ✅ | Main navigation |
+| └─ Logo & tagline | | 🔴 High | ✅ | Left side |
+| └─ Navigation menu | | 🔴 High | ✅ | HOME, CATEGORIES, BLOGS, etc. |
+| └─ Contact info | | 🔴 High | ✅ | Phone, location |
+| └─ Search bar | | 🟡 Medium | ✅ | Product search |
+| └─ Mobile hamburger | | 🔴 High | ✅ | Mobile toggle |
+| **MobileMenu** | `components/layout/MobileMenu.tsx` | 🔴 High | ✅ | Slide-out menu |
 | **MegaMenu** | `components/layout/MegaMenu.tsx` | 🟡 Medium | ⏳ | Categories dropdown |
-| **Footer** | `components/layout/Footer.tsx` | 🔴 High | ⏳ | Site footer |
-| └─ Company info | | 🔴 High | ⏳ | Logo, tagline, social |
-| └─ Quick links | | 🔴 High | ⏳ | Navigation links |
-| └─ Product categories | | 🟡 Medium | ⏳ | Category links |
-| └─ Contact details | | 🔴 High | ⏳ | Phone, email, address |
-| └─ Copyright | | 🔴 High | ⏳ | © 2026 text |
+| **Footer** | `components/layout/Footer.tsx` | 🔴 High | ✅ | Site footer |
+| └─ Company info | | 🔴 High | ✅ | Logo, tagline, social |
+| └─ Quick links | | 🔴 High | ✅ | Navigation links |
+| └─ Product categories | | 🟡 Medium | ✅ | Category links |
+| └─ Contact details | | 🔴 High | ✅ | Phone, email, address |
+| └─ Copyright | | 🔴 High | ✅ | © 2026 text |
 
 ### 2.7 Card Components
 | Component | File Path | Priority | Status | Description |
@@ -377,7 +377,7 @@ SMTP_PASS=
 | CategoryCard | `components/cards/CategoryCard.tsx` | 🔴 High | ✅ | Category with icon/image |
 | BlogCard | `components/cards/BlogCard.tsx` | 🔴 High | ✅ | Image, title, excerpt, date |
 | TestimonialCard | `components/cards/TestimonialCard.tsx` | 🟡 Medium | ✅ | Photo, name, rating, review |
-| BrandCard | `components/cards/BrandCard.tsx` | 🟢 Low | ⏳ | Brand logo display |
+| BrandCard | `components/cards/BrandCard.tsx` | 🟢 Low | ✅ | Brand logo display |
 
 ---
 
