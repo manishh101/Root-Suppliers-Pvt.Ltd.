@@ -1,0 +1,51 @@
+import { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
+);
+
+export interface AuthUser {
+  userId: string;
+  email: string;
+  role: "admin" | "editor";
+}
+
+/**
+ * Verify JWT token and return user data
+ * 
+ * @param req - Next.js request object
+ * @returns AuthUser object or null if invalid
+ */
+export async function verifyAuth(req: NextRequest): Promise<AuthUser | null> {
+  try {
+    const token = req.cookies.get("auth-token")?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+
+    return {
+      userId: payload.userId as string,
+      email: payload.email as string,
+      role: payload.role as "admin" | "editor",
+    };
+  } catch (error) {
+    console.error("Auth verification error:", error);
+    return null;
+  }
+}
+
+/**
+ * Check if user has required role
+ * 
+ * @param user - Authenticated user
+ * @param allowedRoles - Array of allowed roles
+ * @returns boolean
+ */
+export function hasRole(user: AuthUser | null, allowedRoles: string[]): boolean {
+  if (!user) return false;
+  return allowedRoles.includes(user.role);
+}
