@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -27,8 +27,8 @@ interface Brand {
   order: number;
 }
 
-export default function EditBrandPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
+export default function EditBrandPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

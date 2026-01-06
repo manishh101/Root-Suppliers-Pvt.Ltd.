@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  ArrowLeft, 
-  Save, 
-  Upload, 
+import {
+  ArrowLeft,
+  Save,
+  Upload,
   X,
   Loader2,
   Image as ImageIcon,
@@ -21,7 +21,7 @@ interface Blog {
   excerpt?: string;
   content: string;
   featuredImage?: string;
-  author: string;
+  author: string | { _id: string; name: string; email: string };
   tags: string[];
   status: 'draft' | 'published';
   publishedAt?: string;
@@ -29,8 +29,8 @@ interface Blog {
   metaDescription?: string;
 }
 
-export default function EditBlogPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
+export default function EditBlogPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -43,7 +43,8 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
     excerpt: '',
     content: '',
     featuredImage: '',
-    author: '',
+    author: '', // This will store the ID for submission
+    authorName: '', // This will store the name for display
     tags: [] as string[],
     status: 'draft' as 'draft' | 'published',
     metaTitle: '',
@@ -58,19 +59,23 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
     try {
       const response = await fetch(`/api/blogs/${slug}`);
       const data = await response.json();
-      
+
       if (data.success && data.blog) {
         const blog = data.blog;
+        const authorId = typeof blog.author === 'object' ? blog.author._id : blog.author;
+        const authorName = typeof blog.author === 'object' ? blog.author.name : 'Unknown Author';
+
         setFormData({
           title: blog.title || '',
           excerpt: blog.excerpt || '',
           content: blog.content || '',
           featuredImage: blog.featuredImage || '',
-          author: blog.author || '',
+          author: authorId || '',
+          authorName: authorName || '',
           tags: blog.tags || [],
-          status: blog.status || 'draft',
-          metaTitle: blog.metaTitle || '',
-          metaDescription: blog.metaDescription || ''
+          status: blog.status ? (blog.status as 'draft' | 'published') : 'draft',
+          metaTitle: blog.meta?.title || '',
+          metaDescription: blog.meta?.description || ''
         });
       } else {
         setError('Blog post not found');
@@ -88,7 +93,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
     if (!file) return;
 
     setUploadingImage(true);
-    
+
     try {
       const formDataUpload = new FormData();
       formDataUpload.append('file', file);
@@ -133,10 +138,25 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
     setError('');
 
     try {
+      // Prepare payload - map flat meta fields back to nested object
+      const payload = {
+        title: formData.title,
+        excerpt: formData.excerpt,
+        content: formData.content,
+        featuredImage: formData.featuredImage,
+        author: formData.author,
+        tags: formData.tags,
+        isPublished: formData.status === 'published', // Map status to isPublished
+        meta: {
+          title: formData.metaTitle,
+          description: formData.metaDescription
+        }
+      };
+
       const response = await fetch(`/api/blogs/${slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
@@ -205,7 +225,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
             {/* Basic Info */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Content</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -255,7 +275,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
             {/* Featured Image */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h2>
-              
+
               <div className="flex items-start gap-6">
                 {formData.featuredImage ? (
                   <div className="relative">
@@ -291,7 +311,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
                     />
                   </label>
                 )}
-                
+
                 <div className="flex-1">
                   <p className="text-sm text-gray-600 mb-2">
                     This image will be displayed at the top of your blog post and in previews.
@@ -306,7 +326,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
             {/* SEO */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -342,7 +362,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
             {/* Status */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Status</h2>
-              
+
               <div className="space-y-3">
                 <label className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors">
                   <input
@@ -358,7 +378,7 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
                     <p className="text-xs text-gray-500">Save as draft, not visible</p>
                   </div>
                 </label>
-                
+
                 <label className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors">
                   <input
                     type="radio"
@@ -379,20 +399,22 @@ export default function EditBlogPage({ params }: { params: Promise<{ slug: strin
             {/* Author */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Author</h2>
-              
-              <input
-                type="text"
-                value={formData.author}
-                onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                placeholder="Author name"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
-              />
+
+              <div className="space-y-1">
+                <input
+                  type="text"
+                  value={formData.authorName}
+                  readOnly
+                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500">Author cannot be changed</p>
+              </div>
             </div>
 
             {/* Tags */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Tags</h2>
-              
+
               <div className="flex gap-2 mb-3">
                 <input
                   type="text"

@@ -32,8 +32,8 @@ interface Category {
 }
 
 // Recursive Category Item Component
-function CategoryItem({ 
-  category, 
+function CategoryItem({
+  category,
   level = 0,
   expanded,
   onToggle,
@@ -54,18 +54,16 @@ function CategoryItem({
   return (
     <div className="select-none">
       {/* Category Row */}
-      <div 
-        className={`flex items-center gap-2 py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors ${
-          level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200 ml-4'
-        }`}
+      <div
+        className={`flex items-center gap-2 py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors ${level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200 ml-4'
+          }`}
         style={{ marginLeft: level > 0 ? `${level * 24}px` : '0' }}
       >
         {/* Expand/Collapse Button */}
         <button
           onClick={onToggle}
-          className={`p-1 rounded hover:bg-gray-200 transition-colors ${
-            !hasChildren ? 'invisible' : ''
-          }`}
+          className={`p-1 rounded hover:bg-gray-200 transition-colors ${!hasChildren ? 'invisible' : ''
+            }`}
         >
           {expanded ? (
             <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -83,14 +81,7 @@ function CategoryItem({
           <Folder className="w-5 h-5 text-gray-400" />
         )}
 
-        {/* Category Image (small) */}
-        {category.image && (
-          <img 
-            src={category.image} 
-            alt="" 
-            className="w-6 h-6 rounded object-cover"
-          />
-        )}
+
 
         {/* Category Name */}
         <span className={`font-medium flex-1 ${level === 0 ? 'text-gray-900' : 'text-gray-700'}`}>
@@ -98,20 +89,18 @@ function CategoryItem({
         </span>
 
         {/* Level Badge */}
-        <span className={`px-2 py-0.5 text-xs rounded-full ${
-          level === 0 
+        <span className={`px-2 py-0.5 text-xs rounded-full ${level === 0
             ? "bg-purple-100 text-purple-700"
             : level === 1
-            ? "bg-blue-100 text-blue-700" 
-            : "bg-teal-100 text-teal-700"
-        }`}>
+              ? "bg-blue-100 text-blue-700"
+              : "bg-teal-100 text-teal-700"
+          }`}>
           {level === 0 ? "Main" : level === 1 ? "Subcategory" : "Sub-subcategory"}
         </span>
 
         {/* Status */}
-        <span className={`px-2 py-0.5 text-xs rounded-full ${
-          category.isActive ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"
-        }`}>
+        <span className={`px-2 py-0.5 text-xs rounded-full ${category.isActive ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"
+          }`}>
           {category.isActive ? "Active" : "Inactive"}
         </span>
 
@@ -166,11 +155,11 @@ function CategoryItem({
 }
 
 // Wrapper to handle state for each category item
-function CategoryItemWrapper({ 
-  category, 
-  level = 0 
-}: { 
-  category: Category; 
+function CategoryItemWrapper({
+  category,
+  level = 0
+}: {
+  category: Category;
   level?: number;
 }) {
   const router = useRouter();
@@ -271,7 +260,7 @@ export default function CategoriesPage() {
     cats.forEach(cat => {
       const category = categoryMap.get(cat._id)!;
       const parentId = typeof cat.parent === 'object' ? cat.parent?._id : cat.parent;
-      
+
       if (parentId && categoryMap.has(parentId)) {
         categoryMap.get(parentId)!.children!.push(category);
       } else {
@@ -296,19 +285,19 @@ export default function CategoriesPage() {
   // Filter categories by search
   const filterCategories = (cats: Category[], query: string): Category[] => {
     if (!query) return cats;
-    
+
     const lowerQuery = query.toLowerCase();
-    
+
     const filterRecursive = (cat: Category): Category | null => {
       const matchesName = cat.name.toLowerCase().includes(lowerQuery);
       const filteredChildren = cat.children?.map(filterRecursive).filter(Boolean) as Category[] || [];
-      
+
       if (matchesName || filteredChildren.length > 0) {
         return { ...cat, children: filteredChildren };
       }
       return null;
     };
-    
+
     return cats.map(filterRecursive).filter(Boolean) as Category[];
   };
 

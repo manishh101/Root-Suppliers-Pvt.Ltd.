@@ -32,7 +32,7 @@ export async function GET(
       query.isPublished = true;
     }
 
-    const blog = await Blog.findOne(query).lean();
+    const blog = await Blog.findOne(query).populate("author", "name email").lean();
 
     if (!blog) {
       return NextResponse.json(

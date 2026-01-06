@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -19,13 +19,19 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  image?: string;
+  image?: {
+    url: string;
+    publicId: string;
+    alt: string;
+  };
   parent?: string | { _id: string; name: string };
-  featured: boolean;
+  isFeatured: boolean;
   isActive: boolean;
-  order: number;
-  metaTitle?: string;
-  metaDescription?: string;
+  orderIndex: number;
+  meta?: {
+    title?: string;
+    description?: string;
+  };
   level?: number;
 }
 
@@ -42,13 +48,15 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    image: '',
+    image: null as { url: string; publicId: string; alt: string } | null,
     parent: '',
-    featured: false,
+    isFeatured: false,
     isActive: true,
-    order: 0,
-    metaTitle: '',
-    metaDescription: ''
+    orderIndex: 0,
+    meta: {
+      title: '',
+      description: ''
+    }
   });
 
   useEffect(() => {
@@ -69,13 +77,15 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
         setFormData({
           name: category.name || '',
           description: category.description || '',
-          image: category.image || '',
-          parent: category.parent || '',
-          featured: category.featured || false,
+          image: category.image || null,
+          parent: typeof category.parent === 'object' ? category.parent?._id : category.parent || '',
+          isFeatured: category.isFeatured || false,
           isActive: category.isActive !== false,
-          order: category.order || 0,
-          metaTitle: category.metaTitle || '',
-          metaDescription: category.metaDescription || ''
+          orderIndex: category.orderIndex || 0,
+          meta: {
+            title: category.meta?.title || '',
+            description: category.meta?.description || ''
+          }
         });
       } else {
         setError('Category not found');
@@ -118,7 +128,14 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
 
       const data = await response.json();
       if (data.success) {
-        setFormData(prev => ({ ...prev, image: data.url }));
+        setFormData(prev => ({
+          ...prev,
+          image: {
+            url: data.url,
+            publicId: data.publicId,
+            alt: prev.name || 'Category Image'
+          }
+        }));
       }
     } catch (err) {
       console.error('Error uploading image:', err);
@@ -323,13 +340,13 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                 {formData.image ? (
                   <div className="relative">
                     <img
-                      src={formData.image}
+                      src={formData.image.url}
                       alt="Category"
                       className="w-40 h-40 object-cover rounded-lg border"
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData({ ...formData, image: '' })}
+                      onClick={() => setFormData({ ...formData, image: null })}
                       className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
                     >
                       <X className="w-4 h-4" />
@@ -377,8 +394,11 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                   </label>
                   <input
                     type="text"
-                    value={formData.metaTitle}
-                    onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                    value={formData.meta.title}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      meta: { ...formData.meta, title: e.target.value }
+                    })}
                     placeholder="SEO title (defaults to category name)"
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
                   />
@@ -389,8 +409,11 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                     Meta Description
                   </label>
                   <textarea
-                    value={formData.metaDescription}
-                    onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                    value={formData.meta.description}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      meta: { ...formData.meta, description: e.target.value }
+                    })}
                     placeholder="SEO description for search engines"
                     rows={3}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
@@ -420,8 +443,8 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    checked={formData.isFeatured}
+                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
                     className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
                   />
                   <span className="text-sm text-gray-700">Featured category</span>
@@ -439,8 +462,8 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                 </label>
                 <input
                   type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                  value={formData.orderIndex}
+                  onChange={(e) => setFormData({ ...formData, orderIndex: Number(e.target.value) })}
                   min="0"
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
                 />
