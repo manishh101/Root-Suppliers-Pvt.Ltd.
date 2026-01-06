@@ -61,6 +61,7 @@ export async function GET(req: NextRequest) {
     // Fetch blogs
     const [blogs, total] = await Promise.all([
       Blog.find(query)
+        .populate("author", "name email")
         .sort(sort)
         .skip(skip)
         .limit(limit)

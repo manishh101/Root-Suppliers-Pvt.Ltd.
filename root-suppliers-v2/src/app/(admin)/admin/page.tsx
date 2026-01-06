@@ -38,7 +38,7 @@ interface Stats {
     _id: string;
     name: string;
     slug: string;
-    images: string[];
+    images: (string | { url: string; alt?: string })[];
     isActive: boolean;
     createdAt: string;
   }>;
@@ -171,11 +171,10 @@ export default function AdminDashboardPage() {
             <Link
               key={card.key}
               href={card.href}
-              className={`bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow ${
-                card.highlight && stats?.inquiries.new && stats.inquiries.new > 0
-                  ? "ring-2 ring-orange-500"
-                  : ""
-              }`}
+              className={`bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow ${card.highlight && stats?.inquiries.new && stats.inquiries.new > 0
+                ? "ring-2 ring-orange-500"
+                : ""
+                }`}
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -185,14 +184,14 @@ export default function AdminDashboardPage() {
                       ? card.key === "products"
                         ? stats.products.total
                         : card.key === "categories"
-                        ? stats.categories.total
-                        : card.key === "blogs"
-                        ? stats.blogs.total
-                        : card.key === "inquiries"
-                        ? stats.inquiries.total
-                        : card.key === "brands"
-                        ? stats.brands.total
-                        : stats.testimonials.total
+                          ? stats.categories.total
+                          : card.key === "blogs"
+                            ? stats.blogs.total
+                            : card.key === "inquiries"
+                              ? stats.inquiries.total
+                              : card.key === "brands"
+                                ? stats.brands.total
+                                : stats.testimonials.total
                       : 0}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
@@ -305,7 +304,7 @@ export default function AdminDashboardPage() {
                   <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {product.images && product.images[0] ? (
                       <img
-                        src={product.images[0]}
+                        src={typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
@@ -325,11 +324,10 @@ export default function AdminDashboardPage() {
                   </div>
                   <div>
                     <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        product.isActive
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
+                      className={`px-2 py-1 text-xs rounded-full ${product.isActive
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-600"
+                        }`}
                     >
                       {product.isActive ? "Active" : "Inactive"}
                     </span>
