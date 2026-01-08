@@ -245,7 +245,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                   src={images[currentImageIndex].url}
                   alt={images[currentImageIndex].alt || product.name}
                   fill
-                  className="object-cover"
+                  className="object-contain p-4 mix-blend-multiply"
                 />
 
                 {/* Navigation Arrows */}
@@ -303,7 +303,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                         src={image.url}
                         alt={image.alt || `${product.name} ${index + 1}`}
                         fill
-                        className="object-cover"
+                        className="object-contain p-2 mix-blend-multiply"
                       />
                     </button>
                   ))}
@@ -423,27 +423,27 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                 <div className="flex flex-col gap-3">
                   <Button
                     size="lg"
-                    className="w-full bg-gradient-to-r from-cardinal-red to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg shadow-red-200 border-0 h-14 text-lg font-medium tracking-wide transition-all hover:scale-[1.02] hover:shadow-xl group"
-                    onClick={() => setInquiryModalOpen(true)}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-100 border-0 h-14 text-lg font-medium tracking-wide transition-all hover:scale-[1.02] hover:shadow-xl group"
+                    onClick={handleWhatsAppInquiry}
                   >
-                    <Mail className="h-5 w-5 mr-2 group-hover:animate-bounce" />
-                    Inquire Now
+                    <MessageCircle className="h-5 w-5 mr-2 group-hover:animate-bounce" />
+                    Chat on WhatsApp
                   </Button>
 
                   <div className="grid grid-cols-2 gap-3">
                     <Button
                       size="lg"
                       variant="outline"
-                      className="flex-1 border-2 border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600 hover:text-green-700 h-12 transition-all font-medium"
-                      onClick={handleWhatsAppInquiry}
+                      className="flex-1 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium"
+                      onClick={() => setInquiryModalOpen(true)}
                     >
-                      <MessageCircle className="h-5 w-5 mr-2" />
-                      WhatsApp
+                      <Mail className="h-5 w-5 mr-2" />
+                      Inquiry
                     </Button>
                     <Button
                       size="lg"
                       variant="outline"
-                      className="flex-1 border-2 border-gray-200 text-gray-700 hover:border-cardinal-red hover:text-cardinal-red hover:bg-red-50 h-12 transition-all font-medium"
+                      className="flex-1 border-2 border-gray-200 text-gray-700 hover:border-primary-600 hover:text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium"
                       onClick={() =>
                         (window.location.href = "tel:+9779800000000")
                       }
