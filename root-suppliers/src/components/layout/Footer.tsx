@@ -22,11 +22,11 @@ const quickLinks = [
 ];
 
 const productCategories = [
-  { label: "Paints & Coatings", href: "/categories/paints" },
-  { label: "Tools & Hardware", href: "/categories/tools" },
-  { label: "Plumbing Supplies", href: "/categories/plumbing" },
-  { label: "Electrical Items", href: "/categories/electrical" },
-  { label: "Construction Materials", href: "/categories/construction" },
+  { label: "Paints & Coatings", href: "/categories/paints-and-coatings" },
+  { label: "Tools & Hardware", href: "/categories/tools-and-hardware" },
+  { label: "Plumbing Supplies", href: "/categories/plumbing-supplies" },
+  { label: "Electrical Items", href: "/categories/electrical-items" },
+  { label: "Construction Materials", href: "/categories/construction-materials" },
 ];
 
 const socialLinks = [

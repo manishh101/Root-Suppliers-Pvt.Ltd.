@@ -74,8 +74,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
               key={product._id}
               href={`/products/${product.slug}`}
               className={`group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-primary-200 ${isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-12'
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-12'
                 }`}
               style={{ transitionDelay: `${index * 75}ms` }}
             >
@@ -109,9 +109,12 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
+                <Link
+                  href={`/categories/${product.category?.slug}`}
+                  className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2 hover:bg-primary-100 transition-colors"
+                >
                   {product.category?.name || "Uncategorized"}
-                </span>
+                </Link>
                 <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
                   {product.name}
                 </h3>
@@ -211,8 +214,8 @@ export const FeaturedProductsStatic: React.FC = () => {
               key={product.id}
               href="/products"
               className={`group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-primary-200 ${isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-12'
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-12'
                 }`}
               style={{ transitionDelay: `${index * 75}ms` }}
             >
@@ -246,9 +249,12 @@ export const FeaturedProductsStatic: React.FC = () => {
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
+                <Link
+                  href={`/categories/${product.category.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2 hover:bg-primary-100 transition-colors"
+                >
                   {product.category}
-                </span>
+                </Link>
                 <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
                   {product.name}
                 </h3>
