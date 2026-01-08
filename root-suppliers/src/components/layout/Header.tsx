@@ -113,7 +113,7 @@ export default function Header() {
                 <div className="p-2 rounded-full bg-primary-50 group-hover:bg-primary-100 transition-colors">
                   <Phone className="h-4 w-4 text-primary-600" />
                 </div>
-                <a href="tel:+9779851222637" className="text-sm font-bold text-gray-900 hover:text-primary-600 transition-colors">
+                <a href="tel:+9779851222637" className="text-sm font-bold text-gray-900 hover:text-secondary-600 transition-colors">
                   9851222637
                 </a>
               </div>
@@ -155,7 +155,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3 lg:px-4 py-2 text-sm font-bold text-white hover:bg-white/20 rounded-lg transition-all duration-300 uppercase tracking-wide hover:scale-105"
+                  className="px-3 lg:px-4 py-2 text-sm font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 uppercase tracking-wide hover:scale-105"
                 >
                   {link.label}
                 </Link>
@@ -176,7 +176,7 @@ export default function Header() {
                 />
                 <button
                   onClick={() => handleSearch()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-primary-600 hover:text-primary-700 bg-primary-50 rounded-md hover:bg-primary-100 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-secondary-600 hover:text-secondary-700 bg-secondary-50 rounded-md hover:bg-secondary-100 transition-colors"
                 >
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                 </button>
@@ -190,7 +190,7 @@ export default function Header() {
                           key={product._id}
                           href={`/products/${product.slug}`}
                           onClick={() => setShowSuggestions(false)}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 transition-colors group"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-secondary-50 transition-colors group"
                         >
                           <div className="relative w-12 h-12 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
                             {product.images?.[0]?.url ? (
@@ -207,7 +207,7 @@ export default function Header() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-gray-900 truncate group-hover:text-primary-600 transition-colors">
+                            <h4 className="text-sm font-bold text-gray-900 truncate group-hover:text-secondary-600 transition-colors">
                               {product.name}
                             </h4>
                             <p className="text-xs text-gray-500 truncate">
@@ -215,7 +215,7 @@ export default function Header() {
                             </p>
                           </div>
                           <div className="text-right">
-                            <span className="text-xs font-bold text-primary-600">
+                            <span className="text-xs font-bold text-secondary-600">
                               NPR {product.price.toLocaleString()}
                             </span>
                           </div>
@@ -223,7 +223,7 @@ export default function Header() {
                       ))}
                       <button
                         onClick={() => handleSearch()}
-                        className="w-full px-4 py-2 text-xs font-bold text-gray-500 hover:text-primary-600 bg-gray-50 hover:bg-primary-50/50 transition-colors text-center border-t border-gray-100 mt-1"
+                        className="w-full px-4 py-2 text-xs font-bold text-gray-500 hover:text-secondary-600 bg-gray-50 hover:bg-secondary-50/50 transition-colors text-center border-t border-gray-100 mt-1"
                       >
                         View all results for "{searchQuery}"
                       </button>
