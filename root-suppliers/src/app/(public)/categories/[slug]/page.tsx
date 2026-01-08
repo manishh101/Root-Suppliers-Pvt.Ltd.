@@ -217,22 +217,47 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
               {/* Subcategories Grid (if any) */}
               {subcategories.length > 0 && (
                 <div className="mb-12">
-                  <h3 className="font-semibold text-lg text-gray-900 mb-5 flex items-center gap-2">
-                    <Package className="w-5 h-5 text-primary-600" />
-                    Explore {currentCategory.name}
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-bold text-xl text-gray-900 tracking-tight">
+                      Explore {currentCategory.name} Collections
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     {subcategories.map(sub => (
                       <Link
                         key={sub._id}
                         href={`/categories/${sub.slug}`}
-                        className="group bg-white/80 backdrop-blur-sm rounded-xl p-5 border border-gray-100/50 hover:border-gray-200/50 hover:shadow-md transition-all text-center"
+                        className="group relative h-40 md:h-48 overflow-hidden rounded-2xl bg-gray-100 transition-all duration-500 hover:shadow-xl hover:shadow-gray-200/50 block"
                       >
-                        <div className="w-12 h-12 bg-gradient-to-br from-primary-50 to-primary-100/50 rounded-xl mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Package className="w-6 h-6 text-primary-600" />
+                        {/* Image Layer */}
+                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                          <Image
+                            src={sub.image?.url || "/images/placeholder.jpg"}
+                            alt={sub.name}
+                            fill
+                            className="object-cover"
+                          />
+                          {/* Modern Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
                         </div>
-                        <h4 className="font-semibold text-gray-900 group-hover:text-primary-600 text-sm mb-1 transition-colors">{sub.name}</h4>
-                        <p className="text-xs text-gray-500">{sub.productCount || 0} products</p>
+
+                        {/* Content Layer */}
+                        <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end transform transition-transform duration-500 group-hover:translate-y-[-4px]">
+                          <h4 className="font-bold text-white text-sm md:text-base mb-1 tracking-tight group-hover:text-primary-300 transition-colors">
+                            {sub.name}
+                          </h4>
+                          <div className="flex items-center justify-between items-center">
+                            <p className="text-white/70 text-[10px] md:text-sm font-medium">
+                              {sub.productCount || 0} Products
+                            </p>
+                            <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 border border-white/20">
+                              <ChevronRight className="w-3 h-3 text-white" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Hover Accent Line */}
+                        <div className="absolute inset-x-0 bottom-0 h-1 bg-primary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                       </Link>
                     ))}
                   </div>
