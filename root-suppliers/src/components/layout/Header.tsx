@@ -127,7 +127,7 @@ export default function Header() {
                 href="https://maps.app.goo.gl/rJiwFYqFo3Dku59LA"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-bold rounded-lg hover:from-primary-700 hover:to-primary-800 transition-all shadow-md hover:shadow-lg hover:scale-105 duration-300"
+                className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white text-sm font-bold rounded-lg hover:from-primary-500 hover:to-primary-600 transition-all shadow-md hover:shadow-lg hover:scale-105 duration-300"
               >
                 Get Directions
               </a>

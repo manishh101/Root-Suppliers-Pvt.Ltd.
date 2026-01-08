@@ -87,7 +87,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories
                   src={category.image?.url || "/images/placeholder.jpg"}
                   alt={category.name}
                   fill
-                  className="object-cover"
+                  className="object-contain p-8 mix-blend-multiply transition-transform duration-1000 group-hover:scale-105"
                 />
                 {/* Modern Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 opacity-90 group-hover:opacity-100" />

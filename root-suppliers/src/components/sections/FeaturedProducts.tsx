@@ -95,26 +95,23 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
               </div>
 
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
+              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-6">
                 <Image
                   src={product.images[0]?.url || "/images/placeholder-product.jpg"}
                   alt={product.images[0]?.alt || product.name}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  className="object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-4 mix-blend-multiply"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <Link
-                  href={`/categories/${product.category?.slug}`}
-                  className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2 hover:bg-primary-100 transition-colors"
-                >
+                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
                   {product.category?.name || "Uncategorized"}
-                </Link>
+                </span>
                 <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
                   {product.name}
                 </h3>
@@ -133,7 +130,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
         <div className={`text-center mt-14 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <Link
             href="/products"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-200 group transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-100/50 group transform hover:-translate-y-0.5"
           >
             <span>EXPLORE ALL PRODUCTS</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -235,26 +232,23 @@ export const FeaturedProductsStatic: React.FC = () => {
               </div>
 
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
+              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-6">
                 <Image
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  className="object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-4 mix-blend-multiply"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <Link
-                  href={`/categories/${product.category.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2 hover:bg-primary-100 transition-colors"
-                >
+                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
                   {product.category}
-                </Link>
+                </span>
                 <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
                   {product.name}
                 </h3>
@@ -273,7 +267,7 @@ export const FeaturedProductsStatic: React.FC = () => {
         <div className={`text-center mt-14 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <Link
             href="/products"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-200 group transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-100/50 group transform hover:-translate-y-0.5"
           >
             <span>EXPLORE ALL PRODUCTS</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />

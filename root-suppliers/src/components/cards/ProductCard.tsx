@@ -52,12 +52,12 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row group hover:shadow-lg hover:border-primary-100 transition-all duration-300"
       >
-        <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-gray-50">
+        <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-gray-50 flex items-center justify-center p-4">
           <Image
             src={product.images?.[0]?.url || "/images/placeholder.jpg"}
             alt={product.images?.[0]?.alt || product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-contain group-hover:scale-105 transition-transform duration-500 p-2 mix-blend-multiply"
           />
           {product.isNew && <Badge className="absolute top-3 left-3 bg-primary-600 text-white shadow-sm">New</Badge>}
           {discount > 0 && <Badge className="absolute top-3 right-3 bg-green-600 text-white shadow-sm">-{discount}%</Badge>}
@@ -105,12 +105,12 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       animate={{ opacity: 1, y: 0 }}
       className={`bg-white ${isCompact ? 'rounded-xl' : 'rounded-2xl'} shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:shadow-gray-200/50 hover:border-primary-100 transition-all duration-300 flex flex-col`}
     >
-      <div className={`relative ${isCompact ? 'aspect-square' : 'aspect-[4/5]'} bg-gray-50 overflow-hidden`}>
+      <div className="relative aspect-square bg-gray-50 overflow-hidden flex items-center justify-center">
         <Image
           src={product.images?.[0]?.url || "/images/placeholder.jpg"}
           alt={product.images?.[0]?.alt || product.name}
           fill
-          className="object-cover group-hover:scale-110 transition-transform duration-700"
+          className="object-contain group-hover:scale-110 transition-transform duration-700 p-4 mix-blend-multiply"
         />
         {product.isNew && <Badge className={`absolute ${isCompact ? 'top-2 left-2 text-[10px] px-1.5 py-0.5' : 'top-3 left-3'} bg-primary-600 text-white shadow-sm`}>New</Badge>}
         {discount > 0 && <Badge className={`absolute ${isCompact ? 'top-2 right-2 text-[10px] px-1.5 py-0.5' : 'top-3 right-3'} bg-green-600 text-white shadow-sm`}>-{discount}%</Badge>}
