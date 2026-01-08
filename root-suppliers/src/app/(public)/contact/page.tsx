@@ -162,7 +162,7 @@ export default function ContactPage() {
                 <button
                   type="button"
                   onClick={() => setStatus("idle")}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors uppercase tracking-wide group"
+                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-secondary-600 text-white font-bold rounded-lg hover:bg-secondary-700 transition-colors uppercase tracking-wide group"
                 >
                   Send Another Message
                   <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -171,7 +171,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors uppercase tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-secondary-600 text-white font-bold rounded-lg hover:bg-secondary-700 transition-colors uppercase tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {status === "loading" ? (
                     <>Processing...</>
