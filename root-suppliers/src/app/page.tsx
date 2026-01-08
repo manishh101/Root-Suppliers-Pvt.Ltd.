@@ -55,8 +55,10 @@ async function getFeaturedProducts() {
 async function getCategories() {
   try {
     await connectDB();
-    const categories = await Category.find({ isActive: true })
+    // Fetch only root categories (parent is null) that are active
+    const categories = await Category.find({ parent: null, isActive: true })
       .sort({ orderIndex: 1, name: 1 })
+      .limit(8)
       .lean();
     return JSON.parse(JSON.stringify(categories));
   } catch (error) {

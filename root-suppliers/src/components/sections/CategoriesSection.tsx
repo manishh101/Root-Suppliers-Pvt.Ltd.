@@ -19,13 +19,6 @@ interface CategoriesSectionProps {
   categories: Category[];
 }
 
-const defaultCategories = [
-  { _id: "1", name: "Adhesives & Sealants", slug: "adhesives", image: { url: "/images/categories/adhesives.jpg", alt: "Adhesives" } },
-  { _id: "2", name: "Bricks & Blocks", slug: "bricks", image: { url: "/images/categories/bricks.jpg", alt: "Bricks" } },
-  { _id: "3", name: "Cement & Concrete", slug: "cement", image: { url: "/images/categories/cement.jpg", alt: "Cement" } },
-  { _id: "4", name: "Electrical & Wiring", slug: "electrical", image: { url: "/images/categories/electrical.jpg", alt: "Electrical" } },
-];
-
 export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -47,10 +40,10 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories
     return () => observer.disconnect();
   }, []);
 
-  // Use dynamic categories if available, otherwise fallback to defaults
-  const displayCategories = categories && categories.length > 0
-    ? categories.slice(0, 8)
-    : defaultCategories;
+  // Use dynamic categories if available
+  const displayCategories = categories && categories.length > 0 ? categories : [];
+
+  if (displayCategories.length === 0) return null;
 
   return (
     <section
@@ -81,7 +74,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories
           {displayCategories.map((category, index) => (
             <Link
               key={category._id}
-              href={`/products?category=${category.slug}`}
+              href={`/categories/${category.slug}`}
               className={`group relative h-[300px] overflow-hidden rounded-[2rem] bg-gray-100 transition-all duration-700 ${isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16 shadow-none'
@@ -90,18 +83,12 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories
             >
               {/* Image with overlay */}
               <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-110">
-                {category.image?.url ? (
-                  <Image
-                    src={category.image.url}
-                    alt={category.name}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <span className="text-gray-300 font-bold text-6xl opacity-20">ROOT</span>
-                  </div>
-                )}
+                <Image
+                  src={category.image?.url || "/images/placeholder.jpg"}
+                  alt={category.name}
+                  fill
+                  className="object-cover"
+                />
                 {/* Modern Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-500 opacity-90 group-hover:opacity-100" />
               </div>
