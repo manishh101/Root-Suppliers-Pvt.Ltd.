@@ -114,7 +114,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ categories
         <div className={`text-center mt-20 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <Link
             href="/categories"
-            className="group inline-flex items-center gap-4 px-10 py-5 bg-gray-900 text-white font-bold rounded-2xl hover:bg-primary-600 transition-all duration-300 shadow-xl hover:shadow-primary-200/50 transform hover:-translate-y-1"
+            className="group inline-flex items-center gap-4 px-10 py-5 bg-secondary-600 text-white font-bold rounded-2xl hover:bg-secondary-700 transition-all duration-300 shadow-xl hover:shadow-secondary-200/50 transform hover:-translate-y-1"
           >
             <span className="tracking-widest text-sm">VIEW ALL CATEGORIES</span>
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
