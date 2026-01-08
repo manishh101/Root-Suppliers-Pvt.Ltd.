@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-secondary-800 via-secondary-900 to-secondary-950 text-white">
+    <footer className="bg-gradient-to-br from-secondary-700 via-secondary-800 to-secondary-900 text-white">
       {/* Main Footer */}
       <div className="container-main py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
