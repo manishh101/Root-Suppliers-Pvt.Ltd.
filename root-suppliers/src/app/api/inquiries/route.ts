@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Inquiry from "@/lib/db/models/Inquiry";
+import Product from "@/lib/db/models/Product";
 import { verifyAuth } from "@/lib/auth";
+
+// Ensure models are registered to prevent MissingSchemaError during population
+const _models = { Product };
 
 /**
  * GET /api/inquiries
