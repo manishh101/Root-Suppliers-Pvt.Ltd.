@@ -63,7 +63,7 @@ export default function EditBrandPage({ params }: { params: { slug: string } }) 
           website: brand.website || '',
           featured: brand.isFeatured || false,
           isActive: brand.isActive !== false,
-          order: brand.orderIndex || 0
+          order: brand.order || 0
         });
       } else {
         setError('Brand not found');

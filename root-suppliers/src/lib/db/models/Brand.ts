@@ -9,11 +9,11 @@ export interface IBrand extends Document {
     url: string;
     publicId: string;
   };
-  websiteUrl?: string;
+  website?: string;
   description?: string;
   isFeatured: boolean;
   isActive: boolean;
-  orderIndex: number;
+  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,7 +36,7 @@ const BrandSchema = new Schema<IBrand>(
       url: { type: String, required: true },
       publicId: { type: String, required: true },
     },
-    websiteUrl: {
+    website: {
       type: String,
       trim: true,
     },
@@ -53,7 +53,7 @@ const BrandSchema = new Schema<IBrand>(
       default: true,
       index: true,
     },
-    orderIndex: {
+    order: {
       type: Number,
       default: 0,
     },

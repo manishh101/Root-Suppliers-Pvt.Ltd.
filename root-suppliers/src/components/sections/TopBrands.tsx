@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface Brand {
   _id: string;
   name: string;
-  logo: { url: string; alt: string };
+  logo: { url: string; publicId: string };
   website?: string;
 }
 
@@ -73,7 +73,7 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
                   <div className="bg-white rounded-lg p-3 h-full flex items-center justify-center shadow-sm">
                     <Image
                       src={brand.logo?.url || "/images/placeholder-brand.png"}
-                      alt={brand.logo?.alt || brand.name}
+                      alt={brand.name}
                       width={80}
                       height={40}
                       className="object-contain max-h-10"
