@@ -22,7 +22,7 @@ interface Brand {
     publicId: string;
   };
   website?: string;
-  featured: boolean;
+  isFeatured: boolean;
   isActive: boolean;
   order: number;
 }
@@ -40,7 +40,7 @@ export default function EditBrandPage({ params }: { params: { slug: string } }) 
     description: '',
     logo: { url: '', publicId: '' },
     website: '',
-    featured: false,
+    isFeatured: false,
     isActive: true,
     order: 0
   });
@@ -61,7 +61,7 @@ export default function EditBrandPage({ params }: { params: { slug: string } }) 
           description: brand.description || '',
           logo: brand.logo || { url: '', publicId: '' },
           website: brand.website || '',
-          featured: brand.isFeatured || false,
+          isFeatured: brand.isFeatured || false,
           isActive: brand.isActive !== false,
           order: brand.order || 0
         });
@@ -298,8 +298,8 @@ export default function EditBrandPage({ params }: { params: { slug: string } }) 
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    checked={formData.isFeatured}
+                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
                     className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
                   />
                   <span className="text-sm text-gray-700">Featured</span>

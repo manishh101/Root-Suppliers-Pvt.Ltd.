@@ -71,7 +71,7 @@ async function getCategories() {
 async function getBrands() {
   try {
     await connectDB();
-    const brands = await Brand.find({ isActive: true })
+    const brands = await Brand.find({ isActive: true, isFeatured: true })
       .sort({ order: 1, name: 1 })
       .lean();
     return JSON.parse(JSON.stringify(brands));
