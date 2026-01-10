@@ -71,9 +71,18 @@ async function getCategories() {
 async function getBrands() {
   try {
     await connectDB();
-    const brands = await Brand.find({ isActive: true, isFeatured: true })
+    // Try to get featured brands first
+    let brands = await Brand.find({ isActive: true, isFeatured: true })
       .sort({ order: 1, name: 1 })
       .lean();
+
+    // Fallback to all active brands if no featured brands are found
+    if (!brands || brands.length === 0) {
+      brands = await Brand.find({ isActive: true })
+        .sort({ order: 1, name: 1 })
+        .lean();
+    }
+
     return JSON.parse(JSON.stringify(brands));
   } catch (error) {
     console.error("Error fetching brands:", error);
