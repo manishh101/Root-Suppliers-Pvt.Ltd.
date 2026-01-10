@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch categories
-    const categories = await Category.find(query).sort({ order: 1, name: 1 }).lean();
+    const categories = await Category.find(query).sort({ orderIndex: 1, name: 1 }).lean();
 
     // Add product counts if requested
     if (includeProductCount) {
@@ -97,13 +97,37 @@ export async function POST(req: NextRequest) {
     // Validation using Zod
     const validatedData = categorySchema.parse(body);
 
+    // Transform and normalize data for Mongoose
+    const categoryData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      categoryData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete categoryData.metaTitle;
+      delete categoryData.metaDescription;
+    }
+
+    // 2. Map order to orderIndex
+    if (validatedData.order !== undefined) {
+      categoryData.orderIndex = validatedData.order;
+      delete categoryData.order;
+    }
+
+    // 3. Normalize parent field (empty string to null to prevent CastError)
+    if (categoryData.parent === "") {
+      categoryData.parent = null;
+    }
+
     // Sanitize rich text
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    if (categoryData.description) {
+      categoryData.description = sanitizeHtml(categoryData.description);
     }
 
     // Create category
-    const category = await Category.create(validatedData);
+    const category = await Category.create(categoryData);
 
     return successResponse({ category }, 201, "Category created successfully");
   } catch (error: any) {

@@ -10,16 +10,17 @@ import { imageSchema, seoSchema, baseStatusSchema } from "./shared.schema";
  */
 export const productSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters").optional(),
+  slug: z.string().optional().or(z.literal("")),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  shortDescription: z.string().min(1, "Short description is required"),
+  shortDescription: z.string().optional(),
   category: z.string().min(1, "Please select a category"),
   brand: z.string().optional(),
   sku: z.string().optional(),
   unit: z.string().optional(),
-  price: z.number().min(0, "Price must be positive").optional(),
+  price: z.number().optional(),
   discountPrice: z.number().optional(),
-  images: z.array(imageSchema).min(1, "At least one image is required"),
+  stock: z.number().optional().default(0),
+  images: z.array(imageSchema).default([]),
   specifications: z.array(
     z.object({
       key: z.string(),

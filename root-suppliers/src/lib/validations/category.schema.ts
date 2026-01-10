@@ -10,7 +10,7 @@ import { imageSchema, seoSchema, baseStatusSchema } from "./shared.schema";
  */
 export const categorySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters").optional(),
+  slug: z.string().optional().or(z.literal("")),
   description: z.string().optional(),
   parent: z.string().optional().nullable(),
   image: imageSchema.optional().nullable(),

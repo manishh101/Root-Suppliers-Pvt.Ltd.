@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { ArrowLeft, Save, Loader2, Upload, X, FileText, Image } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Upload, X, FileText, Image as ImageIcon } from "lucide-react";
+import { blogSchema, type BlogFormData } from "@/lib/validations";
 
 // Dynamically import RichTextEditor to prevent SSR issues with Quill
 const RichTextEditor = dynamic(
@@ -19,23 +19,9 @@ const RichTextEditor = dynamic(
   }
 );
 
-// Validation schema
-const blogSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  excerpt: z.string().min(20, "Excerpt must be at least 20 characters"),
-  content: z.string().min(50, "Content must be at least 50 characters"),
-  isPublished: z.boolean().default(false),
-  metaTitle: z.string().optional(),
-  metaDescription: z.string().optional(),
-  tags: z.array(z.string()).default([]),
-});
-
-type BlogFormData = z.infer<typeof blogSchema>;
-
 export default function NewBlogPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [featuredImage, setFeaturedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tagInput, setTagInput] = useState("");
@@ -50,18 +36,29 @@ export default function NewBlogPage() {
     resolver: zodResolver(blogSchema),
     defaultValues: {
       title: "",
+      slug: "",
       excerpt: "",
       content: "",
-      isPublished: false,
+      isActive: true, // matches baseStatusSchema
       metaTitle: "",
       metaDescription: "",
       tags: [],
+      featuredImage: null,
     },
   });
 
+  const watchedTitle = watch("title");
+  const watchedSlug = watch("slug");
   const watchedTags = watch("tags");
+  const watchedFeaturedImage = watch("featuredImage");
 
-  // Handle image upload
+  // Real-time slug generation
+  useEffect(() => {
+    if (watchedTitle && !watchedSlug) {
+      setValue("slug", watchedTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-*|-*$/g, ""));
+    }
+  }, [watchedTitle, watchedSlug, setValue]);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -85,7 +82,10 @@ export default function NewBlogPage() {
         throw new Error(data.message);
       }
 
-      setFeaturedImage(data.url);
+      setValue("featuredImage", {
+        url: data.url,
+        publicId: data.publicId,
+      });
     } catch (err: any) {
       console.error("Upload failed:", err);
       setError(err.message || "Failed to upload image");
@@ -94,7 +94,6 @@ export default function NewBlogPage() {
     }
   };
 
-  // Add tag
   const addTag = () => {
     if (tagInput.trim() && !watchedTags?.includes(tagInput.trim())) {
       setValue("tags", [...(watchedTags || []), tagInput.trim()]);
@@ -102,15 +101,13 @@ export default function NewBlogPage() {
     }
   };
 
-  // Remove tag
   const removeTag = (index: number) => {
     setValue(
       "tags",
-      (watchedTags || []).filter((_, i) => i !== index)
+      (watchedTags || []).filter((_: string, i: number) => i !== index)
     );
   };
 
-  // Submit form
   const onSubmit = async (data: BlogFormData) => {
     setIsSubmitting(true);
     setError(null);
@@ -121,11 +118,7 @@ export default function NewBlogPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...data,
-          featuredImage: featuredImage ? { url: featuredImage } : undefined,
-          publishedAt: data.isPublished ? new Date().toISOString() : null,
-        }),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -146,7 +139,6 @@ export default function NewBlogPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <Link
           href="/admin/blogs"
@@ -160,7 +152,6 @@ export default function NewBlogPage() {
         </div>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
           {error}
@@ -169,220 +160,119 @@ export default function NewBlogPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Post Details</h2>
-
-              {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                 <input
                   type="text"
                   {...register("title")}
-                  className={`w - full px - 4 py - 2 border rounded - lg focus: outline - none focus: ring - 2 focus: ring - primary ${
-  errors.title ? "border-red-500" : "border-gray-300"
-} `}
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.title ? "border-red-500" : "border-gray-300"}`}
                   placeholder="Enter blog title"
                 />
-                {errors.title && (
-                  <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>
-                )}
+                {errors.title && <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>}
               </div>
 
-              {/* Excerpt */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Excerpt *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL) *</label>
+                <div className="flex gap-2">
+                  <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">/blog/</span>
+                  <input
+                    type="text"
+                    {...register("slug")}
+                    className={`flex-1 px-4 py-2 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.slug ? "border-red-500" : "border-gray-300"}`}
+                    placeholder="blog-post-slug"
+                  />
+                </div>
+                {errors.slug && <p className="mt-1 text-sm text-red-500">{errors.slug.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt *</label>
                 <textarea
                   {...register("excerpt")}
                   rows={3}
-                  className={`w - full px - 4 py - 2 border rounded - lg focus: outline - none focus: ring - 2 focus: ring - primary ${
-  errors.excerpt ? "border-red-500" : "border-gray-300"
-} `}
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.excerpt ? "border-red-500" : "border-gray-300"}`}
                   placeholder="Brief summary of the blog post"
                 />
-                {errors.excerpt && (
-                  <p className="mt-1 text-sm text-red-500">{errors.excerpt.message}</p>
-                )}
+                {errors.excerpt && <p className="mt-1 text-sm text-red-500">{errors.excerpt.message}</p>}
               </div>
 
-              {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Content *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Content *</label>
                 <RichTextEditor
-                  value={watch("content")}
+                  value={watch("content") || ""}
                   onChange={(value) => setValue("content", value, { shouldValidate: true })}
-                  placeholder="Write your blog content here..."
                 />
-                {errors.content && (
-                  <p className="mt-1 text-sm text-red-500">{errors.content.message}</p>
-                )}
-                <p className="mt-1 text-xs text-gray-500">
-                  You can use Markdown formatting for rich text
-                </p>
+                {errors.content && <p className="mt-1 text-sm text-red-500">{errors.content.message}</p>}
               </div>
             </div>
 
-            {/* Featured Image */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Featured Image</h2>
-
-              {featuredImage ? (
+              {watchedFeaturedImage ? (
                 <div className="relative rounded-lg overflow-hidden">
-                  <img
-                    src={featuredImage}
-                    alt="Featured"
-                    className="w-full h-64 object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFeaturedImage(null)}
-                    className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                  >
+                  <img src={watchedFeaturedImage.url} alt="Featured" className="w-full h-64 object-cover" />
+                  <button type="button" onClick={() => setValue("featuredImage", null)} className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <label
-                  className={`flex flex - col items - center justify - center h - 64 border - 2 border - dashed border - gray - 300 rounded - lg cursor - pointer hover: border - primary hover: bg - primary / 5 transition - colors ${
-  isUploading ? "opacity-50 cursor-not-allowed" : ""
-} `}
-                >
-                  {isUploading ? (
-                    <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />
-                  ) : (
-                    <>
-                      <Image className="w-12 h-12 text-gray-400" />
-                      <span className="mt-2 text-gray-500">Click to upload featured image</span>
-                      <span className="mt-1 text-xs text-gray-400">
-                        Recommended: 1200x630px
-                      </span>
-                    </>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
+                <label className={`flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+                  {isUploading ? <Loader2 className="w-12 h-12 text-gray-400 animate-spin" /> : <><ImageIcon className="w-12 h-12 text-gray-400" /><span className="mt-2 text-gray-500">Click to upload featured image</span></>}
+                  <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="hidden" />
                 </label>
               )}
             </div>
 
-            {/* SEO */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">SEO Settings</h2>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Meta Title
-                </label>
-                <input
-                  type="text"
-                  {...register("metaTitle")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="SEO title (defaults to post title)"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+                <input type="text" {...register("metaTitle")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SEO title" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Meta Description
-                </label>
-                <textarea
-                  {...register("metaDescription")}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="SEO description (max 160 characters)"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                <textarea {...register("metaDescription")} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SEO description" />
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Publish */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Publish</h2>
-
               <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register("isPublished")}
-                  className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
-                />
+                <input type="checkbox" {...register("isActive")} className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary" />
                 <span className="text-gray-700">Publish immediately</span>
               </label>
+              {Object.keys(errors).length > 0 && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                  Please fix validation errors:
+                  <ul className="list-disc list-inside mt-1 font-medium">
+                    {Object.entries(errors).map(([key, err]) => (
+                      <li key={key}>{(err as any).message || key}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              <p className="text-sm text-gray-500">
-                If unchecked, the post will be saved as a draft
-              </p>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    Save Post
-                  </>
-                )}
+              <button type="submit" disabled={isSubmitting} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50">
+                {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Saving...</> : <><Save className="w-5 h-5" /> Save Post</>}
               </button>
             </div>
 
-            {/* Tags */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Tags</h2>
-
               <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) =>
-                    e.key === "Enter" && (e.preventDefault(), addTag())
-                  }
-                  placeholder="Add a tag"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  type="button"
-                  onClick={addTag}
-                  className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
-                >
-                  <span className="text-xl leading-none">+</span>
-                </button>
+                <input type="text" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} placeholder="Add a tag" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg" />
+                <button type="button" onClick={addTag} className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"><span className="text-xl leading-none">+</span></button>
               </div>
-
               <div className="flex flex-wrap gap-2">
-                {watchedTags?.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                  >
+                {(watchedTags || []).map((tag: string, index: number) => (
+                  <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
                     {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(index)}
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
+                    <button type="button" onClick={() => removeTag(index)} className="text-gray-400 hover:text-red-500"><X className="w-3 h-3" /></button>
                   </span>
                 ))}
               </div>

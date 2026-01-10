@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   ArrowLeft,
   Save,
@@ -14,11 +13,9 @@ import {
   Trash2,
   Upload,
   X,
-  Package,
   GripVertical,
 } from "lucide-react";
 import { productSchema, type ProductFormData } from "@/lib/validations";
-
 
 interface Category {
   _id: string;
@@ -39,33 +36,10 @@ export default function NewProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  interface ProductImage {
-    url: string;
-    publicId: string;
-    alt?: string;
-  }
-
-  const [images, setImages] = useState<ProductImage[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [featureInput, setFeatureInput] = useState("");
   const [tagInput, setTagInput] = useState("");
-
-  // Build category tree with levels for display
-  const buildCategoryTree = (cats: Category[], parentId: string | null = null, level: number = 0): Category[] => {
-    const result: Category[] = [];
-    const children = cats.filter(cat => {
-      const catParent = typeof cat.parent === 'object' ? cat.parent?._id : cat.parent;
-      return catParent === parentId || (!catParent && !parentId);
-    });
-
-    for (const child of children) {
-      result.push({ ...child, level });
-      const grandchildren = buildCategoryTree(cats, child._id, level + 1);
-      result.push(...grandchildren);
-    }
-    return result;
-  };
 
   const {
     register,
@@ -78,19 +52,22 @@ export default function NewProductPage() {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
+      slug: "",
       description: "",
       shortDescription: "",
       category: "",
       brand: "",
       sku: "",
       unit: "",
-      price: undefined,
-      discountPrice: undefined,
+      price: 0,
+      discountPrice: 0,
+      stock: 0,
       specifications: [],
       features: [],
       tags: [],
       isActive: true,
       isFeatured: false,
+      isTopSelling: false,
       metaTitle: "",
       metaDescription: "",
       images: [],
@@ -106,8 +83,18 @@ export default function NewProductPage() {
     name: "specifications",
   });
 
+  const watchedName = watch("name");
+  const watchedSlug = watch("slug");
   const watchedFeatures = watch("features");
   const watchedTags = watch("tags");
+  const watchedImages = watch("images") || [];
+
+  // Real-time slug generation
+  useEffect(() => {
+    if (watchedName && !watchedSlug) {
+      setValue("slug", watchedName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-*|-*$/g, ""));
+    }
+  }, [watchedName, watchedSlug, setValue]);
 
   // Fetch categories and brands
   useEffect(() => {
@@ -122,9 +109,8 @@ export default function NewProductPage() {
         const brandsData = await brandsRes.json();
 
         if (categoriesData.success) {
-          // Build hierarchical category tree
-          const treeCategories = buildCategoryTree(categoriesData.categories);
-          setCategories(treeCategories);
+          // Flatten tree logic if needed, or just set
+          setCategories(buildCategoryTree(categoriesData.categories));
         }
         if (brandsData.success) {
           setBrands(brandsData.brands);
@@ -137,7 +123,21 @@ export default function NewProductPage() {
     fetchData();
   }, []);
 
-  // Handle image upload
+  const buildCategoryTree = (cats: Category[], parentId: string | null = null, level: number = 0): Category[] => {
+    const result: Category[] = [];
+    const children = cats.filter(cat => {
+      const catParent = typeof cat.parent === 'object' ? cat.parent?._id : cat.parent;
+      return catParent === parentId || (!catParent && !parentId);
+    });
+
+    for (const child of children) {
+      result.push({ ...child, level });
+      const grandchildren = buildCategoryTree(cats, child._id, level + 1);
+      result.push(...grandchildren);
+    }
+    return result;
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -149,7 +149,7 @@ export default function NewProductPage() {
       const uploadPromises = Array.from(files).map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("folder", "root-suppliers/products");
+        formData.append("folder", "products");
 
         const response = await fetch("/api/upload", {
           method: "POST",
@@ -157,92 +157,60 @@ export default function NewProductPage() {
         });
 
         const data = await response.json();
-
-        if (!data.success) {
-          throw new Error(data.message);
-        }
+        if (!data.success) throw new Error(data.message);
 
         return {
           url: data.url,
           publicId: data.publicId,
-          alt: file.name.split('.')[0]
+          alt: watchedName || file.name.split('.')[0]
         };
       });
 
       const uploadedImages = await Promise.all(uploadPromises);
-      const newImages = [...images, ...uploadedImages];
-      setImages(newImages);
-      setValue("images", newImages);
+      setValue("images", [...watchedImages, ...uploadedImages]);
     } catch (err: any) {
       console.error("Upload failed:", err);
       setError(err.message || "Failed to upload images");
     } finally {
       setIsUploading(false);
-      // Reset input value to allow uploading same file again
       e.target.value = "";
     }
   };
 
-  // Remove image
   const removeImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index);
-    setImages(newImages);
-    setValue("images", newImages);
+    setValue("images", watchedImages.filter((_, i) => i !== index));
   };
 
-  // Add feature
   const addFeature = () => {
     if (featureInput.trim()) {
-      setValue("features", [...(watchedFeatures || []), featureInput.trim()]);
+      setValue("features", [...watchedFeatures, featureInput.trim()]);
       setFeatureInput("");
     }
   };
 
-  // Remove feature
   const removeFeature = (index: number) => {
-    setValue(
-      "features",
-      (watchedFeatures || []).filter((_, i) => i !== index)
-    );
+    setValue("features", watchedFeatures.filter((_, i) => i !== index));
   };
 
-  // Add tag
   const addTag = () => {
     if (tagInput.trim() && !watchedTags?.includes(tagInput.trim())) {
-      setValue("tags", [...(watchedTags || []), tagInput.trim()]);
+      setValue("tags", [...watchedTags, tagInput.trim()]);
       setTagInput("");
     }
   };
 
-  // Remove tag
   const removeTag = (index: number) => {
-    setValue(
-      "tags",
-      (watchedTags || []).filter((_, i) => i !== index)
-    );
+    setValue("tags", watchedTags.filter((_, i) => i !== index));
   };
 
-  // Submit form
-  const onSubmit = async (data: ProductFormData) => {
-    if (images.length === 0) {
-      setError("Please upload at least one product image");
-      return;
-    }
-
+  const onSubmit: SubmitHandler<ProductFormData> = async (data) => {
     setIsSubmitting(true);
     setError(null);
-
-    // Generate slug if empty
-    if (!data.slug) {
-      data.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-    }
 
     try {
       const response = await fetch("/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -262,472 +230,193 @@ export default function NewProductPage() {
     }
   };
 
-  // Helper replacement to fix render loop
-  // ... in return JSX ...
-  // {images.map((image, index) => (
-  //   <div key={index} ...>
-  //      <img src={image.url} ... />
-  //   </div>
-  // ))}
-
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/admin/products"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">New Product</h1>
-            <p className="text-gray-600">Create a new product</p>
-          </div>
+      <div className="flex items-center gap-4">
+        <Link href="/admin/products" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">New Product</h1>
+          <p className="text-gray-600">Create a new product</p>
         </div>
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
+      {error && <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">{error}</div>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Basic Information</h2>
-
-              {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Product Name *
-                </label>
-                <input
-                  type="text"
-                  {...register("name")}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.name ? "border-red-500" : "border-gray-300"
-                    }`}
-                  placeholder="Enter product name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-                )}
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                <input type="text" {...register("name")} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.name ? "border-red-500" : "border-gray-300"}`} placeholder="Enter product name" />
+                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>}
               </div>
 
-              {/* Short Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Short Description
-                </label>
-                <input
-                  type="text"
-                  {...register("shortDescription")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Brief product description"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL) *</label>
+                <div className="flex gap-2">
+                  <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">/products/</span>
+                  <input type="text" {...register("slug")} className={`flex-1 px-4 py-2 border rounded-r-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.slug ? "border-red-500" : "border-gray-300"}`} placeholder="product-url-slug" />
+                </div>
+                {errors.slug && <p className="mt-1 text-sm text-red-500">{errors.slug.message}</p>}
               </div>
 
-              {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Description *
-                </label>
-                <textarea
-                  {...register("description")}
-                  rows={6}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.description ? "border-red-500" : "border-gray-300"
-                    }`}
-                  placeholder="Detailed product description"
-                />
-                {errors.description && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.description.message}
-                  </p>
-                )}
+                <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                <input type="text" {...register("shortDescription")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Brief product description" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Description *</label>
+                <textarea {...register("description")} rows={6} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none ${errors.description ? "border-red-500" : "border-gray-300"}`} placeholder="Detailed product description" />
+                {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description.message}</p>}
               </div>
             </div>
 
-            {/* Images */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Product Images</h2>
-
-              {/* Image Grid */}
+              <h2 className="text-lg font-semibold text-gray-900">Product Images (At least 1 required)</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="relative aspect-square rounded-lg overflow-hidden border group"
-                  >
-                    <img
-                      src={image.url}
-                      alt={image.alt || `Product ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                    {index === 0 && (
-                      <span className="absolute bottom-2 left-2 px-2 py-1 bg-primary text-white text-xs rounded">
-                        Primary
-                      </span>
-                    )}
+                {watchedImages.map((image, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                    <img src={image.url} alt={`Product ${index + 1}`} className="w-full h-full object-cover" />
+                    <button type="button" onClick={() => removeImage(index)} className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><X className="w-4 h-4" /></button>
+                    {index === 0 && <span className="absolute bottom-2 left-2 px-2 py-1 bg-cardinal-red text-white text-xs rounded">Primary</span>}
                   </div>
                 ))}
-
-                {/* Upload Button */}
-                <label
-                  className={`aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors ${isUploading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                >
-                  {isUploading ? (
-                    <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
-                  ) : (
-                    <>
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="mt-2 text-sm text-gray-500">Upload</span>
-                    </>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageUpload}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
+                <label className={`aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-cardinal-red hover:bg-cardinal-red/5 transition-colors ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+                  {isUploading ? <Loader2 className="w-8 h-8 text-gray-400 animate-spin" /> : <><Upload className="w-8 h-8 text-gray-400" /><span className="mt-2 text-sm text-gray-500">Upload</span></>}
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={isUploading} className="hidden" />
                 </label>
               </div>
-
-              <p className="text-sm text-gray-500">
-                First image will be the primary product image. Recommended size: 800x800px
-              </p>
+              {errors.images && <p className="mt-2 text-sm text-red-500 font-medium">{errors.images.message}</p>}
             </div>
 
-            {/* Specifications */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">Specifications</h2>
-                <button
-                  type="button"
-                  onClick={() => appendSpec({ key: "", value: "" })}
-                  className="text-sm text-primary hover:underline flex items-center gap-1"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Specification
-                </button>
+                <button type="button" onClick={() => appendSpec({ key: "", value: "" })} className="text-sm text-cardinal-red hover:underline flex items-center gap-1"><Plus className="w-4 h-4" /> Add Specification</button>
               </div>
-
               <div className="space-y-3">
                 {specFields.map((field, index) => (
                   <div key={field.id} className="flex items-center gap-3">
-                    <GripVertical className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                    <input
-                      type="text"
-                      {...register(`specifications.${index}.key` as const)}
-                      placeholder="Name (e.g., Material)"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    <input
-                      type="text"
-                      {...register(`specifications.${index}.value` as const)}
-                      placeholder="Value (e.g., Stainless Steel)"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeSpec(index)}
-                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <GripVertical className="w-5 h-5 text-gray-400" />
+                    <input type="text" {...register(`specifications.${index}.key` as const)} placeholder="Name" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg" />
+                    <input type="text" {...register(`specifications.${index}.value` as const)} placeholder="Value" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg" />
+                    <button type="button" onClick={() => removeSpec(index)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 ))}
-
-                {specFields.length === 0 && (
-                  <p className="text-sm text-gray-500 text-center py-4">
-                    No specifications added yet
-                  </p>
-                )}
               </div>
             </div>
 
-            {/* Features */}
-            <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Features</h2>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={featureInput}
-                  onChange={(e) => setFeatureInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
-                  placeholder="Add a feature"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  type="button"
-                  onClick={addFeature}
-                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-                >
-                  Add
-                </button>
-              </div>
-
-              <ul className="space-y-2">
-                {watchedFeatures?.map((feature, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg"
-                  >
-                    <span className="text-gray-700">{feature}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeFeature(index)}
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* SEO */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">SEO Settings</h2>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Meta Title
-                </label>
-                <input
-                  type="text"
-                  {...register("metaTitle")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="SEO title (defaults to product name)"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+                <input type="text" {...register("metaTitle")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SEO title" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Meta Description
-                </label>
-                <textarea
-                  {...register("metaDescription")}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="SEO description (max 160 characters)"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                <textarea {...register("metaDescription")} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none" placeholder="SEO description" />
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Publish */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Publish</h2>
-
               <div className="space-y-3">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    {...register("isActive")}
-                    className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                  <span className="text-gray-700">Active (visible on site)</span>
+                  <input type="checkbox" {...register("isActive")} className="w-5 h-5 rounded border-gray-300 text-cardinal-red focus:ring-cardinal-red" />
+                  <span className="text-gray-700">Active</span>
                 </label>
-
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    {...register("isFeatured")}
-                    className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                  <span className="text-gray-700">Featured product</span>
+                  <input type="checkbox" {...register("isFeatured")} className="w-5 h-5 rounded border-gray-300 text-cardinal-red focus:ring-cardinal-red" />
+                  <span className="text-gray-700">Featured</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" {...register("isTopSelling")} className="w-5 h-5 rounded border-gray-300 text-cardinal-red focus:ring-cardinal-red" />
+                  <span className="text-gray-700">Top Selling</span>
                 </label>
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    Save Product
-                  </>
-                )}
+              {Object.keys(errors).length > 0 && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                  Please fix validation errors:
+                  <ul className="list-disc list-inside mt-1">
+                    {Object.entries(errors).map(([key, err]) => (
+                      <li key={key}>{(err as any).message || key}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <button type="submit" disabled={isSubmitting} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-cardinal-red text-white rounded-lg hover:bg-cardinal-red/90 disabled:opacity-50">
+                {isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Saving...</> : <><Save className="w-5 h-5" /> Save Product</>}
               </button>
             </div>
 
-            {/* Organization */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Organization</h2>
-
-              {/* Category */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category *
-                </label>
-                <select
-                  {...register("category")}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white ${errors.category ? "border-red-500" : "border-gray-300"
-                    }`}
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                <select {...register("category")} className={`w-full px-4 py-2 border rounded-lg bg-white ${errors.category ? "border-red-500" : "border-gray-300"}`}>
                   <option value="">Select category</option>
                   {categories.map((cat) => (
                     <option key={cat._id} value={cat._id}>
-                      {cat.level === 0
-                        ? cat.name
-                        : cat.level === 1
-                          ? `    └─ ${cat.name}`
-                          : `        └─ ${cat.name}`
-                      }
+                      {cat.level && cat.level > 0 ? `${"─".repeat(cat.level)} ${cat.name}` : cat.name}
                     </option>
                   ))}
                 </select>
-                {errors.category && (
-                  <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>
-                )}
-                <p className="mt-1 text-xs text-gray-500">
-                  Select the most specific category for your product
-                </p>
+                {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>}
               </div>
 
-              {/* Brand */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Brand
-                </label>
-                <select
-                  {...register("brand")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <select {...register("brand")} className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
                   <option value="">Select brand</option>
                   {brands.map((brand) => (
-                    <option key={brand._id} value={brand._id}>
-                      {brand.name}
-                    </option>
+                    <option key={brand._id} value={brand._id}>{brand.name}</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  SKU
-                </label>
-                <input
-                  type="text"
-                  {...register("sku")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Stock keeping unit"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                <input type="text" {...register("sku")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Stock keeping unit" />
               </div>
 
-              {/* Unit */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Unit
-                </label>
-                <input
-                  type="text"
-                  {...register("unit")}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="e.g. pc, kg, box"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                <input type="text" {...register("unit")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="e.g. pc, kg" />
               </div>
             </div>
 
-            {/* Pricing */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Pricing</h2>
-
+              <h2 className="text-lg font-semibold text-gray-900">Pricing & Inventory</h2>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Regular Price (₹)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  {...register("price", { valueAsNumber: true })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="0.00"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹) *</label>
+                <input type="number" step="0.01" {...register("price", { valueAsNumber: true })} className={`w-full px-4 py-2 border rounded-lg ${errors.price ? "border-red-500" : "border-gray-300"}`} />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Sale/Discount Price (₹)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  {...register("discountPrice", { valueAsNumber: true })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="0.00"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Leave empty if no discount
-                </p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Price (₹)</label>
+                <input type="number" step="0.01" {...register("discountPrice", { valueAsNumber: true })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                <input type="number" {...register("stock", { valueAsNumber: true })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
               </div>
             </div>
 
-            {/* Tags */}
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Tags</h2>
-
               <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
-                  placeholder="Add a tag"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  type="button"
-                  onClick={addTag}
-                  className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
+                <input type="text" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} placeholder="Add a tag" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg" />
+                <button type="button" onClick={addTag} className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"><Plus className="w-5 h-5" /></button>
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                {watchedTags?.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                  >
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(index)}
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
+              <div className="flex flex-wrap gap-2">{watchedTags?.map((tag, index) => (<span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">{tag}<button type="button" onClick={() => removeTag(index)} className="text-gray-400 hover:text-red-500"><X className="w-3 h-3" /></button></span>))}</div>
             </div>
           </div>
         </div>

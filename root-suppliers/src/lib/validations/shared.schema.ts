@@ -4,8 +4,8 @@ import { z } from "zod";
  * Shared image schema
  */
 export const imageSchema = z.object({
-  url: z.string().url("Invalid image URL"),
-  publicId: z.string().min(1, "Public ID is required"),
+  url: z.string().optional().or(z.literal("")),
+  publicId: z.string().optional(),
   alt: z.string().optional(),
 });
 

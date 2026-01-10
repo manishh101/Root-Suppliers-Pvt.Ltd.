@@ -37,14 +37,38 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     // Partial validation
     const validatedData = categorySchema.partial().parse(body);
 
+    // Transform and normalize data for Mongoose
+    const updateData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      updateData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete updateData.metaTitle;
+      delete updateData.metaDescription;
+    }
+
+    // 2. Map order to orderIndex
+    if (validatedData.order !== undefined) {
+      updateData.orderIndex = validatedData.order;
+      delete updateData.order;
+    }
+
+    // 3. Normalize parent field (empty string to null to prevent CastError)
+    if (updateData.parent === "") {
+      updateData.parent = null;
+    }
+
     // Sanitize rich text
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    if (updateData.description) {
+      updateData.description = sanitizeHtml(updateData.description);
     }
 
     const category = await Category.findOneAndUpdate(
       { slug: params.slug },
-      { $set: validatedData },
+      { $set: updateData },
       { new: true, runValidators: true }
     );
 

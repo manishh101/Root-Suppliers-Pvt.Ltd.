@@ -196,16 +196,40 @@ export async function POST(req: NextRequest) {
     // Validation using Zod
     const validatedData = productSchema.parse(body);
 
-    // Sanitize rich text fields
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    // Transform and normalize data for Mongoose
+    const productData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      productData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete productData.metaTitle;
+      delete productData.metaDescription;
     }
-    if (validatedData.shortDescription) {
-      validatedData.shortDescription = sanitizeHtml(validatedData.shortDescription);
+
+    // 2. Map order to orderIndex
+    if (validatedData.order !== undefined) {
+      productData.orderIndex = validatedData.order;
+      delete productData.order;
+    }
+
+    // 3. Normalize brand field (empty string to null to prevent CastError)
+    if (productData.brand === "") {
+      productData.brand = null;
+    }
+
+    // Sanitize rich text fields
+    if (productData.description) {
+      productData.description = sanitizeHtml(productData.description);
+    }
+    if (productData.shortDescription) {
+      productData.shortDescription = sanitizeHtml(productData.shortDescription);
     }
 
     // Create product
-    const product = await Product.create(validatedData);
+    const product = await Product.create(productData);
 
     // Populate category
     await product.populate("category", "name slug");

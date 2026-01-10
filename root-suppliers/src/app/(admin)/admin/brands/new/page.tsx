@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -42,9 +42,31 @@ export default function NewBrandPage() {
     },
   });
 
+  const name = watch('name');
+  const slug = watch('slug');
   const logo = watch('logo');
   const isActive = watch('isActive');
   const isFeatured = watch('isFeatured');
+
+  // Auto-generate slug from name
+  useEffect(() => {
+    const subscription = watch((value, { name: changedField }) => {
+      if (changedField === 'name' && value.name) {
+        const generatedSlug = value.name
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+
+        // Only update slug if it's empty or was previously auto-generated from the previous name
+        // For simplicity in UX, many admins prefer it always syncing unless they manually change the slug.
+        // We'll update it if the field isn't "touched" or is empty.
+        setValue('slug', generatedSlug, { shouldValidate: true });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setValue]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,11 +101,6 @@ export default function NewBrandPage() {
   const onSubmit = async (data: BrandFormData) => {
     setSaving(true);
     setError('');
-
-    // Generate slug from name if not provided
-    if (!data.slug) {
-      data.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-    }
 
     try {
       const response = await fetch('/api/brands', {
@@ -317,6 +334,17 @@ export default function NewBrandPage() {
               />
             </div>
           </div>
+
+          {Object.keys(errors).length > 0 && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+              Please fix validation errors:
+              <ul className="list-disc list-inside mt-1 font-medium">
+                {Object.entries(errors).map(([key, err]) => (
+                  <li key={key}>{(err as any).message || key}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex gap-4">

@@ -68,17 +68,41 @@ export async function PUT(
 
     const validatedData = productSchema.partial().parse(body);
 
-    // Sanitize rich text fields
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    // Transform and normalize data for Mongoose
+    const updateData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      updateData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete updateData.metaTitle;
+      delete updateData.metaDescription;
     }
-    if (validatedData.shortDescription) {
-      validatedData.shortDescription = sanitizeHtml(validatedData.shortDescription);
+
+    // 2. Map order to orderIndex
+    if (validatedData.order !== undefined) {
+      updateData.orderIndex = validatedData.order;
+      delete updateData.order;
+    }
+
+    // 3. Normalize brand field (empty string to null to prevent CastError)
+    if (updateData.brand === "") {
+      updateData.brand = null;
+    }
+
+    // Sanitize rich text fields
+    if (updateData.description) {
+      updateData.description = sanitizeHtml(updateData.description);
+    }
+    if (updateData.shortDescription) {
+      updateData.shortDescription = sanitizeHtml(updateData.shortDescription);
     }
 
     const product = await Product.findOneAndUpdate(
       { slug: params.slug },
-      { $set: validatedData },
+      { $set: updateData },
       { new: true, runValidators: true }
     ).populate("category", "name slug");
 

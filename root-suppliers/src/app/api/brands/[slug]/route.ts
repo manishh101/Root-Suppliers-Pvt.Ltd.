@@ -60,14 +60,27 @@ export async function PUT(
 
     const validatedData = brandSchema.partial().parse(body);
 
+    // Transform and normalize data for Mongoose
+    const updateData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      updateData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete updateData.metaTitle;
+      delete updateData.metaDescription;
+    }
+
     // Sanitize rich text
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    if (updateData.description) {
+      updateData.description = sanitizeHtml(updateData.description);
     }
 
     const brand = await Brand.findOneAndUpdate(
       { slug: params.slug },
-      { $set: validatedData },
+      { $set: updateData },
       { new: true, runValidators: true }
     );
 

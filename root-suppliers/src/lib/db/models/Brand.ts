@@ -14,6 +14,10 @@ export interface IBrand extends Document {
   isFeatured: boolean;
   isActive: boolean;
   order: number;
+  meta: {
+    title?: string;
+    description?: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +60,10 @@ const BrandSchema = new Schema<IBrand>(
     order: {
       type: Number,
       default: 0,
+    },
+    meta: {
+      title: String,
+      description: String,
     },
   },
   {

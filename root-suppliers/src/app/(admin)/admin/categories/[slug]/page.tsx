@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowLeft,
   Save,
@@ -13,25 +15,13 @@ import {
   FolderTree,
   ChevronRight
 } from 'lucide-react';
+import { categorySchema, type CategoryFormData } from '@/lib/validations';
 
 interface Category {
   _id: string;
   name: string;
   slug: string;
-  description?: string;
-  image?: {
-    url: string;
-    publicId: string;
-    alt: string;
-  };
   parent?: string | { _id: string; name: string };
-  isFeatured: boolean;
-  isActive: boolean;
-  orderIndex: number;
-  meta?: {
-    title?: string;
-    description?: string;
-  };
   level?: number;
 }
 
@@ -42,29 +32,50 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [parentCategories, setParentCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [currentCategoryId, setCurrentCategoryId] = useState<string>('');
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    image: null as { url: string; publicId: string; alt: string } | null,
-    parent: '',
-    isFeatured: false,
-    isActive: true,
-    orderIndex: 0,
-    meta: {
-      title: '',
-      description: ''
-    }
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<CategoryFormData>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: '',
+      slug: '',
+      description: '',
+      parent: '',
+      isActive: true,
+      isFeatured: false,
+      order: 0,
+      metaTitle: '',
+      metaDescription: '',
+      image: null,
+    },
   });
 
+  const watchedName = watch("name");
+  const watchedSlug = watch("slug");
+  const watchedImage = watch("image");
+  const watchedParent = watch("parent");
+
   useEffect(() => {
-    Promise.all([
-      fetchCategory(),
-      fetchParentCategories()
-    ]);
+    const initData = async () => {
+      await Promise.all([fetchCategory(), fetchAllCategories()]);
+    };
+    initData();
   }, [slug]);
+
+  // Real-time slug generation
+  useEffect(() => {
+    if (watchedName && !watchedSlug) {
+      setValue("slug", watchedName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-*|-*$/g, ""));
+    }
+  }, [watchedName, watchedSlug, setValue]);
 
   const fetchCategory = async () => {
     try {
@@ -74,18 +85,17 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
       if (data.success && data.category) {
         const category = data.category;
         setCurrentCategoryId(category._id);
-        setFormData({
+        reset({
           name: category.name || '',
+          slug: category.slug || '',
           description: category.description || '',
-          image: category.image || null,
           parent: typeof category.parent === 'object' ? category.parent?._id : category.parent || '',
-          isFeatured: category.isFeatured || false,
           isActive: category.isActive !== false,
-          orderIndex: category.orderIndex || 0,
-          meta: {
-            title: category.meta?.title || '',
-            description: category.meta?.description || ''
-          }
+          isFeatured: category.isFeatured || false,
+          order: category.order || category.orderIndex || 0,
+          metaTitle: category.meta?.title || '',
+          metaDescription: category.meta?.description || '',
+          image: category.image || null,
         });
       } else {
         setError('Category not found');
@@ -98,12 +108,12 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     }
   };
 
-  const fetchParentCategories = async () => {
+  const fetchAllCategories = async () => {
     try {
       const response = await fetch('/api/categories');
       const data = await response.json();
       if (data.success) {
-        setParentCategories(data.categories || []);
+        setAllCategories(data.categories || []);
       }
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -128,14 +138,11 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
 
       const data = await response.json();
       if (data.success) {
-        setFormData(prev => ({
-          ...prev,
-          image: {
-            url: data.url,
-            publicId: data.publicId,
-            alt: prev.name || 'Category Image'
-          }
-        }));
+        setValue("image", {
+          url: data.url,
+          publicId: data.publicId,
+          alt: watchedName || 'Category Image'
+        });
       }
     } catch (err) {
       console.error('Error uploading image:', err);
@@ -144,8 +151,7 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onFormSubmit = async (data: CategoryFormData) => {
     setSaving(true);
     setError('');
 
@@ -153,13 +159,13 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
       const response = await fetch(`/api/categories/${slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(data)
       });
 
-      const data = await response.json();
+      const resData = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Failed to update category');
+        setError(resData.error || 'Failed to update category');
         return;
       }
 
@@ -172,7 +178,7 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     }
   };
 
-  // Build category tree with levels for display
+  // Tree building logic
   const buildCategoryTree = (cats: Category[], parentId: string | null = null, level: number = 0): Category[] => {
     const result: Category[] = [];
     const children = cats.filter(cat => {
@@ -188,19 +194,17 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     return result;
   };
 
-  // Get parent category path for display
   const getParentPath = (parentId: string): string => {
     const paths: string[] = [];
-    let current = parentCategories.find(c => c._id === parentId);
+    let current = allCategories.find(c => c._id === parentId);
     while (current) {
       paths.unshift(current.name);
       const parentRef = typeof current.parent === 'object' ? current.parent?._id : current.parent;
-      current = parentRef ? parentCategories.find(c => c._id === parentRef) : undefined;
+      current = parentRef ? allCategories.find(c => c._id === parentRef) : undefined;
     }
     return paths.join(" → ");
   };
 
-  // Filter out current category and its descendants from parent options
   const getDescendantIds = (catId: string, cats: Category[]): string[] => {
     const ids: string[] = [catId];
     const children = cats.filter(cat => {
@@ -213,8 +217,8 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     return ids;
   };
 
-  const excludeIds = getDescendantIds(currentCategoryId, parentCategories);
-  const filteredCategories = parentCategories.filter(cat => !excludeIds.includes(cat._id));
+  const excludeIds = getDescendantIds(currentCategoryId, allCategories);
+  const filteredCategories = allCategories.filter(cat => !excludeIds.includes(cat._id));
   const availableParentCategories = buildCategoryTree(filteredCategories);
 
   if (loading) {
@@ -225,20 +229,8 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
     );
   }
 
-  if (error && !formData.name) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-red-600 mb-4">{error}</p>
-        <Link href="/admin/categories" className="text-cardinal-red hover:underline">
-          Back to Categories
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <Link
@@ -260,93 +252,86 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="max-w-4xl">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="max-w-4xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category Name *
-                  </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
+                <input
+                  type="text"
+                  {...register("name")}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                />
+                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL) *</label>
+                <div className="flex gap-2">
+                  <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">/category/</span>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                    {...register("slug")}
+                    className={`flex-1 px-4 py-2 border rounded-r-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.slug ? "border-red-500" : "border-gray-300"}`}
                   />
                 </div>
+                {errors.slug && <p className="mt-1 text-sm text-red-500">{errors.slug.message}</p>}
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    rows={4}
-                    placeholder="Describe this category"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  {...register("description")}
+                  rows={4}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <span className="flex items-center gap-2">
-                      <FolderTree className="w-4 h-4" />
-                      Parent Category
-                    </span>
-                  </label>
-                  <select
-                    value={formData.parent}
-                    onChange={(e) => setFormData({ ...formData, parent: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
-                  >
-                    <option value="">None (Top Level)</option>
-                    {availableParentCategories.map(cat => (
-                      <option key={cat._id} value={cat._id}>
-                        {cat.level && cat.level > 0
-                          ? `${"─".repeat(cat.level)} ${cat.name}`
-                          : cat.name
-                        }
-                        {cat.level === 1 ? " (Subcategory)" : ""}
-                        {(cat.level || 0) >= 2 ? " (Sub-subcategory)" : ""}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Leave empty for top-level category. Select parent for subcategory.
-                  </p>
-                  {formData.parent && (
-                    <div className="mt-2 p-2 bg-blue-50 rounded-lg text-sm text-blue-700 flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4" />
-                      Category path: {getParentPath(formData.parent)} → <span className="font-medium">{formData.name || 'This Category'}</span>
-                    </div>
-                  )}
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="flex items-center gap-2">
+                    <FolderTree className="w-4 h-4" />
+                    Parent Category
+                  </span>
+                </label>
+                <select
+                  {...register("parent")}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                >
+                  <option value="">None (Top Level)</option>
+                  {availableParentCategories.map(cat => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.level && cat.level > 0 ? `${"─".repeat(cat.level)} ${cat.name}` : cat.name}
+                      {cat.level === 1 ? " (Subcategory)" : ""}
+                      {(cat.level || 0) >= 2 ? " (Sub-subcategory)" : ""}
+                    </option>
+                  ))}
+                </select>
+                {watchedParent && (
+                  <div className="mt-2 p-2 bg-blue-50 rounded-lg text-sm text-blue-700 flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4" />
+                    Category path: {getParentPath(watchedParent)} → <span className="font-medium">{watchedName || 'This Category'}</span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Image */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Category Image</h2>
-
               <div className="flex items-start gap-6">
-                {formData.image ? (
+                {watchedImage ? (
                   <div className="relative">
                     <img
-                      src={formData.image.url}
+                      src={watchedImage.url}
                       alt="Category"
                       className="w-40 h-40 object-cover rounded-lg border"
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData({ ...formData, image: null })}
+                      onClick={() => setValue("image", null)}
                       className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
                     >
                       <X className="w-4 h-4" />
@@ -362,132 +347,87 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                         <span className="text-sm text-gray-500">Upload Image</span>
                       </>
                     )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      disabled={uploadingImage}
-                    />
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploadingImage} />
                   </label>
                 )}
-
                 <div className="flex-1">
-                  <p className="text-sm text-gray-600 mb-2">
-                    Upload a category image to display on the website.
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Recommended: 400x400px, JPG or PNG format
-                  </p>
+                  <p className="text-sm text-gray-600 mb-2">Upload a category image to display on the website.</p>
+                  <p className="text-xs text-gray-500">Recommended: 400x400px, JPG or PNG format</p>
                 </div>
               </div>
             </div>
 
-            {/* SEO */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO</h2>
-
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO Metadata</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Meta Title
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
                   <input
                     type="text"
-                    value={formData.meta.title}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      meta: { ...formData.meta, title: e.target.value }
-                    })}
-                    placeholder="SEO title (defaults to category name)"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                    {...register("metaTitle")}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                    placeholder="SEO title"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Meta Description
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
                   <textarea
-                    value={formData.meta.description}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      meta: { ...formData.meta, description: e.target.value }
-                    })}
-                    placeholder="SEO description for search engines"
+                    {...register("metaDescription")}
                     rows={3}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
+                    placeholder="SEO description"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Status */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Status</h2>
-
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Status & Visibility</h2>
               <div className="space-y-3">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
-                  />
-                  <span className="text-sm text-gray-700">Active (visible on website)</span>
+                  <input type="checkbox" {...register("isActive")} className="w-4 h-4 text-cardinal-red rounded border-gray-300 focus:ring-cardinal-red" />
+                  <span className="text-sm text-gray-700">Active (Visible)</span>
                 </label>
-
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isFeatured}
-                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
-                  />
-                  <span className="text-sm text-gray-700">Featured category</span>
+                  <input type="checkbox" {...register("isFeatured")} className="w-4 h-4 text-cardinal-red rounded border-gray-300 focus:ring-cardinal-red" />
+                  <span className="text-sm text-gray-700">Featured</span>
                 </label>
               </div>
             </div>
 
-            {/* Display Order */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Display Order</h2>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Order
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Order</label>
                 <input
                   type="number"
-                  value={formData.orderIndex}
-                  onChange={(e) => setFormData({ ...formData, orderIndex: Number(e.target.value) })}
+                  {...register("order", { valueAsNumber: true })}
                   min="0"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
                 <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
               </div>
             </div>
 
-            {/* Save Button */}
+            {Object.keys(errors).length > 0 && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                Please fix the validation errors before updating.
+                <ul className="list-disc list-inside mt-1 font-medium">
+                  {Object.entries(errors).map(([key, err]) => (
+                    <li key={key}>{(err as any).message || key}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={saving}
               className="w-full py-3 bg-cardinal-red text-white rounded-lg hover:bg-cardinal-red/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {saving ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Update Category
-                </>
-              )}
+              {saving ? <><Loader2 className="w-5 h-5 animate-spin" /> Saving...</> : <><Save className="w-5 h-5" /> Update Category</>}
             </button>
           </div>
         </div>

@@ -83,13 +83,26 @@ export async function POST(req: NextRequest) {
     // Validation using Zod
     const validatedData = brandSchema.parse(body);
 
+    // Transform and normalize data for Mongoose
+    const brandData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      brandData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete brandData.metaTitle;
+      delete brandData.metaDescription;
+    }
+
     // Sanitize rich text
-    if (validatedData.description) {
-      validatedData.description = sanitizeHtml(validatedData.description);
+    if (brandData.description) {
+      brandData.description = sanitizeHtml(brandData.description);
     }
 
     // Create brand
-    const brand = await Brand.create(validatedData);
+    const brand = await Brand.create(brandData);
 
     return successResponse({ brand }, 201, "Brand created successfully");
   } catch (error: any) {

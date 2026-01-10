@@ -4,6 +4,8 @@ import Blog from "@/lib/db/models/Blog";
 import User from "@/lib/db/models/User";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
+import { blogSchema } from "@/lib/validations";
+import { sanitizeHtml } from "@/lib/utils";
 
 // Ensure models are registered
 const _models = { Blog, User };
@@ -109,18 +111,48 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    // Set author if not provided
-    if (!body.author) {
-      body.author = user.userId;
+    // Validation using Zod
+    const validatedData = blogSchema.parse(body);
+
+    // Transform and normalize data for Mongoose
+    const blogData: any = { ...validatedData };
+
+    // 1. Transform meta fields
+    if (validatedData.metaTitle !== undefined || validatedData.metaDescription !== undefined) {
+      blogData.meta = {
+        title: validatedData.metaTitle || "",
+        description: validatedData.metaDescription || "",
+      };
+      delete blogData.metaTitle;
+      delete blogData.metaDescription;
     }
 
-    // Set publishedAt if publishing
-    if (body.isPublished && !body.publishedAt) {
-      body.publishedAt = new Date();
+    // 2. Map isActive to isPublished
+    if (validatedData.isActive !== undefined) {
+      blogData.isPublished = validatedData.isActive;
+      delete blogData.isActive;
+    }
+
+    // 3. Set author if not provided or empty
+    if (!blogData.author || blogData.author === "") {
+      blogData.author = user.userId;
+    }
+
+    // 4. Set publishedAt if publishing
+    if (blogData.isPublished && !blogData.publishedAt) {
+      blogData.publishedAt = new Date();
+    }
+
+    // Sanitize rich text fields
+    if (blogData.content) {
+      blogData.content = sanitizeHtml(blogData.content);
+    }
+    if (blogData.excerpt) {
+      blogData.excerpt = sanitizeHtml(blogData.excerpt);
     }
 
     // Create blog
-    const blog = await Blog.create(body);
+    const blog = await Blog.create(blogData);
 
     return successResponse({ blog }, 201, "Blog post created successfully");
   } catch (error: any) {
