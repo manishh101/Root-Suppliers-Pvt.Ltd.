@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Category from "@/lib/db/models/Category";
 import Product from "@/lib/db/models/Product";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { categorySchema } from "@/lib/validations";
+import { handleApiError, successResponse, AuthError, ForbiddenError } from "@/lib/errors";
+import { sanitizeHtml } from "@/lib/utils";
+
+// ... existing GET ...
 
 /**
  * GET /api/categories
@@ -83,58 +88,25 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validation
-    if (!body.name) {
-      return NextResponse.json(
-        { success: false, message: "Name is required" },
-        { status: 400 }
-      );
+    // Validation using Zod
+    const validatedData = categorySchema.parse(body);
+
+    // Sanitize rich text
+    if (validatedData.description) {
+      validatedData.description = sanitizeHtml(validatedData.description);
     }
 
     // Create category
-    const category = await Category.create(body);
+    const category = await Category.create(validatedData);
 
-    return NextResponse.json(
-      {
-        success: true,
-        category,
-        message: "Category created successfully",
-      },
-      { status: 201 }
-    );
+    return successResponse({ category }, 201, "Category created successfully");
   } catch (error: any) {
-    console.error("POST /api/categories error:", error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Category with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to create category" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

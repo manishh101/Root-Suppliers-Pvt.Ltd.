@@ -3,7 +3,10 @@ import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
 import Brand from "@/lib/db/models/Brand";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { productSchema } from "@/lib/validations";
+import { handleApiError, successResponse, AuthError } from "@/lib/errors";
+import { sanitizeHtml } from "@/lib/utils";
 
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Category, Brand };
@@ -171,6 +174,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
+
 /**
  * POST /api/products
  * 
@@ -183,70 +187,31 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validation
-    if (!body.name || !body.description || !body.shortDescription || !body.category) {
-      return NextResponse.json(
-        { success: false, message: "Name, description, short description, and category are required" },
-        { status: 400 }
-      );
+    // Validation using Zod
+    const validatedData = productSchema.parse(body);
+
+    // Sanitize rich text fields
+    if (validatedData.description) {
+      validatedData.description = sanitizeHtml(validatedData.description);
+    }
+    if (validatedData.shortDescription) {
+      validatedData.shortDescription = sanitizeHtml(validatedData.shortDescription);
     }
 
     // Create product
-    const product = await Product.create(body);
+    const product = await Product.create(validatedData);
 
     // Populate category
     await product.populate("category", "name slug");
 
-    return NextResponse.json(
-      {
-        success: true,
-        product,
-        message: "Product created successfully",
-      },
-      { status: 201 }
-    );
+    return successResponse({ product }, 201, "Product created successfully");
   } catch (error: any) {
-    console.error("POST /api/products error:", error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Product with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    if (error.name === "ValidationError") {
-      // Mongoose validation error
-      const messages = Object.values(error.errors).map((val: any) => val.message);
-      return NextResponse.json(
-        { success: false, message: messages[0] || "Validation Error" },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to create product" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

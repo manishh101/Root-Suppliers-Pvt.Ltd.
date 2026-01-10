@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Blog from "@/lib/db/models/Blog";
 import User from "@/lib/db/models/User";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse } from "@/lib/errors";
 
 // Ensure models are registered
 const _models = { Blog, User };
@@ -63,7 +64,6 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Fetch blogs
-    console.log("Blog API Query:", JSON.stringify(query));
     const [blogs, total] = await Promise.all([
       Blog.find(query)
         .populate("author", "name email")
@@ -74,31 +74,21 @@ export async function GET(req: NextRequest) {
       Blog.countDocuments(query),
     ]);
 
-    console.log("Blogs found:", blogs.length, "Total in DB matching query:", total);
-
     const totalPages = Math.ceil(total / limit);
 
-    return NextResponse.json(
-      {
-        success: true,
-        blogs,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages,
-          hasNext: page < totalPages,
-          hasPrev: page > 1,
-        },
+    return successResponse({
+      blogs,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
       },
-      { status: 200 }
-    );
+    });
   } catch (error) {
-    console.error("GET /api/blogs error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch blogs" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -106,37 +96,22 @@ export async function GET(req: NextRequest) {
  * POST /api/blogs
  * 
  * Create a new blog post.
- * Requires authentication (admin/editor).
+ * Requires authentication (admin only).
  * 
  * @body { title, content, excerpt, featuredImage, author, tags?, isPublished? }
  * @returns { success: boolean, blog: object }
  */
 export async function POST(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    const user = await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validation
-    if (!body.author && user) {
+    // Set author if not provided
+    if (!body.author) {
       body.author = user.userId;
-    }
-
-    if (!body.title || !body.content || !body.author) {
-      return NextResponse.json(
-        { success: false, message: "Title, content, and author are required" },
-        { status: 400 }
-      );
     }
 
     // Set publishedAt if publishing
@@ -147,27 +122,9 @@ export async function POST(req: NextRequest) {
     // Create blog
     const blog = await Blog.create(body);
 
-    return NextResponse.json(
-      {
-        success: true,
-        blog,
-        message: "Blog post created successfully",
-      },
-      { status: 201 }
-    );
+    return successResponse({ blog }, 201, "Blog post created successfully");
   } catch (error: any) {
-    console.error("POST /api/blogs error:", error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Blog with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to create blog post" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Brand from "@/lib/db/models/Brand";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { brandSchema } from "@/lib/validations";
+import { handleApiError, successResponse } from "@/lib/errors";
+import { sanitizeHtml } from "@/lib/utils";
+
+// ... GET function ...
 
 /**
  * GET /api/brands
@@ -53,11 +58,7 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("GET /api/brands error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch brands" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -73,75 +74,25 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validation
-    if (!body.name || !body.logo) {
-      return NextResponse.json(
-        { success: false, message: "Name and logo are required" },
-        { status: 400 }
-      );
-    }
+    // Validation using Zod
+    const validatedData = brandSchema.parse(body);
 
-    // Validate logo fields
-    if (!body.logo.url || !body.logo.publicId) {
-      return NextResponse.json(
-        { success: false, message: "Logo must have url and publicId" },
-        { status: 400 }
-      );
+    // Sanitize rich text
+    if (validatedData.description) {
+      validatedData.description = sanitizeHtml(validatedData.description);
     }
 
     // Create brand
-    const brand = await Brand.create(body);
+    const brand = await Brand.create(validatedData);
 
-    return NextResponse.json(
-      {
-        success: true,
-        brand,
-        message: "Brand created successfully",
-      },
-      { status: 201 }
-    );
+    return successResponse({ brand }, 201, "Brand created successfully");
   } catch (error: any) {
-    console.error("POST /api/brands error:", error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Brand with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    if (error.name === "ValidationError") {
-      // Mongoose validation error
-      const messages = Object.values(error.errors).map((val: any) => val.message);
-      return NextResponse.json(
-        { success: false, message: messages[0] || "Validation Error" },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to create brand" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

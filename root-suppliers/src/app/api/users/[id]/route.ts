@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse, NotFoundError, ForbiddenError, ValidationError } from "@/lib/errors";
 import bcrypt from "bcryptjs";
 
 interface RouteParams {
@@ -23,22 +24,15 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
     const currentUser = await verifyAuth(req);
 
     if (!currentUser) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
+      throw new ForbiddenError("Unauthorized");
     }
 
     // Allow admin or self to view
     if (currentUser.role !== "admin" && currentUser.userId !== params.id) {
-      return NextResponse.json(
-        { success: false, message: "Forbidden" },
-        { status: 403 }
-      );
+      throw new ForbiddenError("You do not have permission to view this user");
     }
 
     await connectDB();
@@ -48,25 +42,12 @@ export async function GET(
       .lean();
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("User not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        user,
-      },
-      { status: 200 }
-    );
+    return successResponse({ user });
   } catch (error) {
-    console.error(`GET /api/users/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch user" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -85,22 +66,15 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
     const currentUser = await verifyAuth(req);
 
     if (!currentUser) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
+      throw new ForbiddenError("Unauthorized");
     }
 
     // Allow admin or self to update
     if (currentUser.role !== "admin" && currentUser.userId !== params.id) {
-      return NextResponse.json(
-        { success: false, message: "Forbidden" },
-        { status: 403 }
-      );
+      throw new ForbiddenError("You do not have permission to update this user");
     }
 
     await connectDB();
@@ -117,13 +91,10 @@ export async function PUT(
       delete body.isActive;
     }
 
-    // If password is being updated, hash it
+    // If password is being updated, hash it (using same logic as before to be safe)
     if (body.password) {
       if (body.password.length < 8) {
-        return NextResponse.json(
-          { success: false, message: "Password must be at least 8 characters" },
-          { status: 400 }
-        );
+        throw new ValidationError("Password must be at least 8 characters");
       }
       const salt = await bcrypt.genSalt(12);
       body.password = await bcrypt.hash(body.password, salt);
@@ -141,41 +112,12 @@ export async function PUT(
     ).select("-password");
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("User not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        user,
-        message: "User updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ user }, 200, "User updated successfully");
   } catch (error: any) {
-    console.error(`PUT /api/users/${params.id} error:`, error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Email already in use" },
-        { status: 409 }
-      );
-    }
-
-    if (error.name === "ValidationError") {
-      return NextResponse.json(
-        { success: false, message: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to update user" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -193,29 +135,11 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const currentUser = await verifyAuth(req);
-
-    if (!currentUser) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (currentUser.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    const currentUser = await verifyAdmin(req);
 
     // Prevent admin from deleting themselves
     if (currentUser.userId === params.id) {
-      return NextResponse.json(
-        { success: false, message: "Cannot delete your own account" },
-        { status: 400 }
-      );
+      throw new ValidationError("Cannot delete your own account");
     }
 
     await connectDB();
@@ -223,24 +147,12 @@ export async function DELETE(
     const user = await User.findByIdAndDelete(params.id);
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("User not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "User deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "User deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/users/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete user" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

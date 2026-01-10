@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Settings from "@/lib/db/models/Settings";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse } from "@/lib/errors";
 
 /**
  * GET /api/settings
@@ -71,11 +72,7 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error("GET /api/settings error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch settings" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -90,22 +87,7 @@ export async function GET() {
  */
 export async function PUT(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -122,9 +104,6 @@ export async function PUT(req: NextRequest) {
       settings = await Settings.create(body);
     } else {
       // Update existing settings
-      // Use $set for top-level fields
-      // Handle nested objects specially to allow partial updates
-
       const updateData: any = {};
 
       // Handle nested updates
@@ -132,30 +111,18 @@ export async function PUT(req: NextRequest) {
 
       nestedFields.forEach((field) => {
         if (body[field]) {
-          // Special handling for homepage to include deep merge for 'about' if needed, 
-          // but for now simple top-level merge within 'homepage' object is tricky with dot notation loop.
-          // Correct approach for 'homepage' which has mixed direct and nested fields:
-          if (field === "homepage") {
-            Object.keys(body.homepage).forEach((key) => {
-              // If it's the 'about' object, we might want to merge it too, but replacing the whole 'about' object is safer/easier for now if sent complete.
-              // Or we can just let it set `homepage.about` = new object.
-              // Given the loop below, it does `homepage.about` = body.homepage.about, which replaces the whole object. This is fine.
-              updateData[`homepage.${key}`] = body.homepage[key];
-            });
-          } else {
-            Object.keys(body[field]).forEach((key) => {
-              updateData[`${field}.${key}`] = body[field][key];
-            });
-          }
+          Object.keys(body[field]).forEach((key) => {
+            updateData[`${field}.${key}`] = body[field][key];
+          });
         }
       });
 
-      // Handle businessHours (array replacement or deep update - here assuming replacement for simplicity or specific logic)
+      // Handle businessHours
       if (body.businessHours) {
         updateData.businessHours = body.businessHours;
       }
 
-      // Handle top-level fields that might be direct (if any remain, but Settings schema seems fully nested except timestamps)
+      // Handle top-level fields
       if (body.enableInquiryNotifications !== undefined) updateData.enableInquiryNotifications = body.enableInquiryNotifications;
       if (body.inquiryEmailRecipients !== undefined) updateData.inquiryEmailRecipients = body.inquiryEmailRecipients;
 
@@ -166,27 +133,9 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        settings,
-        message: "Settings updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ settings }, 200, "Settings updated successfully");
   } catch (error: any) {
-    console.error("PUT /api/settings error:", error);
-
-    if (error.name === "ValidationError") {
-      return NextResponse.json(
-        { success: false, message: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to update settings" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

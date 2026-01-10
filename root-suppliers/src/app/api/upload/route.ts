@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { verifyAuth } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { v2 as cloudinary } from "cloudinary";
+import { handleApiError, successResponse, ValidationError } from "@/lib/errors";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -24,24 +25,14 @@ cloudinary.config({
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    await verifyAuth(req);
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const folder = (formData.get("folder") as string) || "root-suppliers";
 
     if (!file) {
-      return NextResponse.json(
-        { success: false, message: "No file provided" },
-        { status: 400 }
-      );
+      throw new ValidationError("No file provided");
     }
 
     // Validate file type
@@ -54,22 +45,13 @@ export async function POST(req: NextRequest) {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG",
-        },
-        { status: 400 }
-      );
+      throw new ValidationError("Invalid file type. Allowed: JPEG, PNG, GIF, WebP, SVG");
     }
 
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      return NextResponse.json(
-        { success: false, message: "File size exceeds 10MB limit" },
-        { status: 400 }
-      );
+      throw new ValidationError("File size exceeds 10MB limit");
     }
 
     // Convert file to buffer
@@ -96,28 +78,16 @@ export async function POST(req: NextRequest) {
       uploadStream.end(buffer);
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        url: result.secure_url,
-        publicId: result.public_id,
-        width: result.width,
-        height: result.height,
-        format: result.format,
-        bytes: result.bytes,
-        message: "Image uploaded successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({
+      url: result.secure_url,
+      publicId: result.public_id,
+      width: result.width,
+      height: result.height,
+      format: result.format,
+      bytes: result.bytes,
+    }, 200, "Image uploaded successfully");
   } catch (error: any) {
-    console.error("POST /api/upload error:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: error.message || "Failed to upload image",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -132,57 +102,24 @@ export async function POST(req: NextRequest) {
  */
 export async function DELETE(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     const body = await req.json();
 
     if (!body.publicId) {
-      return NextResponse.json(
-        { success: false, message: "Public ID is required" },
-        { status: 400 }
-      );
+      throw new ValidationError("Public ID is required");
     }
 
     // Delete from Cloudinary
     const result = await cloudinary.uploader.destroy(body.publicId);
 
     if (result.result !== "ok") {
-      return NextResponse.json(
-        { success: false, message: "Failed to delete image" },
-        { status: 400 }
-      );
+      throw new ValidationError("Failed to delete image from Cloudinary");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Image deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Image deleted successfully");
   } catch (error: any) {
-    console.error("DELETE /api/upload error:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: error.message || "Failed to delete image",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

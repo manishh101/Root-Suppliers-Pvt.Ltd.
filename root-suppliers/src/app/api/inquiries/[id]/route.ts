@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Inquiry from "@/lib/db/models/Inquiry";
 import Product from "@/lib/db/models/Product";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
 
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Product };
@@ -17,7 +18,7 @@ interface RouteParams {
  * GET /api/inquiries/[id]
  * 
  * Fetch a single inquiry by ID.
- * Requires authentication (admin/editor).
+ * Requires authentication (admin only).
  * 
  * @returns { success: boolean, inquiry: object }
  */
@@ -26,15 +27,7 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -43,25 +36,12 @@ export async function GET(
       .lean();
 
     if (!inquiry) {
-      return NextResponse.json(
-        { success: false, message: "Inquiry not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Inquiry not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        inquiry,
-      },
-      { status: 200 }
-    );
+    return successResponse({ inquiry });
   } catch (error) {
-    console.error(`GET /api/inquiries/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch inquiry" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -69,7 +49,7 @@ export async function GET(
  * PUT /api/inquiries/[id]
  * 
  * Update an inquiry (typically status and notes).
- * Requires authentication (admin/editor).
+ * Requires authentication (admin only).
  * 
  * @body { status?, notes? }
  * @returns { success: boolean, inquiry: object }
@@ -79,15 +59,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -103,26 +75,12 @@ export async function PUT(
     ).populate("product", "name slug images");
 
     if (!inquiry) {
-      return NextResponse.json(
-        { success: false, message: "Inquiry not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Inquiry not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        inquiry,
-        message: "Inquiry updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ inquiry }, 200, "Inquiry updated successfully");
   } catch (error) {
-    console.error(`PUT /api/inquiries/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to update inquiry" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -139,46 +97,19 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const inquiry = await Inquiry.findByIdAndDelete(params.id);
 
     if (!inquiry) {
-      return NextResponse.json(
-        { success: false, message: "Inquiry not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Inquiry not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Inquiry deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Inquiry deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/inquiries/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete inquiry" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

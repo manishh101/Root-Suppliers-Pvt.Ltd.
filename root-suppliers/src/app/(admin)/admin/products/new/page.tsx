@@ -17,33 +17,8 @@ import {
   Package,
   GripVertical,
 } from "lucide-react";
+import { productSchema, type ProductFormData } from "@/lib/validations";
 
-// Validation schema
-const productSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  shortDescription: z.string().optional(),
-  category: z.string().min(1, "Please select a category"),
-  brand: z.string().optional(),
-  sku: z.string().optional(),
-  unit: z.string().optional(),
-  price: z.number().min(0, "Price must be positive").optional(), // Regular Price
-  discountPrice: z.number().optional(), // Sale Price
-  specifications: z.array(
-    z.object({
-      key: z.string(),
-      value: z.string(),
-    })
-  ),
-  features: z.array(z.string()),
-  tags: z.array(z.string()),
-  isActive: z.boolean(),
-  isFeatured: z.boolean(),
-  metaTitle: z.string().optional(),
-  metaDescription: z.string().optional(),
-});
-
-type ProductFormData = z.infer<typeof productSchema>;
 
 interface Category {
   _id: string;
@@ -118,6 +93,7 @@ export default function NewProductPage() {
       isFeatured: false,
       metaTitle: "",
       metaDescription: "",
+      images: [],
     },
   });
 
@@ -194,7 +170,9 @@ export default function NewProductPage() {
       });
 
       const uploadedImages = await Promise.all(uploadPromises);
-      setImages((prev) => [...prev, ...uploadedImages]);
+      const newImages = [...images, ...uploadedImages];
+      setImages(newImages);
+      setValue("images", newImages);
     } catch (err: any) {
       console.error("Upload failed:", err);
       setError(err.message || "Failed to upload images");
@@ -207,7 +185,9 @@ export default function NewProductPage() {
 
   // Remove image
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    const newImages = images.filter((_, i) => i !== index);
+    setImages(newImages);
+    setValue("images", newImages);
   };
 
   // Add feature
@@ -252,16 +232,18 @@ export default function NewProductPage() {
     setIsSubmitting(true);
     setError(null);
 
+    // Generate slug if empty
+    if (!data.slug) {
+      data.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
+
     try {
       const response = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...data,
-          images, // Now sending array of {url, publicId, alt} objects
-        }),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();

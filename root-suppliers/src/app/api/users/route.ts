@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
-import { verifyAuth } from "@/lib/auth";
-import bcrypt from "bcryptjs";
+import { verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse, ValidationError } from "@/lib/errors";
 
 /**
  * GET /api/users
@@ -21,22 +21,7 @@ import bcrypt from "bcryptjs";
  */
 export async function GET(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -76,25 +61,17 @@ export async function GET(req: NextRequest) {
       .limit(limit)
       .lean();
 
-    return NextResponse.json(
-      {
-        success: true,
-        users,
-        pagination: {
-          page,
-          limit,
-          total,
-          pages: Math.ceil(total / limit),
-        },
+    return successResponse({
+      users,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
       },
-      { status: 200 }
-    );
+    });
   } catch (error) {
-    console.error("GET /api/users error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch users" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -109,56 +86,21 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validate required fields
-    if (!body.name || !body.email || !body.password) {
-      return NextResponse.json(
-        { success: false, message: "Name, email, and password are required" },
-        { status: 400 }
-      );
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: body.email.toLowerCase() });
-    if (existingUser) {
-      return NextResponse.json(
-        { success: false, message: "User with this email already exists" },
-        { status: 409 }
-      );
-    }
-
     // Validate password strength
-    if (body.password.length < 8) {
-      return NextResponse.json(
-        { success: false, message: "Password must be at least 8 characters" },
-        { status: 400 }
-      );
+    if (body.password && body.password.length < 8) {
+      throw new ValidationError("Password must be at least 8 characters");
     }
 
     // Create user - Password will be hashed by pre-save hook
     const newUser = await User.create({
       name: body.name,
-      email: body.email.toLowerCase(),
+      email: body.email?.toLowerCase(),
       password: body.password,
       role: body.role || "editor",
       avatar: body.avatar || "",
@@ -169,34 +111,13 @@ export async function POST(req: NextRequest) {
     const userResponse = newUser.toObject();
     const { password: _, ...userWithoutPassword } = userResponse;
 
-    return NextResponse.json(
-      {
-        success: true,
-        user: userWithoutPassword,
-        message: "User created successfully",
-      },
-      { status: 201 }
+    return successResponse(
+      { user: userWithoutPassword },
+      201,
+      "User created successfully"
     );
   } catch (error: any) {
-    console.error("POST /api/users error:", error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "User with this email already exists" },
-        { status: 409 }
-      );
-    }
-
-    if (error.name === "ValidationError") {
-      return NextResponse.json(
-        { success: false, message: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to create user" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

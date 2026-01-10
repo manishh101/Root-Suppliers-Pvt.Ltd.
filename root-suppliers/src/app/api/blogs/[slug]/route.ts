@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Blog from "@/lib/db/models/Blog";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
 
 interface RouteParams {
   params: {
@@ -35,25 +36,12 @@ export async function GET(
     const blog = await Blog.findOne(query).populate("author", "name email").lean();
 
     if (!blog) {
-      return NextResponse.json(
-        { success: false, message: "Blog post not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Blog post not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        blog,
-      },
-      { status: 200 }
-    );
+    return successResponse({ blog });
   } catch (error) {
-    console.error(`GET /api/blogs/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch blog post" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -61,7 +49,7 @@ export async function GET(
  * PUT /api/blogs/[slug]
  * 
  * Update a blog post by slug.
- * Requires authentication (admin/editor).
+ * Requires authentication (admin only).
  * 
  * @body Partial<Blog>
  * @returns { success: boolean, blog: object }
@@ -71,15 +59,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -104,34 +84,12 @@ export async function PUT(
     );
 
     if (!blog) {
-      return NextResponse.json(
-        { success: false, message: "Blog post not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Blog post not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        blog,
-        message: "Blog post updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ blog }, 200, "Blog post updated successfully");
   } catch (error: any) {
-    console.error(`PUT /api/blogs/${params.slug} error:`, error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Blog with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to update blog post" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -148,46 +106,19 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const blog = await Blog.findOneAndDelete({ slug: params.slug });
 
     if (!blog) {
-      return NextResponse.json(
-        { success: false, message: "Blog post not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Blog post not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Blog post deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Blog post deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/blogs/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete blog post" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Testimonial from "@/lib/db/models/Testimonial";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse } from "@/lib/errors";
 
 /**
  * GET /api/testimonials
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
 
     const user = await verifyAuth(req);
     const { searchParams } = new URL(req.url);
-    
+
     const isActive = searchParams.get("isActive");
     const isFeatured = searchParams.get("isFeatured");
     const limit = parseInt(searchParams.get("limit") || "10");
@@ -47,20 +48,12 @@ export async function GET(req: NextRequest) {
       .limit(limit)
       .lean();
 
-    return NextResponse.json(
-      {
-        success: true,
-        testimonials,
-        total: testimonials.length,
-      },
-      { status: 200 }
-    );
+    return successResponse({
+      testimonials,
+      total: testimonials.length,
+    });
   } catch (error) {
-    console.error("GET /api/testimonials error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch testimonials" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -75,59 +68,18 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const body = await req.json();
 
-    // Validation
-    if (!body.customerName || !body.reviewText || !body.rating) {
-      return NextResponse.json(
-        { success: false, message: "Customer name, review text, and rating are required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate rating
-    if (body.rating < 1 || body.rating > 5) {
-      return NextResponse.json(
-        { success: false, message: "Rating must be between 1 and 5" },
-        { status: 400 }
-      );
-    }
-
     // Create testimonial
     const testimonial = await Testimonial.create(body);
 
-    return NextResponse.json(
-      {
-        success: true,
-        testimonial,
-        message: "Testimonial created successfully",
-      },
-      { status: 201 }
-    );
+    return successResponse({ testimonial }, 201, "Testimonial created successfully");
   } catch (error: any) {
-    console.error("POST /api/testimonials error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to create testimonial" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

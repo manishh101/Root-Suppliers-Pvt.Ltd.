@@ -7,19 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowLeft, Save, Loader2, Upload, X, FolderTree, ChevronRight, Folder } from "lucide-react";
+import { categorySchema, type CategoryFormData } from "@/lib/validations";
 
-// Validation schema
-const categorySchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().optional(),
-  parent: z.string().optional(),
-  order: z.number().int().min(0).default(0),
-  isActive: z.boolean().default(true),
-  metaTitle: z.string().optional(),
-  metaDescription: z.string().optional(),
-});
-
-type CategoryFormData = z.infer<typeof categorySchema>;
 
 interface Category {
   _id: string;
@@ -33,7 +22,7 @@ export default function NewCategoryPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const parentFromUrl = searchParams.get("parent");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -46,15 +35,18 @@ export default function NewCategoryPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
+      slug: "",
       description: "",
       parent: "",
       order: 0,
       isActive: true,
+      isFeatured: false,
       metaTitle: "",
       metaDescription: "",
     },
@@ -71,7 +63,7 @@ export default function NewCategoryPage() {
           // Build hierarchical list with levels
           const categoriesWithLevels = buildCategoryTree(rawCategories);
           setCategories(categoriesWithLevels);
-          
+
           // If parent is from URL, find and set it
           if (parentFromUrl) {
             const parent = rawCategories.find((c: Category) => c._id === parentFromUrl);
@@ -95,7 +87,7 @@ export default function NewCategoryPage() {
       const catParent = typeof cat.parent === 'object' ? cat.parent?._id : cat.parent;
       return catParent === parentId || (!catParent && !parentId);
     });
-    
+
     for (const child of children) {
       result.push({ ...child, level });
       const grandchildren = buildCategoryTree(cats, child._id, level + 1);
@@ -140,7 +132,12 @@ export default function NewCategoryPage() {
         throw new Error(data.message);
       }
 
-      setImage(data.url);
+      const imageData = {
+        url: data.url,
+        publicId: data.publicId,
+      };
+      setImage(data.url); // Keep for local preview
+      setValue("image", imageData);
     } catch (err: any) {
       console.error("Upload failed:", err);
       setError(err.message || "Failed to upload image");
@@ -149,10 +146,17 @@ export default function NewCategoryPage() {
     }
   };
 
+  const watchedImage = watch("image");
+
   // Submit form
   const onSubmit = async (data: CategoryFormData) => {
     setIsSubmitting(true);
     setError(null);
+
+    // Generate slug if empty
+    if (!data.slug) {
+      data.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
 
     try {
       const response = await fetch("/api/categories", {
@@ -160,11 +164,7 @@ export default function NewCategoryPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...data,
-          parent: selectedParent || null,
-          image: image || "",
-        }),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -265,9 +265,8 @@ export default function NewCategoryPage() {
                 <input
                   type="text"
                   {...register("name")}
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${errors.name ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter category name"
                 />
                 {errors.name && (
@@ -298,9 +297,9 @@ export default function NewCategoryPage() {
                     </span>
                   </label>
                   <select
-                    value={selectedParent}
+                    {...register("parent")}
                     onChange={(e) => {
-                      setSelectedParent(e.target.value);
+                      setValue("parent", e.target.value);
                       const parent = categories.find(c => c._id === e.target.value);
                       setParentCategory(parent || null);
                     }}
@@ -311,7 +310,7 @@ export default function NewCategoryPage() {
                       .filter(cat => (cat.level || 0) < 2) // Only show Main and Subcategories as parent options
                       .map((cat) => (
                         <option key={cat._id} value={cat._id}>
-                          {cat.level && cat.level > 0 
+                          {cat.level && cat.level > 0
                             ? `└─ ${cat.name} (creates sub-subcategory)`
                             : `${cat.name} (creates subcategory)`
                           }
@@ -366,9 +365,8 @@ export default function NewCategoryPage() {
                 {/* Upload Controls */}
                 <div className="flex-1">
                   <label
-                    className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
-                      isUploading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${isUploading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                   >
                     {isUploading ? (
                       <>

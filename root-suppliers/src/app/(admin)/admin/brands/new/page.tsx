@@ -12,21 +12,39 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { brandSchema, type BrandFormData } from '@/lib/validations';
+
 export default function NewBrandPage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    logo: { url: '', publicId: '' },
-    website: '',
-    featured: false,
-    isActive: true,
-    order: 0
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<BrandFormData>({
+    resolver: zodResolver(brandSchema),
+    defaultValues: {
+      name: '',
+      slug: '',
+      description: '',
+      website: '',
+      logo: { url: '', publicId: '' },
+      isActive: true,
+      isFeatured: false,
+      order: 0,
+    },
   });
+
+  const logo = watch('logo');
+  const isActive = watch('isActive');
+  const isFeatured = watch('isFeatured');
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,13 +64,10 @@ export default function NewBrandPage() {
 
       const data = await response.json();
       if (data.success) {
-        setFormData(prev => ({
-          ...prev,
-          logo: {
-            url: data.url,
-            publicId: data.publicId
-          }
-        }));
+        setValue('logo', {
+          url: data.url,
+          publicId: data.publicId
+        });
       }
     } catch (err) {
       console.error('Error uploading image:', err);
@@ -61,22 +76,26 @@ export default function NewBrandPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: BrandFormData) => {
     setSaving(true);
     setError('');
+
+    // Generate slug from name if not provided
+    if (!data.slug) {
+      data.slug = data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
 
     try {
       const response = await fetch('/api/brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(data)
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
-      if (!response.ok) {
-        setError(data.message || data.error || 'Failed to create brand');
+      if (!result.success) {
+        setError(result.message || 'Failed to create brand');
         return;
       }
 
@@ -113,7 +132,7 @@ export default function NewBrandPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="max-w-2xl">
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl">
         <div className="space-y-6">
           {/* Basic Info */}
           <div className="bg-white rounded-xl shadow-sm border p-6">
@@ -126,12 +145,27 @@ export default function NewBrandPage() {
                 </label>
                 <input
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
+                  {...register('name')}
                   placeholder="e.g., Bosch"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.name ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Slug (Optional)
+                </label>
+                <input
+                  type="text"
+                  {...register('slug')}
+                  placeholder="e.g., bosch"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                />
+                <p className="text-xs text-gray-500 mt-1">Leave empty to auto-generate from name</p>
               </div>
 
               <div>
@@ -139,11 +173,10 @@ export default function NewBrandPage() {
                   Description
                 </label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  {...register('description')}
                   rows={4}
                   placeholder="Brief description of the brand"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
                 />
               </div>
 
@@ -152,12 +185,15 @@ export default function NewBrandPage() {
                   Website URL
                 </label>
                 <input
-                  type="url"
-                  value={formData.website}
-                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  type="text"
+                  {...register('website')}
                   placeholder="https://www.example.com"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.website ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {errors.website && (
+                  <p className="mt-1 text-sm text-red-500">{errors.website.message}</p>
+                )}
               </div>
             </div>
           </div>
@@ -167,16 +203,16 @@ export default function NewBrandPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Brand Logo</h2>
 
             <div className="flex items-start gap-6">
-              {formData.logo.url ? (
+              {logo?.url ? (
                 <div className="relative">
                   <img
-                    src={formData.logo.url}
+                    src={logo.url}
                     alt="Brand Logo"
                     className="w-32 h-32 object-contain rounded-lg border bg-white p-2"
                   />
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, logo: { url: '', publicId: '' } })}
+                    onClick={() => setValue('logo', { url: '', publicId: '' })}
                     className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
                   >
                     <X className="w-4 h-4" />
@@ -222,8 +258,7 @@ export default function NewBrandPage() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                    {...register('isActive')}
                     className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
                   />
                   <span className="text-sm text-gray-700">Active</span>
@@ -232,8 +267,7 @@ export default function NewBrandPage() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    {...register('isFeatured')}
                     className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
                   />
                   <span className="text-sm text-gray-700">Featured</span>
@@ -246,13 +280,41 @@ export default function NewBrandPage() {
                 </label>
                 <input
                   type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                  {...register('order', { valueAsNumber: true })}
                   min="0"
-                  className="w-32 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
+                  className="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
                 />
                 <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
               </div>
+            </div>
+          </div>
+
+          {/* SEO Settings */}
+          <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">SEO Settings</h2>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Title
+              </label>
+              <input
+                type="text"
+                {...register("metaTitle")}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="SEO title (defaults to brand name)"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Meta Description
+              </label>
+              <textarea
+                {...register("metaDescription")}
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="SEO description (max 160 characters)"
+              />
             </div>
           </div>
 

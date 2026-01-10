@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { AuthError, ForbiddenError } from "@/lib/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
@@ -48,4 +49,22 @@ export async function verifyAuth(req: NextRequest): Promise<AuthUser | null> {
 export function hasRole(user: AuthUser | null, allowedRoles: string[]): boolean {
   if (!user) return false;
   return allowedRoles.includes(user.role);
+}
+/**
+ * Verify if the request is from an authenticated admin
+ * 
+ * @param req - Next.js request object
+ * @throws {AuthError} if not authenticated
+ * @throws {ForbiddenError} if not an admin
+ * @returns AuthUser object
+ */
+export async function verifyAdmin(req: NextRequest): Promise<AuthUser> {
+  const user = await verifyAuth(req);
+  if (!user) {
+    throw new AuthError();
+  }
+  if (user.role !== "admin") {
+    throw new ForbiddenError("Admin access required");
+  }
+  return user;
 }

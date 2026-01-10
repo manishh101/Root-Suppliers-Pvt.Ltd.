@@ -2,28 +2,34 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { VisitUsSection } from "@/components/sections";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { inquirySchema, type InquiryFormData } from "@/lib/validations";
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<InquiryFormData>({
+    resolver: zodResolver(inquirySchema),
+    defaultValues: {
+      fullName: "",
+      phone: "",
+      email: "",
+      message: "",
+      source: "contact_form",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Submitting form with data:", formData);
-    setStatus("loading");
+  const onSubmit = async (data: InquiryFormData) => {
+    setStatus("idle");
     setErrorMessage("");
 
     try {
@@ -32,19 +38,17 @@ export default function ContactPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
-      console.log("Response status:", res.status);
-      const data = await res.json();
-      console.log("Response data:", data);
+      const result = await res.json();
 
-      if (data.success) {
+      if (res.ok && result.success) {
         setStatus("success");
-        setFormData({ fullName: "", phone: "", email: "", message: "" });
+        reset();
       } else {
         setStatus("error");
-        setErrorMessage(data.message || "Failed to submit inquiry");
+        setErrorMessage(result.message || "Failed to submit inquiry");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -52,6 +56,7 @@ export default function ContactPage() {
       setErrorMessage("Something went wrong. Please try again.");
     }
   };
+
   return (
     <div className="bg-white min-h-screen">
       {/* Header Section */}
@@ -90,19 +95,18 @@ export default function ContactPage() {
             className="max-w-3xl mx-auto"
           >
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Get in Touch With Us</h2>
-            <form className="space-y-6 bg-gray-50 p-8 md:p-10 rounded-2xl border border-gray-100" onSubmit={handleSubmit}>
+            <form className="space-y-6 bg-gray-50 p-8 md:p-10 rounded-2xl border border-gray-100" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-2">
                 <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700">Full Name *</label>
                 <input
                   type="text"
                   id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  required
+                  {...register("fullName")}
                   placeholder="e.g. John Doe"
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                  className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.fullName ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
+                    }`}
                 />
+                {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -110,40 +114,38 @@ export default function ContactPage() {
                 <input
                   type="tel"
                   id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
+                  {...register("phone")}
                   placeholder="e.g. 9841234567"
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                  className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.phone ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
+                    }`}
                 />
+                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email Address (Optional)</label>
                 <input
-                  type="email"
+                  type="text"
                   id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register("email")}
                   placeholder="e.g. john@example.com"
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                  className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
+                    }`}
                 />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="message" className="block text-sm font-semibold text-gray-700">Message *</label>
                 <textarea
                   id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
+                  {...register("message")}
                   rows={5}
                   placeholder="How can we help you?"
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all resize-none"
+                  className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all resize-none ${errors.message ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
+                    }`}
                 />
+                {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
               </div>
 
               {status === "error" && (
@@ -170,11 +172,14 @@ export default function ContactPage() {
               ) : (
                 <button
                   type="submit"
-                  disabled={status === "loading"}
+                  disabled={isSubmitting}
                   className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors uppercase tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {status === "loading" ? (
-                    <>Processing...</>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
                   ) : (
                     <>
                       Submit Message

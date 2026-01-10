@@ -3,7 +3,10 @@ import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
 import Brand from "@/lib/db/models/Brand";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { productSchema } from "@/lib/validations";
+import { handleApiError, successResponse, AuthError, NotFoundError } from "@/lib/errors";
+import { sanitizeHtml } from "@/lib/utils";
 
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Category, Brand };
@@ -35,25 +38,12 @@ export async function GET(
       .lean();
 
     if (!product) {
-      return NextResponse.json(
-        { success: false, message: "Product not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Product not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        product,
-      },
-      { status: 200 }
-    );
+    return successResponse({ product });
   } catch (error) {
-    console.error(`GET /api/products/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch product" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -71,66 +61,34 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
-
     const body = await req.json();
 
-    // Don't allow changing _id or createdAt
-    delete body._id;
-    delete body.createdAt;
+    const validatedData = productSchema.partial().parse(body);
+
+    // Sanitize rich text fields
+    if (validatedData.description) {
+      validatedData.description = sanitizeHtml(validatedData.description);
+    }
+    if (validatedData.shortDescription) {
+      validatedData.shortDescription = sanitizeHtml(validatedData.shortDescription);
+    }
 
     const product = await Product.findOneAndUpdate(
       { slug: params.slug },
-      { $set: body },
+      { $set: validatedData },
       { new: true, runValidators: true }
     ).populate("category", "name slug");
 
     if (!product) {
-      return NextResponse.json(
-        { success: false, message: "Product not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Product not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        product,
-        message: "Product updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ product }, 200, "Product updated successfully");
   } catch (error: any) {
-    console.error(`PUT /api/products/${params.slug} error:`, error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Product with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to update product" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -147,46 +105,18 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const product = await Product.findOneAndDelete({ slug: params.slug });
 
     if (!product) {
-      return NextResponse.json(
-        { success: false, message: "Product not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Product not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Product deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Product deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/products/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete product" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

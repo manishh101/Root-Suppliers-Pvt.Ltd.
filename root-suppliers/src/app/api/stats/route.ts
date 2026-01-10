@@ -7,7 +7,8 @@ import Inquiry from "@/lib/db/models/Inquiry";
 import User from "@/lib/db/models/User";
 import Brand from "@/lib/db/models/Brand";
 import Testimonial from "@/lib/db/models/Testimonial";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse } from "@/lib/errors";
 
 /**
  * GET /api/stats
@@ -22,15 +23,8 @@ import { verifyAuth } from "@/lib/auth";
  */
 export async function GET(req: NextRequest) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // Stats are typically for admin/editor use
+    await verifyAuth(req);
 
     await connectDB();
 
@@ -216,18 +210,9 @@ export async function GET(req: NextRequest) {
       };
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        stats,
-      },
-      { status: 200 }
-    );
+    return successResponse({ stats });
   } catch (error) {
-    console.error("GET /api/stats error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch statistics" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

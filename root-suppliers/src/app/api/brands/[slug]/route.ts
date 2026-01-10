@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Brand from "@/lib/db/models/Brand";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/auth";
+import { brandSchema } from "@/lib/validations";
+import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
+import { sanitizeHtml } from "@/lib/utils";
 
 interface RouteParams {
   params: {
@@ -27,25 +30,12 @@ export async function GET(
     const brand = await Brand.findOne({ slug: params.slug }).lean();
 
     if (!brand) {
-      return NextResponse.json(
-        { success: false, message: "Brand not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Brand not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        brand,
-      },
-      { status: 200 }
-    );
+    return successResponse({ brand });
   } catch (error) {
-    console.error(`GET /api/brands/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch brand" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -63,66 +53,31 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
-
     const body = await req.json();
 
-    // Don't allow changing _id or createdAt
-    delete body._id;
-    delete body.createdAt;
+    const validatedData = brandSchema.partial().parse(body);
+
+    // Sanitize rich text
+    if (validatedData.description) {
+      validatedData.description = sanitizeHtml(validatedData.description);
+    }
 
     const brand = await Brand.findOneAndUpdate(
       { slug: params.slug },
-      { $set: body },
+      { $set: validatedData },
       { new: true, runValidators: true }
     );
 
     if (!brand) {
-      return NextResponse.json(
-        { success: false, message: "Brand not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Brand not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        brand,
-        message: "Brand updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ brand }, 200, "Brand updated successfully");
   } catch (error: any) {
-    console.error(`PUT /api/brands/${params.slug} error:`, error);
-
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { success: false, message: "Brand with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, message: "Failed to update brand" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -139,46 +94,18 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const brand = await Brand.findOneAndDelete({ slug: params.slug });
 
     if (!brand) {
-      return NextResponse.json(
-        { success: false, message: "Brand not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Brand not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Brand deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Brand deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/brands/${params.slug} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete brand" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

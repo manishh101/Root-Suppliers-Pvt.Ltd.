@@ -1,11 +1,24 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import DOMPurify from "isomorphic-dompurify";
 
 /**
  * Merges Tailwind CSS classes with clsx
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+/**
+ * Sanitize HTML content to prevent XSS
+ */
+export function sanitizeHtml(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      "b", "i", "em", "strong", "a", "p", "ul", "ol", "li", "br", "h1", "h2", "h3", "h4", "h5", "h6", "img", "blockquote", "code", "pre"
+    ],
+    ALLOWED_ATTR: ["href", "src", "alt", "title", "target", "rel", "class"]
+  });
 }
 
 /**

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
+import { handleApiError, successResponse, AuthError, NotFoundError, ForbiddenError } from "@/lib/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
@@ -20,10 +21,7 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get("auth-token")?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { success: false, message: "Not authenticated" },
-        { status: 401 }
-      );
+      throw new AuthError("Not authenticated");
     }
 
     // Verify token
@@ -35,37 +33,24 @@ export async function GET(req: NextRequest) {
     const user = await User.findById(payload.userId).select("-password");
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("User not found");
     }
 
     if (!user.isActive) {
-      return NextResponse.json(
-        { success: false, message: "Account deactivated" },
-        { status: 403 }
-      );
+      throw new ForbiddenError("Account deactivated");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          lastLogin: user.lastLogin,
-        },
+    return successResponse({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        lastLogin: user.lastLogin,
       },
-      { status: 200 }
-    );
+    });
   } catch (error) {
-    console.error("Session error:", error);
-    return NextResponse.json(
-      { success: false, message: "Invalid or expired token" },
-      { status: 401 }
-    );
+    return handleApiError(error);
   }
 }
+

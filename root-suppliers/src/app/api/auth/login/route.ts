@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { SignJWT } from "jose";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
+import { handleApiError, successResponse, ValidationError, AuthError, ForbiddenError } from "@/lib/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
@@ -25,38 +25,26 @@ export async function POST(req: NextRequest) {
 
     // Validation
     if (!email || !password) {
-      return NextResponse.json(
-        { success: false, message: "Email and password are required" },
-        { status: 400 }
-      );
+      throw new ValidationError("Email and password are required");
     }
 
     // Find user
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Invalid credentials" },
-        { status: 401 }
-      );
+      throw new AuthError("Invalid credentials");
     }
 
     // Check password
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { success: false, message: "Invalid credentials" },
-        { status: 401 }
-      );
+      throw new AuthError("Invalid credentials");
     }
 
     // Check if user is active
     if (!user.isActive) {
-      return NextResponse.json(
-        { success: false, message: "Your account has been deactivated" },
-        { status: 403 }
-      );
+      throw new ForbiddenError("Your account has been deactivated");
     }
 
     // Create JWT token
@@ -74,19 +62,18 @@ export async function POST(req: NextRequest) {
     user.lastLogin = new Date();
     await user.save();
 
-    // Create response
-    const response = NextResponse.json(
+    // Create response using standardized helper
+    const response = successResponse(
       {
-        success: true,
         user: {
           id: user._id,
           name: user.name,
           email: user.email,
           role: user.role,
         },
-        message: "Login successful",
       },
-      { status: 200 }
+      200,
+      "Login successful"
     );
 
     // Set HTTP-only cookie
@@ -100,10 +87,7 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Login error:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+

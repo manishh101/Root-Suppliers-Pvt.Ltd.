@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db/connect";
 import Testimonial from "@/lib/db/models/Testimonial";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth, verifyAdmin } from "@/lib/auth";
+import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
 
 interface RouteParams {
   params: {
@@ -35,25 +36,12 @@ export async function GET(
     const testimonial = await Testimonial.findOne(query).lean();
 
     if (!testimonial) {
-      return NextResponse.json(
-        { success: false, message: "Testimonial not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Testimonial not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        testimonial,
-      },
-      { status: 200 }
-    );
+    return successResponse({ testimonial });
   } catch (error) {
-    console.error(`GET /api/testimonials/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch testimonial" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -71,22 +59,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
@@ -96,14 +69,6 @@ export async function PUT(
     delete body._id;
     delete body.createdAt;
 
-    // Validate rating if provided
-    if (body.rating && (body.rating < 1 || body.rating > 5)) {
-      return NextResponse.json(
-        { success: false, message: "Rating must be between 1 and 5" },
-        { status: 400 }
-      );
-    }
-
     const testimonial = await Testimonial.findByIdAndUpdate(
       params.id,
       { $set: body },
@@ -111,26 +76,12 @@ export async function PUT(
     );
 
     if (!testimonial) {
-      return NextResponse.json(
-        { success: false, message: "Testimonial not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Testimonial not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        testimonial,
-        message: "Testimonial updated successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({ testimonial }, 200, "Testimonial updated successfully");
   } catch (error) {
-    console.error(`PUT /api/testimonials/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to update testimonial" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
@@ -147,46 +98,19 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    // Verify authentication
-    const user = await verifyAuth(req);
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden: Admin access required" },
-        { status: 403 }
-      );
-    }
+    await verifyAdmin(req);
 
     await connectDB();
 
     const testimonial = await Testimonial.findByIdAndDelete(params.id);
 
     if (!testimonial) {
-      return NextResponse.json(
-        { success: false, message: "Testimonial not found" },
-        { status: 404 }
-      );
+      throw new NotFoundError("Testimonial not found");
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Testimonial deleted successfully",
-      },
-      { status: 200 }
-    );
+    return successResponse({}, 200, "Testimonial deleted successfully");
   } catch (error) {
-    console.error(`DELETE /api/testimonials/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, message: "Failed to delete testimonial" },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
+
