@@ -128,6 +128,7 @@
 
 /* ===== Component Styles ===== */
 @layer components {
+
   /* Container */
   .container-main {
     @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8;
@@ -321,6 +322,7 @@
 
 /* ===== Utility Styles ===== */
 @layer utilities {
+
   /* Text Gradient */
   .text-gradient {
     @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
@@ -336,6 +338,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
   }
 
@@ -343,6 +346,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    line-clamp: 3;
     overflow: hidden;
   }
 
