@@ -41,8 +41,8 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-gradient-to-br from-secondary-700 via-secondary-800 to-secondary-900 text-white">
       {/* Main Footer */}
-      <div className="container-main py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+      <div className="container-main py-10 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-5">
@@ -64,17 +64,17 @@ export const Footer: React.FC = () => {
             <p className="text-secondary-200 text-sm mb-6 leading-relaxed">
               All Construction Solutions Under One Roof. Your trusted hardware partner in Biratnagar since 2010.
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 bg-white/10 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white hover:text-secondary-700 transition-all group"
+                  className="w-11 h-11 bg-white/10 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white hover:text-secondary-700 transition-all group"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-4 w-4 text-secondary-200 group-hover:text-secondary-700 transition-colors" />
+                  <social.icon className="h-5 w-5 text-secondary-200 group-hover:text-secondary-700 transition-colors" />
                 </a>
               ))}
             </div>

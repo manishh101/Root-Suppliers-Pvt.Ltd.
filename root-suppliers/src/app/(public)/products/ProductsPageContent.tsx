@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, Suspense } from "react";
+import React, { useState, useEffect, useCallback, Suspense, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -104,29 +104,22 @@ function FilterSidebar({
   brands,
   selectedCategories,
   selectedBrands,
-  priceRange,
-  maxPrice,
   onCategoryChange,
   onBrandChange,
-  onPriceChange,
   onClearFilters,
 }: {
   categories: Category[];
   brands: Brand[];
   selectedCategories: string[];
   selectedBrands: string[];
-  priceRange: [number, number];
-  maxPrice: number;
   onCategoryChange: (id: string) => void;
   onBrandChange: (id: string) => void;
-  onPriceChange: (range: [number, number]) => void;
   onClearFilters: () => void;
 }) {
   const hasFilters =
     selectedCategories.length > 0 ||
     selectedBrands.length > 0 ||
-    priceRange[0] > 0 ||
-    priceRange[1] < maxPrice;
+    selectedBrands.length > 0;
 
   return (
     <div className="space-y-6">
@@ -168,30 +161,6 @@ function FilterSidebar({
         </div>
       </div>
 
-      {/* Price Range */}
-      <div className="pt-4 border-t border-gray-50">
-        <h4 className="font-bold text-gray-900 mb-6">Price Range</h4>
-        <div className="px-2">
-          <Slider
-            value={priceRange}
-            min={0}
-            max={maxPrice}
-            step={100}
-            onValueChange={(value) => onPriceChange(value as [number, number])}
-            className="mb-6"
-          />
-          <div className="flex items-center justify-between">
-            <div className="bg-gray-50 rounded-lg px-3 py-2 border border-gray-100 flex-1 mr-2">
-              <span className="text-[10px] text-gray-400 block uppercase font-bold">Min</span>
-              <span className="text-sm font-bold text-gray-900">NPR {priceRange[0].toLocaleString()}</span>
-            </div>
-            <div className="bg-gray-50 rounded-lg px-3 py-2 border border-gray-100 flex-1">
-              <span className="text-[10px] text-gray-400 block uppercase font-bold">Max</span>
-              <span className="text-sm font-bold text-gray-900">NPR {priceRange[1].toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -222,7 +191,6 @@ function ProductsContent() {
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
 
   // Pagination
@@ -230,7 +198,6 @@ function ProductsContent() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const productsPerPage = 12;
-  const maxPrice = 100000;
 
   // Fetch categories and brands
   useEffect(() => {
@@ -276,9 +243,6 @@ function ProductsContent() {
         params.set("category", selectedCategories.join(","));
       if (selectedBrands.length > 0)
         params.set("brand", selectedBrands.join(","));
-      if (priceRange[0] > 0) params.set("minPrice", priceRange[0].toString());
-      if (priceRange[1] < maxPrice)
-        params.set("maxPrice", priceRange[1].toString());
 
       switch (sortBy) {
         case "price-low":
@@ -306,7 +270,10 @@ function ProductsContent() {
       const response = await fetch(`/api/products?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data.products || []);
+        // Append new products if page > 1, otherwise replace
+        setProducts((prev) =>
+          currentPage === 1 ? data.products || [] : [...prev, ...(data.products || [])]
+        );
         setTotalProducts(data.pagination?.total || 0);
         setTotalPages(data.pagination?.totalPages || 1);
       }
@@ -315,16 +282,41 @@ function ProductsContent() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, searchQuery, selectedCategories, selectedBrands, priceRange, sortBy]);
+  }, [currentPage, searchQuery, selectedCategories, selectedBrands, sortBy]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
+  // Infinite Scroll: Load more when scrolling near bottom
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setHasMore(currentPage < totalPages);
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading && hasMore) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.1, rootMargin: "100px" }
+    );
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loading]);
+
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategories, selectedBrands, priceRange, sortBy]);
+    setProducts([]); // Clear products when filters change
+  }, [searchQuery, selectedCategories, selectedBrands, sortBy]);
 
   const handleCategoryChange = (id: string) => {
     setSelectedCategories((prev) =>
@@ -342,14 +334,12 @@ function ProductsContent() {
     setSearchQuery("");
     setSelectedCategories([]);
     setSelectedBrands([]);
-    setPriceRange([0, maxPrice]);
     setSortBy("newest");
   };
 
   const activeFilterCount =
     selectedCategories.length +
-    selectedBrands.length +
-    (priceRange[0] > 0 || priceRange[1] < maxPrice ? 1 : 0);
+    selectedBrands.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -392,11 +382,8 @@ function ProductsContent() {
                     brands={brands}
                     selectedCategories={selectedCategories}
                     selectedBrands={selectedBrands}
-                    priceRange={priceRange}
-                    maxPrice={maxPrice}
                     onCategoryChange={handleCategoryChange}
                     onBrandChange={handleBrandChange}
-                    onPriceChange={setPriceRange}
                     onClearFilters={handleClearFilters}
                   />
                 </div>
@@ -406,23 +393,22 @@ function ProductsContent() {
             {/* Main Content */}
             <div className="lg:col-span-9">
               {/* Toolbar */}
-              <div className="bg-white rounded-xl shadow-card p-4 mb-6">
+              {/* Toolbar */}
+              <div className="bg-white rounded-xl shadow-card p-4 mb-6 sticky top-0 z-10">
                 <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                   {/* Search */}
-                  <div className="relative w-full md:w-80">
+                  <div className="relative w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       type="text"
                       placeholder="Search products..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors h-11"
                     />
                   </div>
 
-
-
-                  <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+                  <div className="flex items-center gap-3 w-full">
                     {/* Mobile Filter Button */}
                     <Sheet
                       open={mobileFilterOpen}
@@ -431,14 +417,15 @@ function ProductsContent() {
                       <SheetTrigger asChild>
                         <Button
                           variant="outline"
-                          className="lg:hidden flex-1 md:flex-none relative h-10"
+                          className={`lg:hidden flex-1 relative h-11 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900 ${activeFilterCount > 0 ? "border-primary-200 bg-primary-50/50 text-primary-700" : ""
+                            }`}
                         >
-                          <Filter className="h-4 w-4 mr-2" />
+                          <Filter className={`h-4 w-4 mr-2 ${activeFilterCount > 0 ? "text-primary-600" : "text-gray-500"}`} />
                           Filters
                           {activeFilterCount > 0 && (
-                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary-600 text-white text-xs rounded-full flex items-center justify-center">
+                            <Badge variant="secondary" className="ml-2 bg-primary-100 text-primary-700 border-none h-5 px-1.5 min-w-[20px]">
                               {activeFilterCount}
-                            </span>
+                            </Badge>
                           )}
                         </Button>
                       </SheetTrigger>
@@ -455,11 +442,8 @@ function ProductsContent() {
                               brands={brands}
                               selectedCategories={selectedCategories}
                               selectedBrands={selectedBrands}
-                              priceRange={priceRange}
-                              maxPrice={maxPrice}
                               onCategoryChange={handleCategoryChange}
                               onBrandChange={handleBrandChange}
-                              onPriceChange={setPriceRange}
                               onClearFilters={handleClearFilters}
                             />
                           </div>
@@ -469,7 +453,7 @@ function ProductsContent() {
 
                     {/* Sort */}
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="flex-1 md:w-44 h-10">
+                      <SelectTrigger className="flex-1 md:w-48 h-11 border-gray-200 bg-white text-gray-700">
                         <SelectValue placeholder="Sort by" />
                       </SelectTrigger>
                       <SelectContent>
@@ -485,8 +469,8 @@ function ProductsContent() {
                       </SelectContent>
                     </Select>
 
-                    {/* View Toggle */}
-                    <div className="hidden md:flex bg-gray-100 rounded-lg p-1 gap-1">
+                    {/* Desktop View Toggle */}
+                    <div className="hidden md:flex bg-gray-100 rounded-lg p-1 gap-1 h-11 items-center">
                       <button
                         onClick={() => setView("grid")}
                         className={`p-1.5 rounded-md transition-colors ${view === "grid"
@@ -494,7 +478,7 @@ function ProductsContent() {
                           : "text-gray-500 hover:text-gray-900"
                           }`}
                       >
-                        <Grid3X3 className="h-4 w-4" />
+                        <Grid3X3 className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => setView("list")}
@@ -503,7 +487,7 @@ function ProductsContent() {
                           : "text-gray-500 hover:text-gray-900"
                           }`}
                       >
-                        <LayoutList className="h-4 w-4" />
+                        <LayoutList className="h-5 w-5" />
                       </button>
                     </div>
                   </div>
@@ -555,10 +539,10 @@ function ProductsContent() {
               </div>
 
               {/* Results Count and View Controls */}
-              <div className="flex items-center justify-between mb-6 px-1 text-sm text-gray-500">
-                <div>
-                  Showing <span className="font-bold text-gray-900">{(currentPage - 1) * productsPerPage + 1} - {Math.min(currentPage * productsPerPage, totalProducts)}</span> of <span className="font-bold text-gray-900">{totalProducts}</span> products
-                </div>
+              <div className="flex items-center justify-between mb-6 px-1">
+                <p className="text-sm text-gray-500 font-medium">
+                  Showing <span className="text-gray-900">{(currentPage - 1) * productsPerPage + 1}-{Math.min(currentPage * productsPerPage, totalProducts)}</span> of <span className="text-gray-900">{totalProducts}</span> products
+                </p>
               </div>
 
               {/* Products Grid/List */}
@@ -586,7 +570,7 @@ function ProductsContent() {
                     exit={{ opacity: 0 }}
                     className={
                       view === "grid"
-                        ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                        ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"
                         : "space-y-4"
                     }
                   >
@@ -595,58 +579,24 @@ function ProductsContent() {
                         key={product._id}
                         product={product}
                         view={view}
+                        size="compact"
                       />
                     ))}
                   </motion.div>
                 </AnimatePresence>
               )}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-8">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
+              {/* Infinite Scroll Trigger */}
+              {hasMore && !loading && products.length > 0 && (
+                <div ref={loadMoreRef} className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 text-primary-600 animate-spin" />
+                </div>
+              )}
 
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let page: number;
-                    if (totalPages <= 5) {
-                      page = i + 1;
-                    } else if (currentPage <= 3) {
-                      page = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      page = totalPages - 4 + i;
-                    } else {
-                      page = currentPage - 2 + i;
-                    }
-
-                    return (
-                      <Button
-                        key={page}
-                        variant={currentPage === page ? "primary" : "outline"}
-                        size="sm"
-                        onClick={() => setCurrentPage(page)}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  })}
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+              {/* End of Results */}
+              {!hasMore && products.length > 0 && (
+                <div className="text-center py-8 text-gray-500 text-sm">
+                  You've reached the end of the results
                 </div>
               )}
             </div>

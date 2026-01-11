@@ -85,7 +85,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-12 md:py-24 bg-white">
         <div className="container-main">
           <motion.div
             initial={{ opacity: 0, x: -20 }}

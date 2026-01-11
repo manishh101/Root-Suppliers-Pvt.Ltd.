@@ -68,7 +68,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {products.slice(0, 8).map((product, index) => (
             <Link
               key={product._id}
@@ -205,7 +205,7 @@ export const FeaturedProductsStatic: React.FC = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {placeholderProducts.map((product, index) => (
             <Link
               key={product.id}

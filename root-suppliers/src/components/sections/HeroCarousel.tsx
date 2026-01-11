@@ -76,7 +76,7 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
               <div className="flex h-full">
                 {heroSlides.map((slide) => (
                   <div key={slide.id} className="flex-[0_0_100%] min-w-0">
-                    <div className="relative w-full h-[500px] lg:h-[550px]">
+                    <div className="relative w-full h-[300px] md:h-[450px] lg:h-[550px]">
                       <Image
                         src={slide.image}
                         alt={slide.alt}
@@ -93,17 +93,17 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
             {/* Navigation Arrows */}
             <button
               onClick={scrollPrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
               aria-label="Previous slide"
             >
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
             </button>
             <button
               onClick={scrollNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
               aria-label="Next slide"
             >
-              <ChevronRight className="w-6 h-6 text-gray-700" />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
             </button>
 
             {/* Dots Indicator */}
@@ -112,7 +112,7 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
                 <button
                   key={index}
                   onClick={() => emblaApi?.scrollTo(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${index === selectedIndex ? 'bg-primary-600' : 'bg-white/70'
+                  className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-colors ${index === selectedIndex ? 'bg-primary-600' : 'bg-white/70'
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -122,14 +122,14 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
 
           {/* Right Side - Top Selling Products (6 products in 3x2 grid) */}
           <div className="lg:w-2/5">
-            <div className="bg-gradient-to-br from-red-50 via-white to-red-50/30 rounded-2xl p-5 h-full flex flex-col shadow-md border border-red-100">
-              <div className="flex items-center justify-center mb-5 pb-4 border-b border-red-200">
-                <h2 className="text-xl font-bold text-center text-gray-800 uppercase tracking-wide flex items-center gap-2">
+            <div className="bg-gradient-to-br from-red-50 via-white to-red-50/30 rounded-2xl p-4 md:p-5 h-full flex flex-col shadow-md border border-red-100">
+              <div className="flex items-center justify-center mb-4 md:mb-5 pb-3 md:pb-4 border-b border-red-200">
+                <h2 className="text-lg md:text-xl font-bold text-center text-gray-800 uppercase tracking-wide flex items-center gap-2">
                   <span className="text-2xl"></span>
                   Top Selling Products
                 </h2>
               </div>
-              <div className="grid grid-cols-3 gap-3 flex-1">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 flex-1">
                 {topProducts.slice(0, 6).map((product) => (
                   <Link
                     key={product._id}
@@ -145,7 +145,7 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
-                    <div className="p-2.5 text-center mt-auto">
+                    <div className="p-2 md:p-2.5 text-center mt-auto">
                       <span className="text-xs font-semibold text-gray-700 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">
                         {product.name}
                       </span>

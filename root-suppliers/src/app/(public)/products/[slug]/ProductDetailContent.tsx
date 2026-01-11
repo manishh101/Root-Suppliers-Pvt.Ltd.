@@ -602,7 +602,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
             </div>
 
             {/* Products Grid using ProductCard */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard
                   key={relatedProduct._id}

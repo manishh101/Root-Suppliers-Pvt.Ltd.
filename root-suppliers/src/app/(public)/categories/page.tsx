@@ -64,7 +64,7 @@ export default function CategoriesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Refined Header */}
-      <section className="relative py-16 md:py-24 overflow-hidden border-b border-gray-100/50">
+      <section className="relative py-12 md:py-24 overflow-hidden border-b border-gray-100/50">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(239,68,68,0.04),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.03),transparent_50%)]" />
 
         <div className="container-main relative z-10">
@@ -97,7 +97,7 @@ export default function CategoriesPage() {
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
             {/* Sidebar */}
-            <div className="lg:col-span-3 sticky top-24 z-20">
+            <div className="hidden lg:block lg:col-span-3 sticky top-24 z-20">
               <CategorySidebar categories={categoryTree} activeSlug={undefined} />
             </div>
 
@@ -126,7 +126,7 @@ export default function CategoriesPage() {
                   <p className="text-gray-500 text-sm">Check back later for updates</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
                   <AnimatePresence mode="popLayout">
                     {displayCategories.map((item, index) => (
                       <motion.div

@@ -187,24 +187,24 @@ export default function AboutPageContent() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 overflow-hidden">
+      <section className="relative py-12 lg:py-28 overflow-hidden">
         {/* Decorative Background Element */}
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary-50 rounded-full blur-3xl opacity-50 z-0" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-gray-50 rounded-full blur-3xl opacity-50 z-0" />
 
         <div className="container-main relative z-10">
           {/* Header Title */}
-          <div className="mb-16 md:mb-24 text-center md:text-left">
+          <div className="mb-12 md:mb-24 text-center md:text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
                 ABOUT <span className="text-primary-600 block sm:inline">ROOT SUPPLIERS</span>
               </h1>
-              <div className="h-1.5 w-24 bg-primary-600 mt-6 rounded-full mx-auto md:mx-0" />
-              <p className="text-gray-500 mt-6 text-lg font-medium max-w-lg leading-relaxed">
+              <div className="h-1.5 w-20 md:w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />
+              <p className="text-gray-500 mt-4 md:mt-6 text-base md:text-lg font-medium max-w-lg leading-relaxed">
                 Building the future of Eastern Nepal, one project at a time. All your construction solutions under one roof.
               </p>
             </motion.div>
@@ -217,9 +217,9 @@ export default function AboutPageContent() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-6 relative"
+              className="lg:col-span-5 relative"
             >
-              <div className="relative aspect-[4/5] md:aspect-square w-full rounded-2xl overflow-hidden shadow-2xl transform md:rotate-2 hover:rotate-0 transition-transform duration-500">
+              <div className="relative aspect-[4/5] md:aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-2xl transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
                 <Image
                   src={storyImage}
                   alt="Root Suppliers Store"
@@ -227,17 +227,17 @@ export default function AboutPageContent() {
                   className="object-cover"
                 />
                 {/* Subtle Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-40" />
 
                 {/* Floating Badge */}
-                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border-l-4 border-primary-600 max-w-[200px]">
+                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border-l-4 border-primary-600 max-w-[180px]">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Since</p>
                   <p className="text-3xl font-bold text-gray-900">2010</p>
                 </div>
               </div>
 
               {/* Decorative Shape Behind */}
-              <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-gray-100 rounded-2xl transform rotate-6 hidden md:block" />
+              <div className="absolute -z-10 top-8 -right-8 w-full h-full border-2 border-gray-100 rounded-2xl transform rotate-3 hidden md:block" />
             </motion.div>
 
             {/* Right Content */}
@@ -246,46 +246,24 @@ export default function AboutPageContent() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-6"
+              className="lg:col-span-7"
             >
               <span className="inline-block py-1 px-3 rounded-full bg-primary-50 text-primary-700 font-bold text-xs uppercase tracking-widest mb-4">
                 Our Story
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-snug">
+              <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8 leading-snug">
                 {storyTitle}
               </h2>
-              <div className="space-y-6 text-gray-600 text-lg leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: storyContent }} />
+              <div className="space-y-4 md:space-y-6 text-gray-600 text-base md:text-lg leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: storyContent }} />
 
-              <div className="mt-10 pt-10 border-t border-gray-100 flex flex-col sm:flex-row gap-8">
-                {statsData ? statsData.slice(0, 3).map((stat, idx) => (
-                  <div key={idx}>
-                    <h4 className="text-2xl font-bold text-gray-900">{stat.value}{stat.suffix}</h4>
-                    <p className="text-sm text-gray-500 mt-1">{stat.label}</p>
-                  </div>
-                )) : (
-                  <>
-                    <div>
-                      <h4 className="text-2xl font-bold text-gray-900">1000+</h4>
-                      <p className="text-sm text-gray-500 mt-1">Premium Products</p>
-                    </div>
-                    <div>
-                      <h4 className="text-2xl font-bold text-gray-900">15+</h4>
-                      <p className="text-sm text-gray-500 mt-1">Years Experience</p>
-                    </div>
-                    <div>
-                      <h4 className="text-2xl font-bold text-gray-900">5k+</h4>
-                      <p className="text-sm text-gray-500 mt-1">Happy Clients</p>
-                    </div>
-                  </>
-                )}
-              </div>
+
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Vision & Mission Section - Distinct Layout */}
-      <section className="py-24 bg-gray-50 relative">
+      <section className="py-16 md:py-24 bg-gray-50 relative">
         <div className="container-main">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Driven by Purpose</h2>
@@ -344,10 +322,10 @@ export default function AboutPageContent() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-auto">
               {/* Display gallery images dynamically - simple grid for generic length */}
               {galleryImages.map((img, idx) => (
-                <div key={idx} className={`relative rounded-2xl overflow-hidden group min-h-[300px] ${idx === 0 ? 'md:col-span-8 md:row-span-2 h-[600px]' : 'md:col-span-4 h-[300px]'}`}>
+                <div key={idx} className={`relative rounded-2xl overflow-hidden group min-h-[250px] ${idx === 0 ? 'md:col-span-8 md:row-span-2 md:h-[600px] h-[350px]' : 'md:col-span-4 h-[250px] md:h-[300px]'}`}>
                   <Image
                     src={img.url}
                     alt={img.alt || "Gallery Image"}
@@ -361,7 +339,7 @@ export default function AboutPageContent() {
           </div>
         </section>
       ) : (
-        <section className="py-24 bg-white">
+        <section className="py-16 md:py-24 bg-white">
           <div className="container-main">
             {/* Static Fallback Gallery */}
             <div className="flex flex-col md:flex-row justify-between items-end mb-12">
@@ -374,9 +352,9 @@ export default function AboutPageContent() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-auto md:h-[600px]">
               {/* Left Column - Large feature */}
-              <div className="md:col-span-7 h-[300px] md:h-full relative rounded-2xl overflow-hidden group">
+              <div className="md:col-span-7 h-[350px] md:h-full relative rounded-2xl overflow-hidden group">
                 <Image
                   src="/images/hero/image copy.png"
                   alt="Warehouse Operations"
@@ -391,8 +369,8 @@ export default function AboutPageContent() {
               </div>
 
               {/* Right Column - Stacked */}
-              <div className="md:col-span-5 flex flex-col gap-6 h-full">
-                <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px]">
+              <div className="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
+                <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px] md:min-h-0 h-[250px] md:h-auto">
                   <Image
                     src="/images/products/image copy.png"
                     alt="Safety Gear"
@@ -401,7 +379,7 @@ export default function AboutPageContent() {
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                 </div>
-                <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px]">
+                <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px] md:min-h-0 h-[250px] md:h-auto">
                   <Image
                     src="/images/products/image copy 2.png"
                     alt="Quality Tools"
@@ -444,11 +422,12 @@ export default function AboutPageContent() {
       </div>
 
       {/* Featured Products - Clean & Minimal */}
+      {/* Featured Products - Clean & Minimal */}
       {featuredProducts.length > 0 && (
-        <section className="py-24 bg-gray-50">
+        <section className="py-16 md:py-24 bg-gray-50">
           <div className="container-main">
-            <div className="flex flex-col md:flex-row items-center justify-between mb-16">
-              <h2 className="text-3xl font-bold text-gray-900">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-10 md:mb-16 gap-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                 Curated Selection
               </h2>
               <Link
@@ -460,14 +439,14 @@ export default function AboutPageContent() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-8">
               {featuredProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
 
-            <div className="mt-16 text-center">
-              <p className="text-gray-500 mb-6 max-w-2xl mx-auto">
+            <div className="mt-12 md:mt-16 text-center">
+              <p className="text-gray-500 mb-6 max-w-2xl mx-auto text-sm md:text-base">
                 Can't find what you're looking for? We have thousands more items in store.
               </p>
               <Link

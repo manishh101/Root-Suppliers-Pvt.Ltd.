@@ -103,14 +103,16 @@ export default async function Home() {
         {/* Hero Section */}
         <HeroCarousel topProducts={topProducts} />
 
-        {/* Top Brands */}
-        <TopBrands brands={brands} />
+
 
         {/* Featured Products */}
         <FeaturedProducts products={featuredProducts} />
 
         {/* CTA Section */}
         <CTASection />
+
+        {/* Top Brands */}
+        <TopBrands brands={brands} />
 
         {/* Categories */}
         <CategoriesSection categories={categories} />

@@ -111,6 +111,15 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // Filter by brand
+    const brandIds = searchParams.get("brand");
+    if (brandIds) {
+      const brandList = brandIds.split(",").map((id) => id.trim()).filter((id) => id);
+      if (brandList.length > 0) {
+        query.brand = { $in: brandList };
+      }
+    }
+
     // Exclude specific products
     const excludeIds = searchParams.get("exclude");
     if (excludeIds) {

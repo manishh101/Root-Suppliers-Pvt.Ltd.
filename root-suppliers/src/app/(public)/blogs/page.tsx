@@ -67,7 +67,7 @@ export default function BlogPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Page Header */}
-      <section className="bg-white border-b border-gray-100 py-16 md:py-24 relative overflow-hidden">
+      <section className="bg-white border-b border-gray-100 py-12 md:py-24 relative overflow-hidden">
         {/* Decorative Background */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
           <div className="absolute top-10 right-10 w-64 h-64 bg-primary-50 rounded-full blur-3xl opacity-60" />
@@ -154,16 +154,16 @@ export default function BlogPage() {
                         </p>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-6 text-sm text-gray-500 border-t border-gray-100 pt-6 mt-auto w-full">
+                        <div className="flex flex-wrap items-center gap-3 md:gap-6 text-sm text-gray-500 border-t border-gray-100 pt-6 mt-auto w-full pr-14 md:pr-0">
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                               <User className="w-4 h-4 text-gray-600" />
                             </div>
-                            <span className="font-medium text-gray-900">{post.author?.name || "Team"}</span>
+                            <span className="font-medium text-gray-900 truncate">{post.author?.name || "Team"}</span>
                           </div>
-                          <div className="flex items-center gap-4 ml-auto sm:ml-0">
-                            <span className="flex items-center gap-1.5">
-                              <Calendar className="w-4 h-4" />
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1.5 whitespace-nowrap">
+                              <Calendar className="w-4 h-4 flex-shrink-0" />
                               {post.publishedAt ? format(new Date(post.publishedAt), "MMM d, yyyy") : format(new Date(post.createdAt), "MMM d, yyyy")}
                             </span>
                             {/* Read Time is not in DB, hiding or estimating? For now hiding or static */}

@@ -265,38 +265,30 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
               )}
 
               {/* Toolbar */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 sticky top-20 lg:static z-10">
-                <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-                  {/* Mobile Filter */}
-                  <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" className="lg:hidden w-full md:w-auto">
-                        <Filter className="w-4 h-4 mr-2" /> Categories
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-[300px] p-0">
-                      <div className="p-4 border-b">
-                        <h3 className="font-bold text-lg">Categories</h3>
-                      </div>
-                      <div className="p-4">
-                        <CategorySidebar categories={categoryTree} activeSlug={currentCategory.slug} className="border-none shadow-none" />
-                      </div>
-                    </SheetContent>
-                  </Sheet>
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 sticky top-0 z-10">
+                <div className="flex flex-col gap-4">
+                  {/* Top Row: Categories Filter + Sort */}
+                  <div className="flex items-center gap-3">
+                    {/* Mobile Filter */}
+                    <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
+                      <SheetTrigger asChild>
+                        <Button variant="outline" className="lg:hidden flex-1">
+                          <Filter className="w-4 h-4 mr-2" /> Categories
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent side="left" className="w-[300px] p-0">
+                        <div className="p-4 border-b">
+                          <h3 className="font-bold text-lg">Categories</h3>
+                        </div>
+                        <div className="p-4">
+                          <CategorySidebar categories={categoryTree} activeSlug={currentCategory.slug} className="border-none shadow-none" />
+                        </div>
+                      </SheetContent>
+                    </Sheet>
 
-                  <div className="relative w-full md:w-64">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Search in this category..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 h-10 bg-gray-50 border-transparent focus:bg-white transition-colors"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-3 w-full md:w-auto">
+                    {/* Sort */}
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-full md:w-40 h-10">
+                      <SelectTrigger className="flex-1 lg:w-48 h-10">
                         <SelectValue placeholder="Sort by" />
                       </SelectTrigger>
                       <SelectContent>
@@ -307,6 +299,7 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
                       </SelectContent>
                     </Select>
 
+                    {/* Desktop View Toggle */}
                     <div className="hidden md:flex bg-gray-100 rounded-lg p-1 gap-1">
                       <button onClick={() => setView("grid")} className={`p-1.5 rounded-md transition-colors ${view === "grid" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-900"}`}>
                         <Grid3X3 className="w-4 h-4" />
@@ -315,6 +308,17 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
                         <LayoutList className="w-4 h-4" />
                       </button>
                     </div>
+                  </div>
+
+                  {/* Second Row: Search */}
+                  <div className="relative w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Search in this category..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 h-10 bg-gray-50 border-transparent focus:bg-white transition-colors"
+                    />
                   </div>
                 </div>
               </div>
@@ -330,9 +334,9 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
                 </div>
               ) : (
                 <AnimatePresence mode="popLayout">
-                  <div className={view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" : "space-y-4"}>
+                  <div className={view === "grid" ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6" : "space-y-4"}>
                     {products.map(product => (
-                      <ProductCard key={product._id} product={product} view={view} />
+                      <ProductCard key={product._id} product={product} view={view} size="compact" />
                     ))}
                   </div>
                 </AnimatePresence>

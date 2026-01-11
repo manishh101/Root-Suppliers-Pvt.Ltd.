@@ -114,13 +114,13 @@ export default function SingleBlogPage() {
               {blog.title}
             </motion.h1>
 
-            <div className="flex items-center justify-center gap-6 text-gray-300 text-sm md:text-base">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                <span>{blog.author?.name || "Team"}</span>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-gray-300 text-sm md:text-base">
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <User className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate max-w-[200px]">{blog.author?.name || "Team"}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
                 <span>{blog.publishedAt ? format(new Date(blog.publishedAt), "MMMM d, yyyy") : format(new Date(blog.createdAt), "MMMM d, yyyy")}</span>
               </div>
               {/* <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function SingleBlogPage() {
 
       {/* Content Section */}
       <div className="container-main max-w-4xl -mt-20 relative z-20 px-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 lg:p-16">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-12 lg:p-16">
           <Link
             href="/blogs"
             className="inline-flex items-center gap-2 text-primary-600 font-medium mb-8 hover:underline"

@@ -23,16 +23,19 @@ interface CategorySidebarProps {
   categories: CategoryNode[];
   activeSlug?: string;
   className?: string;
+  onLinkClick?: () => void;
 }
 
 const CategoryItem = ({
   category,
   depth = 0,
-  activeSlug
+  activeSlug,
+  onLinkClick
 }: {
   category: CategoryNode;
   depth?: number;
   activeSlug?: string;
+  onLinkClick?: () => void;
 }) => {
   const isActive = activeSlug === category.slug;
   const hasActiveChild = (cat: CategoryNode): boolean => {
@@ -67,6 +70,7 @@ const CategoryItem = ({
 
         <Link
           href={`/categories/${category.slug}`}
+          onClick={onLinkClick}
           className="flex-1 flex items-center gap-2.5 min-w-0 py-0.5"
         >
           <span className={cn(
@@ -128,6 +132,7 @@ const CategoryItem = ({
                   category={child}
                   depth={depth + 1}
                   activeSlug={activeSlug}
+                  onLinkClick={onLinkClick}
                 />
               ))}
             </div>
@@ -138,7 +143,7 @@ const CategoryItem = ({
   );
 };
 
-export function CategorySidebar({ categories, activeSlug, className }: CategorySidebarProps) {
+export function CategorySidebar({ categories, activeSlug, className, onLinkClick }: CategorySidebarProps) {
   return (
     <div className={cn("bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 shadow-sm overflow-hidden", className)}>
       <div className="p-4 border-b border-gray-100/50 bg-gradient-to-b from-gray-50/50 to-transparent">
@@ -151,6 +156,7 @@ export function CategorySidebar({ categories, activeSlug, className }: CategoryS
         {/* All Products Link */}
         <Link
           href="/categories"
+          onClick={onLinkClick}
           className={cn(
             "flex items-center gap-3 py-2.5 px-2.5 rounded-lg mb-2 transition-all group relative overflow-hidden",
             !activeSlug
@@ -175,6 +181,7 @@ export function CategorySidebar({ categories, activeSlug, className }: CategoryS
               key={category._id}
               category={category}
               activeSlug={activeSlug}
+              onLinkClick={onLinkClick}
             />
           ))}
         </div>
