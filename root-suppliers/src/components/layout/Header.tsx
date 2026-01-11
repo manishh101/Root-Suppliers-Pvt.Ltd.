@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, MapPin, Menu, X, Search, Loader2, Package } from "lucide-react";
@@ -26,6 +26,7 @@ export default function Header() {
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Header hide/show on scroll
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -412,9 +413,9 @@ export default function Header() {
         <div className="flex items-center justify-around h-16">
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${typeof window !== 'undefined' && window.location.pathname === '/' ? 'text-primary-600' : 'text-gray-500'}`}
+            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${pathname === '/' ? 'text-primary-600' : 'text-gray-500'}`}
           >
-            <div className={`p-1 rounded-full ${typeof window !== 'undefined' && window.location.pathname === '/' ? 'bg-primary-50' : ''}`}>
+            <div className={`p-1 rounded-full ${pathname === '/' ? 'bg-primary-50' : ''}`}>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
@@ -422,8 +423,8 @@ export default function Header() {
             </div>
             <span className="text-[10px] font-medium">Home</span>
           </Link>
-          <Link href="/products" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${typeof window !== 'undefined' && window.location.pathname?.startsWith('/products') ? 'text-primary-600' : 'text-gray-500'}`}>
-            <div className={`p-1 rounded-full ${typeof window !== 'undefined' && window.location.pathname?.startsWith('/products') ? 'bg-primary-50' : ''}`}>
+          <Link href="/products" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${pathname?.startsWith('/products') ? 'text-primary-600' : 'text-gray-500'}`}>
+            <div className={`p-1 rounded-full ${pathname?.startsWith('/products') ? 'bg-primary-50' : ''}`}>
               <Package className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-medium">Products</span>

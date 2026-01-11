@@ -74,7 +74,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        primary: ["Bank Gothic", "Inter", "sans-serif"],
+        primary: ["Inter", "sans-serif"],
         secondary: ["Inter", "system-ui", "sans-serif"],
       },
       boxShadow: {
