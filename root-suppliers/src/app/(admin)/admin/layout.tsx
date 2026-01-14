@@ -67,6 +67,11 @@ const menuItems = [
     icon: FolderTree, // Using FolderTree as a placeholder, maybe distinct icon like 'Info' if imported
   },
   {
+    label: "Hero Slides",
+    href: "/admin/hero-slides",
+    icon: Image,
+  },
+  {
     label: "Testimonials",
     href: "/admin/testimonials",
     icon: Star,

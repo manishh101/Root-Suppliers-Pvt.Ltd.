@@ -3,6 +3,7 @@ import connectDB from "@/lib/db/connect";
 import Settings from "@/lib/db/models/Settings";
 import { verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
+import { DEFAULT_STATS } from "@/lib/constants";
 
 /**
  * GET /api/settings
@@ -22,39 +23,48 @@ export async function GET() {
     // If no settings exist, create default
     if (!settings) {
       const newSettings = await Settings.create({
-        siteName: "Root Suppliers",
-        siteDescription: "Your Trusted Partner for Quality Hardware & Building Materials",
-        logo: "",
-        favicon: "",
-        email: "info@rootsuppliers.com",
-        phone: "+91 9876543210",
-        whatsapp: "+91 9876543210",
-        address: "123 Hardware Street, Industrial Area, Delhi, India - 110001",
-        mapUrl: "",
-        socialLinks: {
+        site: {
+          name: "Root Suppliers",
+          tagline: "All Construction Solutions Under One Roof",
+          logo: { url: "", publicId: "" },
+          favicon: { url: "", publicId: "" },
+        },
+        contact: {
+          primaryPhone: "+977-XXX-XXXXXXX",
+          secondaryPhone: "",
+          primaryEmail: "info@rootsuppliers.com.np",
+          secondaryEmail: "",
+          address: "Biratnagar, Nepal",
+          googleMapsEmbed: "",
+          googleMapsLink: "",
+        },
+        social: {
           facebook: "",
-          twitter: "",
           instagram: "",
-          linkedin: "",
           youtube: "",
+          linkedin: "",
         },
+        businessHours: [
+          { day: "monday", hours: "9:00 AM - 7:00 PM" },
+          { day: "tuesday", hours: "9:00 AM - 7:00 PM" },
+          { day: "wednesday", hours: "9:00 AM - 7:00 PM" },
+          { day: "thursday", hours: "9:00 AM - 7:00 PM" },
+          { day: "friday", hours: "9:00 AM - 7:00 PM" },
+          { day: "saturday", hours: "10:00 AM - 5:00 PM" },
+          { day: "sunday", hours: "Closed" },
+        ],
         seo: {
-          metaTitle: "Root Suppliers | Quality Hardware & Building Materials",
-          metaDescription: "Root Suppliers is your trusted partner for quality hardware, tools, and building materials. Serving professionals and DIY enthusiasts since 2010.",
-          metaKeywords: "hardware, tools, building materials, construction, plumbing, electrical",
-          ogImage: "",
+          defaultTitle: "Root Suppliers - All Construction Solutions Under One Roof",
+          defaultDescription: "Your trusted hardware partner in Biratnagar, Nepal. Wide range of construction materials, tools, and equipment.",
+          googleAnalyticsId: "",
         },
-        businessHours: {
-          monday: "9:00 AM - 7:00 PM",
-          tuesday: "9:00 AM - 7:00 PM",
-          wednesday: "9:00 AM - 7:00 PM",
-          thursday: "9:00 AM - 7:00 PM",
-          friday: "9:00 AM - 7:00 PM",
-          saturday: "10:00 AM - 5:00 PM",
-          sunday: "Closed",
+        homepage: {
+          heroSlides: [],
+          featuredProductsTitle: "Featured Products",
+          featuredProductsSubtitle: "",
+          aboutSectionContent: "",
+          stats: DEFAULT_STATS,
         },
-        enableInquiryNotifications: true,
-        inquiryEmailRecipients: [],
       });
       settings = newSettings.toObject();
     }
@@ -106,23 +116,45 @@ export async function PUT(req: NextRequest) {
       // Update existing settings
       const updateData: any = {};
 
-      // Handle nested updates
-      const nestedFields = ["site", "contact", "social", "seo", "homepage"];
+      // Helper to flatten nested objects for $set, EXCEPT for arrays which we want to replace
+      const flatten = (obj: any, prefix = '') => {
+        Object.keys(obj).forEach(key => {
+          const val = obj[key];
+          const type = typeof val;
+          if (val !== null && type === 'object' && !Array.isArray(val)) {
+            flatten(val, prefix + key + '.');
+          } else {
+            updateData[prefix + key] = val;
+          }
+        });
+      };
 
-      nestedFields.forEach((field) => {
+      // We only want to flatten specific top-level fields that map to nested schemas
+      // 'homepage' contains 'stats' (array) and 'heroSlides' (array).
+      // If we flatten 'homepage', 'homepage.stats' will be treated as value.
+
+      const topLevel = ["site", "contact", "social", "seo"];
+      topLevel.forEach(field => {
         if (body[field]) {
-          Object.keys(body[field]).forEach((key) => {
-            updateData[`${field}.${key}`] = body[field][key];
-          });
+          flatten(body[field], `${field}.`);
         }
       });
 
-      // Handle businessHours
+      // For homepage, we might want to be careful. 
+      // If the body sends the whole homepage object, we can flatten it to update specific fields
+      // but arrays like stats need to be set as a whole.
+      if (body.homepage) {
+        // We can just rely on the body being structured correctly.
+        // If we use $set with "homepage.stats": [...], it replaces the array.
+        // If we use $set with "homepage.featuredProductsTitle": "...", it updates string.
+        flatten(body.homepage, "homepage.");
+      }
+
+      // For businessHours, it's an array of objects. We replace the whole array.
       if (body.businessHours) {
         updateData.businessHours = body.businessHours;
       }
 
-      // Handle top-level fields
       if (body.enableInquiryNotifications !== undefined) updateData.enableInquiryNotifications = body.enableInquiryNotifications;
       if (body.inquiryEmailRecipients !== undefined) updateData.inquiryEmailRecipients = body.inquiryEmailRecipients;
 
@@ -138,4 +170,3 @@ export async function PUT(req: NextRequest) {
     return handleApiError(error);
   }
 }
-

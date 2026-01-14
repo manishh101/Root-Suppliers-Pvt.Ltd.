@@ -130,7 +130,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
         <div className={`text-center mt-14 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <Link
             href="/products"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-100/50 group transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-100/50 group transform hover:-translate-y-0.5 font-primary"
           >
             <span>EXPLORE ALL PRODUCTS</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />

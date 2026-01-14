@@ -1,6 +1,6 @@
 export { HeroCarousel } from "./HeroCarousel";
 export { FeaturedProducts, FeaturedProductsStatic } from "./FeaturedProducts";
-export { TopBrands, TopBrandsStatic } from "./TopBrands";
+export { TopBrands } from "./TopBrands";
 export { CategoriesSection, CategoriesSectionStatic } from "./CategoriesSection";
 export { AboutSection } from "./AboutSection";
 export { StatsSection } from "./StatsSection";

@@ -3,11 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  ArrowRight, 
-  Award, 
-  Users, 
-  Truck, 
+import {
+  ArrowRight,
+  Award,
+  Users,
+  Truck,
   Shield,
   Package,
   Clock
@@ -68,21 +68,21 @@ export const AboutSection: React.FC = () => {
                 <div className="w-16 h-1 bg-primary-600 mt-2" />
               </div>
             </div>
-            
+
             <p className="text-gray-600 leading-relaxed mb-4">
-              Root Suppliers Pvt. Ltd. is a leading construction materials and hardware 
-              supplier based in Biratnagar, Nepal. Since 2010, we have been serving 
+              Root Suppliers Pvt. Ltd. is a leading construction materials and hardware
+              supplier based in Biratnagar, Nepal. Since 2010, we have been serving
               contractors, builders, and homeowners with premium quality products.
             </p>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Our tagline &quot;All Construction Solutions Under One Roof&quot; reflects our 
-              commitment to being your one-stop destination for all construction needs. 
+              Our tagline &quot;All Construction Solutions Under One Roof&quot; reflects our
+              commitment to being your one-stop destination for all construction needs.
               From steel and cement to paints and plumbing supplies, we have it all.
             </p>
 
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors group"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors group font-primary"
             >
               Learn More
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -97,7 +97,7 @@ export const AboutSection: React.FC = () => {
               </h2>
               <div className="w-16 h-1 bg-primary-600 mx-auto mt-2" />
             </div>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {whyChooseUs.map((item, index) => (
                 <div

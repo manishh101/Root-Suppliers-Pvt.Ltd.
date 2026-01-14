@@ -6,22 +6,27 @@ import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-// Hero carousel slides
-const heroSlides = [
+// Default fallback slides
+const defaultSlides = [
   {
-
-    id: 1,
-    image: '/images/hero/hero.png',
-    alt: 'Root Suppliers - All Construction Solutions Under One Roof',
+    image: { url: '/images/hero/hero.png', publicId: '' },
+    title: 'Root Suppliers',
+    subtitle: 'All Construction Solutions Under One Roof',
   },
   {
-    id: 2,
-    image: '/images/hero/hero1.png',
-    alt: 'construction tools and building materials',
-
-  }
-
+    image: { url: '/images/hero/hero1.png', publicId: '' },
+    title: 'Quality Hardware',
+    subtitle: 'Construction tools and building materials',
+  },
 ]
+
+interface HeroSlide {
+  image: { url: string; publicId: string };
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
 
 interface Product {
   _id: string;
@@ -32,9 +37,12 @@ interface Product {
 
 interface HeroCarouselProps {
   topProducts?: Product[];
+  heroSlides?: HeroSlide[];
 }
 
-export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
+export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps) {
+  // Use provided slides or fallback to defaults
+  const slides = heroSlides && heroSlides.length > 0 ? heroSlides : defaultSlides;
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -77,12 +85,12 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
           <div className="lg:w-3/5 relative">
             <div className="overflow-hidden rounded-lg h-full" ref={emblaRef}>
               <div className="flex h-full">
-                {heroSlides.map((slide) => (
-                  <div key={slide.id} className="flex-[0_0_100%] min-w-0">
+                {slides.map((slide, index) => (
+                  <div key={index} className="flex-[0_0_100%] min-w-0">
                     <div className="relative w-full h-[300px] md:h-[450px] lg:h-[550px]">
                       <Image
-                        src={slide.image}
-                        alt={slide.alt}
+                        src={slide.image.url}
+                        alt={slide.title || 'Hero slide'}
                         fill
                         className="object-cover rounded-lg"
                         priority
@@ -111,7 +119,7 @@ export function HeroCarousel({ topProducts = [] }: HeroCarouselProps) {
 
             {/* Dots Indicator */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-              {heroSlides.map((_, index) => (
+              {slides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => emblaApi?.scrollTo(index)}

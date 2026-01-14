@@ -176,9 +176,7 @@ export default function AboutPageContent() {
   const visionContent = settings?.homepage?.about?.vision?.content ||
     "To represent the gold standard in hardware supply across Nepal. We envision a future where Root Suppliers is synonymous with trust, innovation, and community development, helping shape the skyline of Biratnagar and beyond.";
 
-  const statsData = settings?.homepage?.stats?.length
-    ? settings.homepage.stats
-    : undefined;
+  const statsData = settings?.homepage?.stats;
 
   const galleryImages = settings?.homepage?.about?.gallery || [];
 

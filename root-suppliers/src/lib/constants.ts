@@ -147,3 +147,11 @@ export const FALLBACK_TESTIMONIALS = [
     rating: 4,
   },
 ];
+
+// ===== Stats Defaults =====
+export const DEFAULT_STATS = [
+  { label: "Products", value: 1000, suffix: "+" },
+  { label: "Happy Customers", value: 500, suffix: "+" },
+  { label: "Trusted Brands", value: 50, suffix: "+" },
+  { label: "Years Experience", value: 15, suffix: "+" },
+];

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { Package, Users, Award, Calendar } from "lucide-react";
+import { DEFAULT_STATS } from "@/lib/constants";
 
 interface StatItem {
   icon: React.ElementType;
@@ -78,13 +79,12 @@ export const StatsSection: React.FC<StatsSectionProps> = ({ stats: customStats }
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Default stats fallback
-  const displayStats = customStats || [
-    { value: 1000, suffix: "+", label: "Products" },
-    { value: 500, suffix: "+", label: "Happy Customers" },
-    { value: 50, suffix: "+", label: "Trusted Brands" },
-    { value: 15, suffix: "+", label: "Years Experience" },
-  ];
+  // Default stats fallback - only use if customStats is undefined
+  const displayStats = customStats !== undefined ? customStats : DEFAULT_STATS;
+
+  if (!displayStats || displayStats.length === 0) {
+    return null;
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(

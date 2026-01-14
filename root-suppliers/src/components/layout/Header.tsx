@@ -139,10 +139,10 @@ export default function Header() {
 
               {/* Tagline - Center */}
               <div className="hidden lg:block text-center flex-1">
-                <h2 className="text-sm lg:text-base font-extrabold text-gray-900 uppercase tracking-wider leading-tight">
+                <h2 className="text-sm lg:text-base font-extrabold text-gray-900 uppercase tracking-wider leading-tight font-primary">
                   ALL CONSTRUCTION
                 </h2>
-                <p className="text-sm lg:text-base font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-wider">
+                <p className="text-sm lg:text-base font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-wider font-primary">
                   SOLUTIONS UNDER ONE ROOF
                 </p>
               </div>
