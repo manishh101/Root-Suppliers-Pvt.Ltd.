@@ -60,13 +60,13 @@ export default function ContactPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Header Section */}
-      <section className="relative py-16 md:py-24 overflow-hidden bg-gray-50 border-b border-gray-100">
+      <section className="relative pt-12 pb-8 md:pt-20 md:pb-12 overflow-hidden bg-gray-50 border-b border-gray-100">
         {/* Decorative Background Element */}
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary-50 rounded-full blur-3xl opacity-50 z-0" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-gray-100 rounded-full blur-3xl opacity-50 z-0" />
 
         <div className="container-main relative z-10">
-          <div className="mb-12 text-center md:text-left">
+          <div className="mb-0 text-center md:text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-12 md:py-24 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container-main">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -102,7 +102,7 @@ export default function ContactPage() {
                   type="text"
                   id="fullName"
                   {...register("fullName")}
-                  placeholder="e.g. John Doe"
+                  placeholder=""
                   className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.fullName ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
                     }`}
                 />
@@ -115,7 +115,7 @@ export default function ContactPage() {
                   type="tel"
                   id="phone"
                   {...register("phone")}
-                  placeholder="e.g. 9841234567"
+                  placeholder=""
                   className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.phone ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
                     }`}
                 />
@@ -128,7 +128,7 @@ export default function ContactPage() {
                   type="text"
                   id="email"
                   {...register("email")}
-                  placeholder="e.g. john@example.com"
+                  placeholder=""
                   className={`w-full px-4 py-3 rounded-lg bg-white border focus:ring-2 outline-none transition-all ${errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-200 focus:border-primary-500 focus:ring-primary-200"
                     }`}
                 />

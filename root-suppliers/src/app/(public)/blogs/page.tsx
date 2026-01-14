@@ -67,7 +67,7 @@ export default function BlogPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Page Header */}
-      <section className="bg-white border-b border-gray-100 py-12 md:py-24 relative overflow-hidden">
+      <section className="bg-white border-b border-gray-100 pt-12 pb-8 md:pt-20 md:pb-12 relative overflow-hidden">
         {/* Decorative Background */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
           <div className="absolute top-10 right-10 w-64 h-64 bg-primary-50 rounded-full blur-3xl opacity-60" />
@@ -76,7 +76,7 @@ export default function BlogPage() {
 
         <div className="container-main relative z-10">
           {/* Header Title */}
-          <div className="mb-16 md:mb-24 text-center md:text-left">
+          <div className="mb-0 text-center md:text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ export default function BlogPage() {
       </section>
 
       {/* Blog List Section */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-16">
         <div className="container-main max-w-5xl">
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
