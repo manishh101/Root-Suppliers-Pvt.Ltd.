@@ -9,15 +9,18 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 // Hero carousel slides
 const heroSlides = [
   {
+
     id: 1,
-    image: '/images/hero/image.png',
-    alt: 'Hardware store with construction tools and equipment',
+    image: '/images/hero/hero.png',
+    alt: 'Root Suppliers - All Construction Solutions Under One Roof',
   },
   {
     id: 2,
-    image: '/images/hero/image copy.png',
-    alt: 'Construction tools and building materials',
-  },
+    image: '/images/hero/hero1.png',
+    alt: 'construction tools and building materials',
+
+  }
+
 ]
 
 interface Product {
