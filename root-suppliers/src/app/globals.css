@@ -28,6 +28,7 @@ a[href*="products"],
 a[href*="categories"],
 a[href*="about"],
 a[href*="contact"],
+a[href*="blogs"],
 a[href*="tel:"] {
   font-family: 'Bank Gothic', 'Inter', sans-serif !important;
   text-transform: uppercase;

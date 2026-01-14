@@ -3,7 +3,20 @@
 import React from "react";
 import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
 
-export const VisitUsSection: React.FC = () => {
+interface VisitUsSectionProps {
+  settings?: {
+    contact?: { primaryPhone?: string; primaryEmail?: string; address?: string; googleMapsLink?: string; googleMapsEmbed?: string };
+    businessHours?: { day: string; hours: string }[];
+  } | null;
+}
+
+import { formatBusinessHours } from "@/lib/formatBusinessHours";
+
+export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings }) => {
+  // Format business hours for display
+  const hours = formatBusinessHours(settings?.businessHours);
+  const businessHoursDisplay = `${hours.weekday} | ${hours.saturday}`;
+
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
       {/* Background Decoration */}
@@ -42,10 +55,10 @@ export const VisitUsSection: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
                   <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Our Location:</h4>
                   <p className="text-gray-600 text-base flex-1">
-                    Main Road, Biratnagar-4, Morang, Nepal
+                    {settings?.contact?.address || "Main Road, Biratnagar-4, Morang, Nepal"}
                   </p>
                   <a
-                    href="https://maps.google.com"
+                    href={settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm group/link whitespace-nowrap"
@@ -64,10 +77,10 @@ export const VisitUsSection: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
                   <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Call Us:</h4>
                   <a
-                    href="tel:+9779851235637"
+                    href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
                     className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium"
                   >
-                    9851235637
+                    {settings?.contact?.primaryPhone || "9851235637"}
                   </a>
                 </div>
               </div>
@@ -80,10 +93,10 @@ export const VisitUsSection: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
                   <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Email Us:</h4>
                   <a
-                    href="mailto:info@rootsuppliers.com"
+                    href={`mailto:${settings?.contact?.primaryEmail || "info@rootsuppliers.com"}`}
                     className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium break-all"
                   >
-                    info@rootsuppliers.com
+                    {settings?.contact?.primaryEmail || "info@rootsuppliers.com"}
                   </a>
                 </div>
               </div>
@@ -96,7 +109,7 @@ export const VisitUsSection: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
                   <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Business Hours:</h4>
                   <p className="text-gray-600 text-base">
-                    Sun - Fri: <span className="font-semibold text-gray-700">7AM - 7PM</span> | Saturday: <span className="font-semibold text-gray-700">7AM - 5PM</span>
+                    {businessHoursDisplay}
                   </p>
                 </div>
               </div>
@@ -107,7 +120,7 @@ export const VisitUsSection: React.FC = () => {
           <div className="rounded-2xl overflow-hidden shadow-xl border-2 border-gray-200/50 h-[400px] lg:h-auto relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
             <iframe
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Root+Suppliers+Pvt+Ltd,Biratnagar,Nepal&zoom=17"
+              src={settings?.contact?.googleMapsEmbed || "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Root+Suppliers+Pvt+Ltd,Biratnagar,Nepal&zoom=17"}
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: '400px' }}
@@ -120,7 +133,7 @@ export const VisitUsSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

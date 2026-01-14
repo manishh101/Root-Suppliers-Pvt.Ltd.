@@ -7,6 +7,13 @@ import Image from "next/image";
 import { Phone, MapPin, Menu, X, Search, Loader2, Package } from "lucide-react";
 import MobileCategoryMenu from "@/components/layout/MobileCategoryMenu";
 
+interface HeaderProps {
+  settings?: {
+    site?: { name?: string; tagline?: string; logo?: { url?: string } };
+    contact?: { primaryPhone?: string; address?: string; googleMapsLink?: string };
+  } | null;
+}
+
 const navLinks = [
   { href: "/", label: "HOME" },
   { href: "/products", label: "PRODUCTS" },
@@ -16,7 +23,7 @@ const navLinks = [
   { href: "/about", label: "ABOUT US" },
 ];
 
-export default function Header() {
+export default function Header({ settings }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -153,18 +160,18 @@ export default function Header() {
                   <div className="p-2 rounded-full bg-primary-50 group-hover:bg-primary-100 transition-colors">
                     <Phone className="h-4 w-4 text-primary-600" />
                   </div>
-                  <a href="tel:+9779851222637" className="text-sm font-bold text-gray-900 hover:text-secondary-600 transition-colors">
-                    9851222637
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-sm font-bold text-gray-900 hover:text-secondary-600 transition-colors">
+                    {settings?.contact?.primaryPhone || '9851222637'}
                   </a>
                 </div>
                 <div className="hidden lg:flex items-center gap-2">
                   <div className="p-2 rounded-full bg-red-50">
                     <MapPin className="h-4 w-4 text-red-600" />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">Pulchowk, Kharji Chowk</span>
+                  <span className="text-sm text-gray-700 font-medium">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
                 </div>
                 <a
-                  href="https://maps.app.goo.gl/rJiwFYqFo3Dku59LA"
+                  href={settings?.contact?.googleMapsLink || 'https://maps.app.goo.gl/jRWqSiE9fjLfv45r8'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white text-sm font-bold rounded-lg hover:from-primary-500 hover:to-primary-600 transition-all shadow-md hover:shadow-lg hover:scale-105 duration-300"
@@ -383,7 +390,7 @@ export default function Header() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-medium">Call Us Now</p>
-                  <a href="tel:+9779851222637" className="text-base font-bold text-gray-900 tracking-wide">9851222637</a>
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 tracking-wide">{settings?.contact?.primaryPhone || '9851222637'}</a>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
@@ -392,11 +399,11 @@ export default function Header() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-medium">Visit Our Showroom</p>
-                  <span className="text-sm text-gray-700 font-bold">Pulchowk, Kharji Chowk</span>
+                  <span className="text-sm text-gray-700 font-bold">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
                 </div>
               </div>
               <a
-                href="https://maps.app.goo.gl/rJiwFYqFo3Dku59LA"
+                href={settings?.contact?.googleMapsLink || 'https://maps.app.goo.gl/jRWqSiE9fjLfv45r8'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-center px-4 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-md active:scale-[0.98]"

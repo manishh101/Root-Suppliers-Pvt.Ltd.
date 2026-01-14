@@ -19,6 +19,7 @@ export interface ISettings extends Document {
   };
   social: {
     facebook?: string;
+    twitter?: string;
     instagram?: string;
     youtube?: string;
     linkedin?: string;
@@ -107,10 +108,11 @@ const SettingsSchema = new Schema<ISettings>(
       secondaryEmail: String,
       address: { type: String, default: "Biratnagar, Nepal" },
       googleMapsEmbed: String,
-      googleMapsLink: String,
+      googleMapsLink: { type: String, default: "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8" },
     },
     social: {
       facebook: String,
+      twitter: String,
       instagram: String,
       youtube: String,
       linkedin: String,

@@ -11,14 +11,26 @@ import {
   Facebook,
   Instagram,
   Youtube,
+  Linkedin,
+  Twitter,
 } from "lucide-react";
 
+interface FooterProps {
+  settings?: {
+    site?: { name?: string; tagline?: string; logo?: { url?: string } };
+    contact?: { primaryPhone?: string; primaryEmail?: string; address?: string; googleMapsLink?: string };
+    social?: { facebook?: string; instagram?: string; youtube?: string; linkedin?: string; twitter?: string };
+    businessHours?: { day: string; hours: string }[];
+  } | null;
+}
+
 const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
+
   { label: "Products", href: "/products" },
   { label: "Categories", href: "/categories" },
+  { label: "Blogs", href: "/blogs" },
   { label: "Contact", href: "/contact" },
+  { label: "About Us", href: "/about" },
 ];
 
 const productCategories = [
@@ -29,14 +41,21 @@ const productCategories = [
   { label: "Construction Materials", href: "/categories/construction-materials" },
 ];
 
-const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-];
+import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<FooterProps> = ({ settings }) => {
   const currentYear = new Date().getFullYear();
+
+  // Get social links from settings
+  const socialLinks = [
+    { icon: Facebook, href: settings?.social?.facebook, label: "Facebook" },
+    { icon: Twitter, href: settings?.social?.twitter, label: "Twitter" },
+    { icon: Instagram, href: settings?.social?.instagram, label: "Instagram" },
+    { icon: Linkedin, href: settings?.social?.linkedin, label: "LinkedIn" },
+    { icon: Youtube, href: settings?.social?.youtube, label: "YouTube" },
+  ].filter(link => link.href && link.href.length > 0);
+
+  const hours = formatBusinessHours(settings?.businessHours);
 
   return (
     <footer className="bg-gradient-to-br from-secondary-700 via-secondary-800 to-secondary-900 text-white">
@@ -55,10 +74,10 @@ export const Footer: React.FC = () => {
                 />
               </div>
               <div>
-                <span className="font-semibold text-lg text-white block tracking-tight">
+                <span className="font-primary font-bold text-lg text-white block tracking-tight uppercase">
                   Root Suppliers
                 </span>
-                <span className="text-secondary-200 text-xs">Pvt. Ltd.</span>
+                <span className="text-secondary-200 text-xs font-semibold uppercase tracking-wider font-primary">Pvt. Ltd.</span>
               </div>
             </Link>
             <p className="text-secondary-200 text-sm mb-6 leading-relaxed">
@@ -90,7 +109,7 @@ export const Footer: React.FC = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors"
+                    className="text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
                   >
                     {link.label}
                   </Link>
@@ -109,7 +128,7 @@ export const Footer: React.FC = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors"
+                    className="text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
                   >
                     {link.label}
                   </Link>
@@ -126,42 +145,40 @@ export const Footer: React.FC = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="https://maps.app.goo.gl/rJiwFYqFo3Dku59LA"
+                  href={settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-secondary-200 hover:text-white text-sm transition-colors"
+                  className="flex items-start gap-3 text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
                 >
                   <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-300" />
                   <span>
-                    Main Road, Biratnagar-4
-                    <br />
-                    Morang, Nepal
+                    {settings?.contact?.address || "Main Road, Biratnagar-4, Morang, Nepal"}
                   </span>
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+9779851235637"
+                  href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
                   className="flex items-center gap-3 text-secondary-200 hover:text-white text-sm transition-colors"
                 >
                   <Phone className="h-4 w-4 flex-shrink-0 text-secondary-300" />
-                  <span>9851235637</span>
+                  <span>{settings?.contact?.primaryPhone || "9851235637"}</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@rootsuppliers.com"
+                  href={`mailto:${settings?.contact?.primaryEmail || "info@rootsuppliers.com"}`}
                   className="flex items-center gap-3 text-secondary-200 hover:text-white text-sm transition-colors"
                 >
                   <Mail className="h-4 w-4 flex-shrink-0 text-secondary-300" />
-                  <span>info@rootsuppliers.com</span>
+                  <span>{settings?.contact?.primaryEmail || "info@rootsuppliers.com"}</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-secondary-200 text-sm">
                 <Clock className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-300" />
                 <div>
-                  <span className="block">Sun - Fri: 7AM - 7PM</span>
-                  <span className="block">Saturday: 7AM - 5PM</span>
+                  <span className="block">{hours.weekday}</span>
+                  <span className="block">{hours.saturday}</span>
                 </div>
               </li>
             </ul>

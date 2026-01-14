@@ -18,25 +18,19 @@ import Category from "@/lib/db/models/Category";
 import Brand from "@/lib/db/models/Brand";
 import Settings from "@/lib/db/models/Settings";
 
-async function getHeroSlides() {
-  try {
-    await connectDB();
-    const settings = await Settings.findOne().lean();
-    return settings?.homepage?.heroSlides || [];
-  } catch (error) {
-    console.error("Error fetching hero slides:", error);
-    return [];
-  }
-}
 
-async function getStats() {
+
+
+
+async function getSettings() {
   try {
     await connectDB();
     const settings = await Settings.findOne().lean();
-    return settings?.homepage?.stats || [];
+    if (!settings) return null;
+    return JSON.parse(JSON.stringify(settings));
   } catch (error) {
-    console.error("Error fetching stats:", error);
-    return [];
+    console.error("Error fetching settings:", error);
+    return null;
   }
 }
 
@@ -114,16 +108,18 @@ async function getBrands() {
 }
 
 export default async function Home() {
-  const heroSlides = await getHeroSlides();
-  const stats = await getStats();
   const topProducts = await getTopProducts();
   const featuredProducts = await getFeaturedProducts();
   const categories = await getCategories();
   const brands = await getBrands();
+  const settings = await getSettings();
+
+  const heroSlides = settings?.homepage?.heroSlides || [];
+  const stats = settings?.homepage?.stats || [];
 
   return (
     <>
-      <Header />
+      <Header settings={settings} />
       <main className="min-h-screen">
         {/* Hero Section */}
         <HeroCarousel topProducts={topProducts} heroSlides={heroSlides} />
@@ -152,9 +148,10 @@ export default async function Home() {
         <TestimonialsSectionStatic />
 
         {/* Visit Us / Map Section */}
-        <VisitUsSection />
+        <VisitUsSection settings={settings} />
       </main>
-      <Footer />
+      <Footer settings={settings} />
     </>
   );
 }
+

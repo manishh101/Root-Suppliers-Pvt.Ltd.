@@ -32,6 +32,7 @@ const settingsSchema = z.object({
     whatsapp: z.string().optional(),
     address: z.string().optional(),
     googleMapsUrl: z.string().optional(),
+    googleMapsEmbed: z.string().optional(),
   }),
   socialLinks: z.object({
     facebook: z.string().optional(),
@@ -127,6 +128,7 @@ export default function SettingsPage() {
               whatsapp: s.contact?.secondaryPhone || "", // Mapped
               address: s.contact?.address || "",
               googleMapsUrl: s.contact?.googleMapsLink || "",
+              googleMapsEmbed: s.contact?.googleMapsEmbed || "",
             },
             socialLinks: {
               facebook: s.social?.facebook || "",
@@ -190,6 +192,7 @@ export default function SettingsPage() {
           secondaryPhone: data.contact.whatsapp,
           address: data.contact.address,
           googleMapsLink: data.contact.googleMapsUrl,
+          googleMapsEmbed: data.contact.googleMapsEmbed,
         },
         social: data.socialLinks,
         seo: {
@@ -288,8 +291,9 @@ export default function SettingsPage() {
                   <div><label className="block text-sm font-medium mb-1">Email</label><input type="email" {...register("contact.primaryEmail")} className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
                   <div><label className="block text-sm font-medium mb-1">Phone</label><input {...register("contact.primaryPhone")} className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
                   <div><label className="block text-sm font-medium mb-1">WhatsApp</label><input {...register("contact.whatsapp")} className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
-                  <div><label className="block text-sm font-medium mb-1">Maps URL</label><input {...register("contact.googleMapsUrl")} className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Maps Link URL <span className="text-xs text-gray-500">(for Get Directions)</span></label><input {...register("contact.googleMapsUrl")} placeholder="https://maps.app.goo.gl/..." className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
                 </div>
+                <div><label className="block text-sm font-medium mb-1">Maps Embed URL <span className="text-xs text-gray-500">(for map iframe display)</span></label><input {...register("contact.googleMapsEmbed")} placeholder="https://www.google.com/maps/embed?pb=..." className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
                 <div><label className="block text-sm font-medium mb-1">Address</label><textarea {...register("contact.address")} rows={2} className="w-full px-4 py-2 border rounded outline-none focus:ring-2 ring-primary/20" /></div>
                 <hr className="border-gray-100" />
                 <label className="flex items-center gap-3 p-4 bg-gray-50 rounded border"><input type="checkbox" {...register("enableInquiryNotifications")} className="w-5 h-5 text-primary" /> <span>Enable Inquiry Notifications</span></label>
