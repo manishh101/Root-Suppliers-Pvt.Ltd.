@@ -29,10 +29,7 @@ export const VisitUsSection: React.FC = () => {
         <div className="grid lg:grid-cols-2 gap-10">
           {/* Left Side - Contact Info */}
           <div className="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
-            <h3 className="font-bold text-3xl text-gray-900 mb-8 flex items-center gap-3">
-              {/* <div className="w-10 h-10 rounded-lg bg-gradient-to-br  flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-white" />
-              </div> */}
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
               Contact Information
             </h3>
 
@@ -42,9 +39,9 @@ export const VisitUsSection: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <MapPin className="h-6 w-6 text-red-600" />
                 </div>
-                <div className="flex items-center gap-4 flex-1">
-                  <h4 className="font-medium text-gray-900 min-w-[120px]">Our Location:</h4>
-                  <p className="text-gray-600 flex-1">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
+                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Our Location:</h4>
+                  <p className="text-gray-600 text-base flex-1">
                     Main Road, Biratnagar-4, Morang, Nepal
                   </p>
                   <a
@@ -64,11 +61,11 @@ export const VisitUsSection: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Phone className="h-6 w-6 text-blue-600" />
                 </div>
-                <div className="flex items-center gap-4 flex-1">
-                  <h4 className="font-medium text-gray-900 min-w-[120px]">Call Us:</h4>
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
+                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Call Us:</h4>
                   <a
                     href="tel:+9779851235637"
-                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
+                    className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium"
                   >
                     9851235637
                   </a>
@@ -80,11 +77,11 @@ export const VisitUsSection: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Mail className="h-6 w-6 text-green-600" />
                 </div>
-                <div className="flex items-center gap-4 flex-1">
-                  <h4 className="font-medium text-gray-900 min-w-[120px]">Email Us:</h4>
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
+                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Email Us:</h4>
                   <a
                     href="mailto:info@rootsuppliers.com"
-                    className="text-gray-600 hover:text-primary-600 transition-colors font-medium break-all"
+                    className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium break-all"
                   >
                     info@rootsuppliers.com
                   </a>
@@ -96,9 +93,9 @@ export const VisitUsSection: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Clock className="h-6 w-6 text-amber-600" />
                 </div>
-                <div className="flex items-center gap-4 flex-1">
-                  <h4 className="font-medium text-gray-900 min-w-[120px]">Business Hours:</h4>
-                  <p className="text-gray-600">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
+                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Business Hours:</h4>
+                  <p className="text-gray-600 text-base">
                     Sun - Fri: <span className="font-semibold text-gray-700">7AM - 7PM</span> | Saturday: <span className="font-semibold text-gray-700">7AM - 5PM</span>
                   </p>
                 </div>
