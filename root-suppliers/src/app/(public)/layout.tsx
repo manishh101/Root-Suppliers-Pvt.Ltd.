@@ -23,10 +23,10 @@ export default async function PublicLayout({
   const settings = await getSettings();
 
   return (
-    <>
+    <div className="public-font-theme">
       <Header settings={settings} />
       <main className="min-h-screen pb-16 md:pb-0">{children}</main>
       <Footer settings={settings} />
-    </>
+    </div>
   );
 }
