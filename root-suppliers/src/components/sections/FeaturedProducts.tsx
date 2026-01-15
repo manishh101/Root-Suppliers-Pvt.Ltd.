@@ -56,13 +56,13 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
       <div className="container-main relative z-10">
         {/* Section Header */}
         <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-4">
+          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-sm md:text-base font-bold rounded-full mb-6 uppercase tracking-wider">
             Our Best Sellers
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Featured Products
           </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Discover our top-rated construction and hardware supplies trusted by professionals
           </p>
           <div className="w-20 h-1.5 bg-gradient-to-r from-primary-500 to-primary-700 mx-auto mt-6 rounded-full" />
@@ -110,17 +110,17 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
+                <span className="inline-block px-3 py-1 text-sm font-bold text-primary-600 bg-primary-50 rounded-full mb-3">
                   {product.category?.name || "Uncategorized"}
                 </span>
-                <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
+                <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight">
                   {product.name}
                 </h3>
 
                 {/* View Product Link */}
-                <div className="mt-3 flex items-center text-sm font-medium text-gray-500 group-hover:text-primary-600 transition-colors">
+                <div className="mt-4 flex items-center text-sm md:text-base font-bold text-gray-500 group-hover:text-primary-600 transition-colors uppercase tracking-wider">
                   <span>View Details</span>
-                  <ArrowRight className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 md:h-5 md:w-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
@@ -193,13 +193,13 @@ export const FeaturedProductsStatic: React.FC = () => {
       <div className="container-main relative z-10">
         {/* Section Header */}
         <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-4">
+          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-sm md:text-base font-bold rounded-full mb-6 uppercase tracking-wider">
             Our Best Sellers
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Featured Products
           </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Discover our top-rated construction and hardware supplies trusted by professionals
           </p>
           <div className="w-20 h-1.5 bg-gradient-to-r from-primary-500 to-primary-700 mx-auto mt-6 rounded-full" />
@@ -247,17 +247,17 @@ export const FeaturedProductsStatic: React.FC = () => {
 
               {/* Content */}
               <div className="p-4 md:p-5">
-                <span className="inline-block px-2.5 py-0.5 text-xs font-semibold text-primary-600 bg-primary-50 rounded-full mb-2">
+                <span className="inline-block px-3 py-1 text-sm font-bold text-primary-600 bg-primary-50 rounded-full mb-3">
                   {product.category}
                 </span>
-                <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 text-sm md:text-base">
+                <h3 className="text-base md:text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight">
                   {product.name}
                 </h3>
 
                 {/* View Product Link */}
-                <div className="mt-3 flex items-center text-sm font-medium text-gray-500 group-hover:text-primary-600 transition-colors">
+                <div className="mt-4 flex items-center text-sm md:text-base font-bold text-gray-500 group-hover:text-primary-600 transition-colors uppercase tracking-wider">
                   <span>View Details</span>
-                  <ArrowRight className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 md:h-5 md:w-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>

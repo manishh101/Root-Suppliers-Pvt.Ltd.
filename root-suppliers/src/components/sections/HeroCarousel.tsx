@@ -75,11 +75,11 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
     const interval = setInterval(() => {
       emblaApi.scrollNext()
     }, 5000)
-    return () => clearInterval(interval)
+    return () => clearInterval(interval)  
   }, [emblaApi])
 
   return (
-    <section className="bg-white pt-16 pb-10 min-h-[calc(100vh-160px)]">
+    <section className="bg-white pt-20 pb-10 min-h-[calc(100vh-160px)]">
       <div className="container mx-auto px-4 h-full">
         <div className="flex flex-col lg:flex-row gap-4 h-full">
           {/* Left Side - Main Carousel (larger size) */}
@@ -137,8 +137,8 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
           <div className="lg:w-2/5">
             <div className="bg-gradient-to-br from-red-50 via-white to-red-50/30 rounded-2xl p-4 md:p-5 h-full flex flex-col shadow-md border border-red-100">
               <div className="flex items-center justify-center mb-4 md:mb-5 pb-3 md:pb-4 border-b border-red-200">
-                <h2 className="text-lg md:text-xl font-bold text-center text-gray-800 uppercase tracking-wide flex items-center gap-2">
-                  <span className="text-2xl"></span>
+                <h2 className="text-xl md:text-2xl font-bold text-center text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-3xl"></span>
                   Top Selling Products
                 </h2>
               </div>
@@ -159,7 +159,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                       <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <div className="p-2 md:p-2.5 text-center mt-auto">
-                      <span className="text-xs font-semibold text-gray-700 group-hover:text-red-600 transition-colors line-clamp-2 leading-tight">
+                      <span className="text-sm font-bold text-gray-700 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">
                         {product.name}
                       </span>
                     </div>

@@ -147,10 +147,10 @@ export default function Header({ settings }: HeaderProps) {
 
               {/* Tagline - Center */}
               <div className="hidden lg:block text-center flex-1">
-                <h2 className="text-sm lg:text-base font-extrabold text-gray-900 uppercase tracking-wider leading-tight font-primary">
+                <h2 className="text-base lg:text-lg font-extrabold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
                   ALL CONSTRUCTION
                 </h2>
-                <p className="text-sm lg:text-base font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-wider font-primary">
+                <p className="text-base lg:text-lg font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
                   SOLUTIONS UNDER ONE ROOF
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function Header({ settings }: HeaderProps) {
                   <div className="p-2 rounded-full bg-primary-50 group-hover:bg-primary-100 transition-colors">
                     <Phone className="h-4 w-4 text-primary-600" />
                   </div>
-                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-sm font-bold text-gray-900 hover:text-secondary-600 transition-colors">
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 hover:text-secondary-600 transition-colors">
                     {settings?.contact?.primaryPhone || '9851222637'}
                   </a>
                 </div>
@@ -169,7 +169,7 @@ export default function Header({ settings }: HeaderProps) {
                   <div className="p-2 rounded-full bg-red-50">
                     <MapPin className="h-4 w-4 text-red-600" />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
+                  <span className="text-base text-gray-700 font-medium">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
                 </div>
                 <a
                   href={settings?.contact?.googleMapsLink || 'https://maps.app.goo.gl/jRWqSiE9fjLfv45r8'}
@@ -203,7 +203,7 @@ export default function Header({ settings }: HeaderProps) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-3 lg:px-4 py-2 text-sm font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 uppercase tracking-wide hover:scale-105"
+                    className="px-4 lg:px-6 py-2.5 text-base font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 uppercase tracking-widest hover:scale-105"
                   >
                     {link.label}
                   </Link>
