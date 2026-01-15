@@ -87,6 +87,11 @@ CategorySchema.pre("save", function (next) {
   next();
 });
 
+// Create indexes for performance
+CategorySchema.index({ parent: 1 });
+CategorySchema.index({ slug: 1 }); // Already unique: true implies index, but let's be descriptive
+CategorySchema.index({ orderIndex: 1, name: 1 });
+
 // Prevent mongoose from recompiling the model
 const Category: Model<ICategory> =
   mongoose.models.Category || mongoose.model<ICategory>("Category", CategorySchema);

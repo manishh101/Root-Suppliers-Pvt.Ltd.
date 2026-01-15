@@ -331,12 +331,32 @@ Cookie: auth-token=...
 
 ## 🚀 Rate Limiting
 
-*To be implemented in production*
+Rate limiting is implemented via middleware to protect against abuse and brute-force attacks.
 
-Recommended limits:
-- Public endpoints: 100 requests/15 minutes per IP
-- Auth endpoints: 5 requests/15 minutes per IP
-- Admin endpoints: 1000 requests/15 minutes per token
+- **Auth endpoints (`/api/auth/login`)**: 10 attempts / 1 minute per IP.
+- **Other endpoints**: Currently monitored (headers added for future enforcement).
+
+---
+
+## 🏥 Health Check
+
+Monitor the system status via the health endpoint.
+
+```http
+GET /api/health
+```
+
+**Response (Standard):**
+```json
+{
+  "success": true,
+  "uptime": 1234.56,
+  "timestamp": 1641470400000,
+  "database": "online",
+  "environment": "production",
+  "version": "1.0.0"
+}
+```
 
 ---
 

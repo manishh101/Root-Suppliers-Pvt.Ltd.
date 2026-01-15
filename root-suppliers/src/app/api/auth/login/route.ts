@@ -4,9 +4,13 @@ import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
 import { handleApiError, successResponse, ValidationError, AuthError, ForbiddenError } from "@/lib/errors";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
-);
+const secret = process.env.NEXTAUTH_SECRET;
+
+if (!secret) {
+  throw new Error("NEXTAUTH_SECRET is not defined");
+}
+
+const JWT_SECRET = new TextEncoder().encode(secret);
 
 /**
  * POST /api/auth/login

@@ -56,7 +56,12 @@ export async function GET(req: NextRequest) {
           success: true,
           categories: categoriesWithCounts,
         },
-        { status: 200 }
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+          }
+        }
       );
     }
 
@@ -65,7 +70,12 @@ export async function GET(req: NextRequest) {
         success: true,
         categories,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        }
+      }
     );
   } catch (error) {
     console.error("GET /api/categories error:", error);

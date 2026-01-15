@@ -4,6 +4,7 @@ import Settings from "@/lib/db/models/Settings";
 import { verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
 import { DEFAULT_STATS } from "@/lib/constants";
+import { recordAuditLog } from "@/lib/audit";
 
 /**
  * GET /api/settings
@@ -97,7 +98,7 @@ export async function GET() {
  */
 export async function PUT(req: NextRequest) {
   try {
-    await verifyAdmin(req);
+    const user = await verifyAdmin(req);
 
     await connectDB();
 
@@ -164,6 +165,15 @@ export async function PUT(req: NextRequest) {
         { new: true, runValidators: true }
       );
     }
+
+    // Record audit log
+    await recordAuditLog({
+      userId: (user as any).userId,
+      action: "UPDATE",
+      resource: "Settings",
+      resourceId: settings?._id.toString(),
+      req,
+    });
 
     return successResponse({ settings }, 200, "Settings updated successfully");
   } catch (error: any) {

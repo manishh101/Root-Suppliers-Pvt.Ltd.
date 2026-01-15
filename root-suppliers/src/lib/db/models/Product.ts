@@ -137,6 +137,11 @@ ProductSchema.pre("save", function (next) {
   next();
 });
 
+// Create compound indexes for performance
+ProductSchema.index({ category: 1, isActive: 1 });
+ProductSchema.index({ isFeatured: 1, isActive: 1 });
+ProductSchema.index({ isTopSelling: 1, isActive: 1 });
+
 // Create text index for search
 ProductSchema.index({ name: "text", shortDescription: "text", tags: "text" });
 

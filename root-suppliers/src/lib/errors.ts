@@ -42,8 +42,13 @@ export class NotFoundError extends AppError {
 /**
  * Standard API error response handler
  */
+import { logger } from "@/lib/logger";
+
+/**
+ * Standard API error response handler
+ */
 export function handleApiError(error: any) {
-  console.error("API Error:", error);
+  logger.error({ err: error }, "API Error Occurred");
 
   if (error instanceof AppError) {
     return NextResponse.json(
