@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { formatDistanceToNow } from "date-fns";
 
 interface Product {
@@ -236,12 +237,13 @@ export default function ProductsPage() {
                     <tr key={product._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          <div className="relative w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                             {product.images && product.images[0] && product.images[0].url ? (
-                              <img
+                              <CloudinaryImage
                                 src={product.images[0].url}
                                 alt={product.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
@@ -323,12 +325,13 @@ export default function ProductsPage() {
               {products.map((product) => (
                 <div key={product._id} className="p-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                       {product.images && product.images[0] && product.images[0].url ? (
-                        <img
+                        <CloudinaryImage
                           src={product.images[0].url}
                           alt={product.name}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">

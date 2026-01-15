@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Loader2, Package, ArrowRight } from "lucide-react";
 import { CategorySidebar, CategoryNode } from "@/components/categories/CategorySidebar";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface Category {
   _id: string;
@@ -15,6 +16,7 @@ interface Category {
   image?: {
     url: string;
     alt: string;
+    publicId?: string;
   };
   productCount?: number;
 }
@@ -143,8 +145,9 @@ export default function CategoriesPage() {
                         >
                           {/* Image */}
                           <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
-                            <Image
-                              src={item.image?.url || "/images/placeholder.jpg"}
+                            <CloudinaryImage
+                              src={item.image?.url || PLACEHOLDER_IMAGES.PRODUCT}
+                              publicId={item.image?.publicId}
                               alt={item.name}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-500"

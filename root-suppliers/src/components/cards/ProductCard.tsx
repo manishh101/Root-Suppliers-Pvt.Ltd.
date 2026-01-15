@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface Product {
   _id: string;
@@ -26,6 +27,7 @@ interface Product {
   };
   images: Array<{
     url: string;
+    publicId?: string;
     alt?: string;
   }>;
   isNew?: boolean;
@@ -53,8 +55,9 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row group hover:shadow-lg hover:border-primary-100 transition-all duration-300"
       >
         <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-gray-50 flex items-center justify-center p-4">
-          <Image
-            src={product.images?.[0]?.url || "/images/placeholder.jpg"}
+          <CloudinaryImage
+            src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
+            publicId={product.images?.[0]?.publicId}
             alt={product.images?.[0]?.alt || product.name}
             fill
             className="object-contain group-hover:scale-105 transition-transform duration-500 p-2 mix-blend-multiply"
@@ -106,8 +109,9 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       className={`bg-white ${isCompact ? 'rounded-xl' : 'rounded-2xl'} shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:shadow-gray-200/50 hover:border-primary-100 transition-all duration-300 flex flex-col`}
     >
       <div className="relative aspect-square bg-gray-50 overflow-hidden flex items-center justify-center">
-        <Image
-          src={product.images?.[0]?.url || "/images/placeholder.jpg"}
+        <CloudinaryImage
+          src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
+          publicId={product.images?.[0]?.publicId}
           alt={product.images?.[0]?.alt || product.name}
           fill
           className="object-contain group-hover:scale-110 transition-transform duration-700 p-4 mix-blend-multiply"

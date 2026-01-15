@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -51,12 +51,13 @@ export const Header: React.FC = () => {
           {/* Logo and Tagline */}
           <div className="flex items-center gap-4">
             <Link href="/" className="flex-shrink-0">
-              <Image
+              <CloudinaryImage
                 src="/images/logo.png"
                 alt="Root Suppliers Pvt. Ltd."
                 width={70}
                 height={70}
                 className="h-16 w-auto"
+                priority
               />
             </Link>
             <div className="hidden sm:block">

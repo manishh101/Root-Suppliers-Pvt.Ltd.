@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Save, Loader2, Upload, Trash2, Plus, Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 // Schema definition
 const aboutPageSchema = z.object({
@@ -47,11 +48,11 @@ export default function AboutAdminPage() {
   });
 
   // Default Fallback Data (Matches Frontend)
-  const defaultStoryImage = { url: "/images/hero/image.png", publicId: "" };
+  const defaultStoryImage = { url: PLACEHOLDER_IMAGES.HERO, publicId: "" };
   const defaultGallery = [
-    { url: "/images/hero/image copy.png", alt: "Warehouse Operations" },
-    { url: "/images/products/image copy.png", alt: "Safety Gear" },
-    { url: "/images/products/image copy 2.png", alt: "Quality Tools" },
+    { url: PLACEHOLDER_IMAGES.PRODUCT, alt: "Warehouse Operations" },
+    { url: PLACEHOLDER_IMAGES.PRODUCT, alt: "Safety Gear" },
+    { url: PLACEHOLDER_IMAGES.PRODUCT, alt: "Quality Tools" },
   ];
   const defaultStory = {
     title: "More Than Just a Hardware Store.",
@@ -219,7 +220,13 @@ export default function AboutAdminPage() {
             <label className="block text-sm font-medium text-gray-700">Story Image</label>
             <div className="relative w-full aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden border">
               {storyImage ? (
-                <Image src={storyImage.url} alt="Story" fill className="object-cover" />
+                <CloudinaryImage
+                  src={storyImage.url}
+                  publicId={storyImage.publicId}
+                  alt="Story"
+                  fill
+                  className="object-cover"
+                />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">No Image</div>
               )}
@@ -276,7 +283,13 @@ export default function AboutAdminPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {gallery.map((img, idx) => (
               <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border">
-                <Image src={img.url} alt="Gallery" fill className="object-cover" />
+                <CloudinaryImage
+                  src={img.url}
+                  publicId={img.publicId}
+                  alt="Gallery"
+                  fill
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button onClick={() => removeGalleryImage(idx)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
                     <Trash2 className="w-4 h-4" />
@@ -290,3 +303,4 @@ export default function AboutAdminPage() {
     </div>
   );
 }
+

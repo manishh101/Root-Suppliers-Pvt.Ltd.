@@ -14,6 +14,7 @@ import {
   Image as ImageIcon,
   Plus,
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 import dynamic from 'next/dynamic';
 import { blogSchema, type BlogFormData } from '@/lib/validations';
 
@@ -260,16 +261,17 @@ export default function EditBlogPage({ params }: { params: { slug: string } }) {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h2>
               <div className="flex items-start gap-6">
                 {watchedImage ? (
-                  <div className="relative">
-                    <img
+                  <div className="relative w-64 h-40 rounded-lg border overflow-hidden">
+                    <CloudinaryImage
                       src={watchedImage.url}
                       alt="Featured"
-                      className="w-64 h-40 object-cover rounded-lg border"
+                      fill
+                      className="object-cover"
                     />
                     <button
                       type="button"
                       onClick={() => setValue("featuredImage", null)}
-                      className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10"
                     >
                       <X className="w-4 h-4" />
                     </button>

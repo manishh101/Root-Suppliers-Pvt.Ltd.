@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { StatsSection } from "@/components/sections/StatsSection";
@@ -9,6 +8,8 @@ import { ProductCard } from "@/components/cards/ProductCard";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { Package, Users, Award, Calendar, Loader2 } from "lucide-react";
 import { FALLBACK_TESTIMONIALS } from "@/lib/constants";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 // Real product data structure using existing images
 const featuredProducts = [
@@ -76,6 +77,7 @@ interface SettingsData {
         content: string;
         image?: {
           url: string;
+          publicId?: string;
         };
       };
       mission: {
@@ -100,7 +102,7 @@ interface Testimonial {
   _id: string;
   customerName: string;
   customerDesignation?: string;
-  customerImage?: { url: string };
+  customerImage?: { url: string; publicId?: string };
   reviewText: string;
   rating: number;
 }
@@ -157,7 +159,8 @@ export default function AboutPageContent() {
   }
 
   // Fallback defaults if settings are missing specific fields
-  const heroImage = settings?.homepage?.about?.heroImage?.url || "/images/hero/image.png";
+  const heroImage = settings?.homepage?.about?.heroImage?.url || PLACEHOLDER_IMAGES.HERO;
+  const heroImagePublicId = settings?.homepage?.about?.heroImage?.publicId;
 
   const storyTitle = settings?.homepage?.about?.story?.title || "More Than Just a Hardware Store.";
   const storyContent = settings?.homepage?.about?.story?.content
@@ -166,7 +169,8 @@ export default function AboutPageContent() {
        <p>What began as a modest storefront has blossomed into a trusted institution. We've weathered market changes and expanded our horizons, but our core philosophy remains unchanged — <span class="italic text-primary-700">integrity in every transaction</span>.</p>
        <p>Today, we pride ourselves on being a partner in your progress. Whether you're building a family home or a commercial landmark, our team puts their expertise to work for you, ensuring you have the right materials at the right time.</p>`;
 
-  const storyImage = settings?.homepage?.about?.story?.image?.url || "/images/hero/image.png";
+  const storyImage = settings?.homepage?.about?.story?.image?.url || PLACEHOLDER_IMAGES.HERO;
+  const storyImagePublicId = settings?.homepage?.about?.story?.image?.publicId;
 
   const missionTitle = settings?.homepage?.about?.mission?.title || "Our Mission";
   const missionContent = settings?.homepage?.about?.mission?.content ||
@@ -218,8 +222,9 @@ export default function AboutPageContent() {
               className="lg:col-span-5 relative"
             >
               <div className="relative aspect-[4/5] md:aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-2xl transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
-                <Image
+                <CloudinaryImage
                   src={storyImage}
+                  publicId={storyImagePublicId}
                   alt="Root Suppliers Store"
                   fill
                   className="object-cover"
@@ -324,8 +329,9 @@ export default function AboutPageContent() {
               {/* Display gallery images dynamically - simple grid for generic length */}
               {galleryImages.map((img, idx) => (
                 <div key={idx} className={`relative rounded-2xl overflow-hidden group min-h-[250px] ${idx === 0 ? 'md:col-span-8 md:row-span-2 md:h-[600px] h-[350px]' : 'md:col-span-4 h-[250px] md:h-[300px]'}`}>
-                  <Image
+                  <CloudinaryImage
                     src={img.url}
+                    publicId={img.publicId}
                     alt={img.alt || "Gallery Image"}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -353,8 +359,8 @@ export default function AboutPageContent() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-auto md:h-[600px]">
               {/* Left Column - Large feature */}
               <div className="md:col-span-7 h-[350px] md:h-full relative rounded-2xl overflow-hidden group">
-                <Image
-                  src="/images/hero/image copy.png"
+                <CloudinaryImage
+                  src={PLACEHOLDER_IMAGES.HERO}
                   alt="Warehouse Operations"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -369,8 +375,8 @@ export default function AboutPageContent() {
               {/* Right Column - Stacked */}
               <div className="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
                 <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px] md:min-h-0 h-[250px] md:h-auto">
-                  <Image
-                    src="/images/products/image copy.png"
+                  <CloudinaryImage
+                    src={PLACEHOLDER_IMAGES.PRODUCT}
                     alt="Safety Gear"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -378,8 +384,8 @@ export default function AboutPageContent() {
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                 </div>
                 <div className="flex-1 relative rounded-2xl overflow-hidden group min-h-[200px] md:min-h-0 h-[250px] md:h-auto">
-                  <Image
-                    src="/images/products/image copy 2.png"
+                  <CloudinaryImage
+                    src={PLACEHOLDER_IMAGES.PRODUCT}
                     alt="Quality Tools"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -397,7 +403,6 @@ export default function AboutPageContent() {
         <StatsSection stats={statsData} />
       </div>
 
-      {/* Testimonials Section - NEW */}
       {/* Testimonials Section - NEW */}
       <div className="py-10">
         <TestimonialsSection testimonials={displayTestimonials} />
@@ -419,7 +424,6 @@ export default function AboutPageContent() {
         </div>
       </div>
 
-      {/* Featured Products - Clean & Minimal */}
       {/* Featured Products - Clean & Minimal */}
       {featuredProducts.length > 0 && (
         <section className="py-16 md:py-24 bg-gray-50">

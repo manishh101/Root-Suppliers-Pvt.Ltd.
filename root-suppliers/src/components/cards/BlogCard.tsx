@@ -1,15 +1,16 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Calendar, User, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/Badge";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface IBlog {
   _id: string;
   title: string;
   slug: string;
   excerpt: string;
-  featuredImage: string | { url: string };
+  featuredImage: string | { url: string; publicId?: string };
   author: string;
   publishedAt: Date;
   tags?: string[];
@@ -32,7 +33,9 @@ export interface BlogCardProps {
  * ```
  */
 export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
-  const image = (typeof blog.featuredImage === 'string' ? blog.featuredImage : blog.featuredImage?.url) || "/placeholder-blog.jpg";
+  const imageUrl = (typeof blog.featuredImage === 'string' ? blog.featuredImage : blog.featuredImage?.url) || PLACEHOLDER_IMAGES.BLOG;
+  const publicId = typeof blog.featuredImage === 'object' ? blog.featuredImage?.publicId : undefined;
+
   const publishDate = new Date(blog.publishedAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -43,8 +46,9 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
     <article className="group bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden flex flex-col h-full">
       {/* Featured Image */}
       <Link href={`/blog/${blog.slug}`} className="block relative aspect-[16/10] overflow-hidden bg-gray-100">
-        <Image
-          src={image}
+        <CloudinaryImage
+          src={imageUrl}
+          publicId={publicId}
           alt={blog.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"

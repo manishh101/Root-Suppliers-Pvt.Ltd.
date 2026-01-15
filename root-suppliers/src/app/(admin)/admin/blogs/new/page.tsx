@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save, Loader2, Upload, X, FileText, Image as ImageIcon } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { blogSchema, type BlogFormData } from "@/lib/validations";
 
 // Dynamically import RichTextEditor to prevent SSR issues with Quill
@@ -212,9 +213,9 @@ export default function NewBlogPage() {
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Featured Image</h2>
               {watchedFeaturedImage ? (
-                <div className="relative rounded-lg overflow-hidden">
-                  <img src={watchedFeaturedImage.url} alt="Featured" className="w-full h-64 object-cover" />
-                  <button type="button" onClick={() => setValue("featuredImage", null)} className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors">
+                <div className="relative rounded-lg overflow-hidden h-64 border">
+                  <CloudinaryImage src={watchedFeaturedImage.url} alt="Featured" fill className="object-cover" />
+                  <button type="button" onClick={() => setValue("featuredImage", null)} className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10">
                     <X className="w-4 h-4" />
                   </button>
                 </div>

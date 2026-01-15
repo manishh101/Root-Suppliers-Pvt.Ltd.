@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 import {
   Plus,
   Trash2,
@@ -247,7 +247,7 @@ export default function HeroSlidesPage() {
             {/* Image Preview */}
             <div className="relative w-48 h-28 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
               {slide.image?.url ? (
-                <Image
+                <CloudinaryImage
                   src={slide.image.url}
                   alt={slide.title || 'Hero slide'}
                   fill
@@ -348,7 +348,7 @@ export default function HeroSlidesPage() {
                 <div className="space-y-3">
                   {formData.image?.url ? (
                     <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                      <Image
+                      <CloudinaryImage
                         src={formData.image.url}
                         alt="Preview"
                         fill

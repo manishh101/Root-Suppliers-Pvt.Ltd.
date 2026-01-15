@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Calendar, User, Clock, ArrowLeft, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface BlogPost {
   _id: string;
@@ -16,6 +18,7 @@ interface BlogPost {
   content: string;
   featuredImage?: {
     url: string;
+    publicId?: string;
   };
   author: {
     name: string;
@@ -85,17 +88,14 @@ export default function SingleBlogPage() {
     <div className="bg-gray-50 min-h-screen pb-20">
       {/* Hero Section */}
       <section className="relative h-[400px] md:h-[500px] w-full bg-gray-900 overflow-hidden">
-        {blog.featuredImage?.url ? (
-          <Image
-            src={blog.featuredImage.url}
-            alt={blog.title}
-            fill
-            className="object-cover opacity-60"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-900 to-gray-900 opacity-90" />
-        )}
+        <CloudinaryImage
+          src={blog.featuredImage?.url || PLACEHOLDER_IMAGES.BLOG}
+          publicId={blog.featuredImage?.publicId}
+          alt={blog.title}
+          fill
+          className="object-cover opacity-60"
+          priority
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
 
         <div className="absolute inset-0 flex items-center justify-center">

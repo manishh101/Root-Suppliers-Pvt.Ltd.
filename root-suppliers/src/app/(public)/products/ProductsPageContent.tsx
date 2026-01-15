@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, Suspense, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";

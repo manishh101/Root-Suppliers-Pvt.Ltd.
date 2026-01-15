@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface IBrand {
   _id: string;
@@ -16,22 +17,17 @@ export interface BrandCardProps {
 }
 
 /**
- * Brand Card Component
- * 
- * Displays brand logo in a card format.
- * Used in brand carousels and listings.
- * 
- * @example
- * ```tsx
- * <BrandCard brand={brandData} />
- * ```
+ * BrandCard Component
  */
 export const BrandCard: React.FC<BrandCardProps> = ({ brand }) => {
+  // Extract publicId if logo is a Cloudinary URL? 
+  // CloudinaryImage helper will do it.
+
   const CardContent = () => (
     <div className="bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-300 p-8 flex items-center justify-center h-32 group">
       <div className="relative h-20 w-full">
-        <Image
-          src={brand.logo}
+        <CloudinaryImage
+          src={brand.logo || PLACEHOLDER_IMAGES.BRAND}
           alt={brand.name}
           fill
           className="object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-300"

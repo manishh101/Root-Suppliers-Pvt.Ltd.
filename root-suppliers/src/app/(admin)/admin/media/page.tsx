@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { 
-  Upload, 
-  Search, 
-  Grid, 
+import {
+  Upload,
+  Search,
+  Grid,
   List,
   Trash2,
   Copy,
@@ -14,6 +14,7 @@ import {
   X,
   FolderOpen
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 
 interface UploadedImage {
   id: string;
@@ -56,7 +57,7 @@ export default function MediaPage() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFiles(e.dataTransfer.files);
     }
@@ -64,7 +65,7 @@ export default function MediaPage() {
 
   const handleFiles = async (files: FileList) => {
     setUploading(true);
-    
+
     try {
       for (const file of Array.from(files)) {
         if (!file.type.startsWith('image/')) continue;
@@ -116,8 +117,8 @@ export default function MediaPage() {
   };
 
   const toggleSelectImage = (id: string) => {
-    setSelectedImages(prev => 
-      prev.includes(id) 
+    setSelectedImages(prev =>
+      prev.includes(id)
         ? prev.filter(i => i !== id)
         : [...prev, id]
     );
@@ -223,10 +224,9 @@ export default function MediaPage() {
 
       {/* Images */}
       {images.length === 0 ? (
-        <div 
-          className={`bg-white rounded-xl shadow-sm border-2 border-dashed p-12 text-center transition-colors ${
-            dragActive ? 'border-cardinal-red bg-cardinal-red/5' : 'border-gray-300'
-          }`}
+        <div
+          className={`bg-white rounded-xl shadow-sm border-2 border-dashed p-12 text-center transition-colors ${dragActive ? 'border-cardinal-red bg-cardinal-red/5' : 'border-gray-300'
+            }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
@@ -250,18 +250,18 @@ export default function MediaPage() {
           {filteredImages.map((image) => (
             <div
               key={image.id}
-              className={`relative group aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                selectedImages.includes(image.id) 
-                  ? 'border-cardinal-red ring-2 ring-cardinal-red/20' 
-                  : 'border-transparent hover:border-gray-200'
-              }`}
+              className={`relative group aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedImages.includes(image.id)
+                ? 'border-cardinal-red ring-2 ring-cardinal-red/20'
+                : 'border-transparent hover:border-gray-200'
+                }`}
             >
-              <img
+              <CloudinaryImage
                 src={image.url}
                 alt={image.filename}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
-              
+
               {/* Overlay */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
@@ -285,12 +285,11 @@ export default function MediaPage() {
               </div>
 
               {/* Selection Indicator */}
-              <div 
-                className={`absolute top-2 left-2 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                  selectedImages.includes(image.id)
-                    ? 'bg-cardinal-red border-cardinal-red'
-                    : 'bg-white/80 border-gray-300 opacity-0 group-hover:opacity-100'
-                }`}
+              <div
+                className={`absolute top-2 left-2 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selectedImages.includes(image.id)
+                  ? 'bg-cardinal-red border-cardinal-red'
+                  : 'bg-white/80 border-gray-300 opacity-0 group-hover:opacity-100'
+                  }`}
                 onClick={() => toggleSelectImage(image.id)}
               >
                 {selectedImages.includes(image.id) && (
@@ -338,11 +337,14 @@ export default function MediaPage() {
                     />
                   </td>
                   <td className="px-6 py-4">
-                    <img
-                      src={image.url}
-                      alt={image.filename}
-                      className="w-12 h-12 object-cover rounded"
-                    />
+                    <div className="relative w-12 h-12 rounded overflow-hidden">
+                      <CloudinaryImage
+                        src={image.url}
+                        alt={image.filename}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900 font-medium truncate max-w-[200px]">
                     {image.filename}
@@ -396,7 +398,7 @@ export default function MediaPage() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -416,9 +418,8 @@ export default function MediaPage() {
               </div>
 
               <div
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                  dragActive ? 'border-cardinal-red bg-cardinal-red/5' : 'border-gray-300'
-                }`}
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${dragActive ? 'border-cardinal-red bg-cardinal-red/5' : 'border-gray-300'
+                  }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}

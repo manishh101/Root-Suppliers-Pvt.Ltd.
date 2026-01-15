@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   Award,
@@ -12,6 +11,7 @@ import {
   Package,
   Clock
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const whyChooseUs = [
   {
@@ -54,7 +54,7 @@ export const AboutSection: React.FC = () => {
           {/* Who Are We - Left Side */}
           <div className="bg-white rounded-xl p-8 shadow-md">
             <div className="flex items-center gap-4 mb-6">
-              <Image
+              <CloudinaryImage
                 src="/images/logo.png"
                 alt="Root Suppliers Pvt. Ltd."
                 width={80}

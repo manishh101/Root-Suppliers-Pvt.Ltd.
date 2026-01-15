@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +58,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
     >
       {!showFallback ? (
-        <Image
+        <CloudinaryImage
           src={src}
           alt={alt}
           fill

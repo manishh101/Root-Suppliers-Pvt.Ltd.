@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
@@ -27,6 +26,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import ProductInquiryModal from "@/components/modals/ProductInquiryModal";
 import { ProductCard } from "@/components/cards/ProductCard";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface Product {
   _id: string;
@@ -47,10 +48,11 @@ interface Product {
     _id: string;
     name: string;
     slug: string;
-    logo?: { url: string };
+    logo?: { url: string; publicId?: string };
   };
   images: Array<{
     url: string;
+    publicId?: string;
     alt?: string;
   }>;
   isFeatured: boolean;
@@ -94,7 +96,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
           if (mainProduct.tags && mainProduct.tags.length > 0) {
             try {
               const tagsQuery = mainProduct.tags.join(",");
-              const tagUrl = `/api/products?category=${mainProduct.category.slug}&tags=${encodeURIComponent(tagsQuery)}&exclude=${mainProduct._id}&limit=4`;
+              const tagUrl = `/api/products?category=${mainProduct.category.slug}&tags=${encodeURIComponent(tagsQuery)}&exclude=${mainProduct._id}&limit=5`;
               console.log("Tag-based recommendation URL:", tagUrl);
 
               const tagRes = await fetch(tagUrl);
@@ -112,11 +114,11 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
 
           // 2. Fallback/Fill: Category match only (Broad Relevance)
           // Fills the remaining slots if tag search didn't return 4 products
-          if (recommended.length < 4) {
+          if (recommended.length < 5) {
             try {
               // Exclude current product AND already found tag-matched products
               const excludeIds = [mainProduct._id, ...recommended.map(p => p._id)].join(",");
-              const catUrl = `/api/products?category=${mainProduct.category.slug}&exclude=${excludeIds}&limit=${4 - recommended.length}`;
+              const catUrl = `/api/products?category=${mainProduct.category.slug}&exclude=${excludeIds}&limit=${5 - recommended.length}`;
               console.log("Category-based recommendation URL:", catUrl);
 
               const catRes = await fetch(catUrl);
@@ -164,7 +166,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
 
   const images = product.images?.length
     ? product.images
-    : [{ url: "/images/placeholder-product.jpg", alt: product.name }];
+    : [{ url: PLACEHOLDER_IMAGES.PRODUCT, alt: product.name }];
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) =>
@@ -241,11 +243,13 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
             <div className="space-y-4">
               {/* Main Image */}
               <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden">
-                <Image
-                  src={images[currentImageIndex].url}
+                <CloudinaryImage
+                  src={images[currentImageIndex].url || PLACEHOLDER_IMAGES.PRODUCT}
+                  publicId={images[currentImageIndex].publicId}
                   alt={images[currentImageIndex].alt || product.name}
                   fill
                   className="object-contain p-4 mix-blend-multiply"
+                  priority
                 />
 
                 {/* Navigation Arrows */}
@@ -299,8 +303,9 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                         : "border-transparent hover:border-gray-300"
                         }`}
                     >
-                      <Image
-                        src={image.url}
+                      <CloudinaryImage
+                        src={image.url || PLACEHOLDER_IMAGES.PRODUCT}
+                        publicId={image.publicId}
                         alt={image.alt || `${product.name} ${index + 1}`}
                         fill
                         className="object-contain p-2 mix-blend-multiply"
@@ -487,7 +492,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
       <section className="py-8 lg:py-12 bg-gray-50">
         <div className="container-main">
           <Tabs defaultValue="specifications" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:w-96">
+            <TabsList className="grid w-full grid-cols-3 lg:w-[30rem]">
               <TabsTrigger value="specifications">Specifications</TabsTrigger>
               <TabsTrigger value="features">Features</TabsTrigger>
               <TabsTrigger value="shipping">Shipping</TabsTrigger>
@@ -602,7 +607,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
             </div>
 
             {/* Products Grid using ProductCard */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard
                   key={relatedProduct._id}

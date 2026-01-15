@@ -1,14 +1,20 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ChevronRight } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface ICategory {
   _id: string;
   name: string;
   slug: string;
   description?: string;
-  image?: string;
+  image?: {
+    url: string;
+    publicId?: string;
+  };
   productCount?: number;
   isActive: boolean;
 }
@@ -29,7 +35,9 @@ export interface CategoryCardProps {
  * ```
  */
 export const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
-  const image = category.image || "/placeholder-category.jpg";
+  // Use CloudinaryImage directly to handle placeholders and optimizations
+  const imageUrl = category.image?.url || PLACEHOLDER_IMAGES.PRODUCT;
+  const publicId = category.image?.publicId;
 
   return (
     <Link
@@ -38,8 +46,9 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
     >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary-100 to-secondary-100">
-        <Image
-          src={image}
+        <CloudinaryImage
+          src={imageUrl}
+          publicId={publicId}
           alt={category.name}
           fill
           className="object-contain group-hover:scale-105 transition-transform duration-300 p-6 mix-blend-multiply"

@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useCallback } from "react";
-import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface Brand {
   _id: string;
@@ -19,14 +20,14 @@ interface TopBrandsProps {
 
 export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
   const placeholderBrands = [
-    { _id: "p1", name: "Asian Paints", logo: { url: "/images/brands/asianpaints.png", publicId: "" } },
-    { _id: "p2", name: "Delta Laminates", logo: { url: "/images/brands/delta-laminates.png", publicId: "" } },
-    { _id: "p3", name: "INCCO", logo: { url: "/images/brands/incco.png", publicId: "" } },
-    { _id: "p4", name: "Jagadamba Steel", logo: { url: "/images/brands/jagadamba-steel.png", publicId: "" } },
-    { _id: "p5", name: "Litmus", logo: { url: "/images/brands/litmus.png", publicId: "" } },
-    { _id: "p6", name: "Sarvo", logo: { url: "/images/brands/sarvo.png", publicId: "" } },
-    { _id: "p7", name: "Sika", logo: { url: "/images/brands/sika.png", publicId: "" } },
-    { _id: "p8", name: "Surya Ply", logo: { url: "/images/brands/surya-ply.png", publicId: "" } },
+    { _id: "p1", name: "Asian Paints", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p2", name: "Delta Laminates", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p3", name: "INCCO", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p4", name: "Jagadamba Steel", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p5", name: "Litmus", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p6", name: "Sarvo", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p7", name: "Sika", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
+    { _id: "p8", name: "Surya Ply", logo: { url: PLACEHOLDER_IMAGES.BRAND, publicId: "" } },
   ];
 
   const displayBrands = brands && brands.length > 0 ? brands : placeholderBrands;
@@ -91,8 +92,9 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
                 >
                   <div className="bg-white rounded-xl p-5 h-full flex items-center justify-center shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-200 group cursor-pointer relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary-50/0 via-primary-50/0 to-primary-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <Image
-                      src={brand.logo?.url || "/images/placeholder-brand.png"}
+                    <CloudinaryImage
+                      src={brand.logo?.url || PLACEHOLDER_IMAGES.BRAND}
+                      publicId={brand.logo?.publicId}
                       alt={brand.name}
                       width={120}
                       height={60}

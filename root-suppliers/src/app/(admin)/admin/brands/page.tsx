@@ -15,6 +15,7 @@ import {
   MoreVertical,
   ExternalLink,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface Brand {
   _id: string;
@@ -191,12 +192,13 @@ export default function BrandsPage() {
                   className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow relative group"
                 >
                   {/* Logo */}
-                  <div className="aspect-square bg-white rounded-lg overflow-hidden mb-3 flex items-center justify-center p-4">
+                  <div className="relative aspect-square bg-white rounded-lg overflow-hidden mb-3 flex items-center justify-center p-4">
                     {brand.logo?.url ? (
-                      <img
+                      <CloudinaryImage
                         src={brand.logo.url}
                         alt={brand.name}
-                        className="w-full h-full object-contain"
+                        fill
+                        className="object-contain"
                       />
                     ) : (
                       <Award className="w-12 h-12 text-gray-400" />
@@ -212,8 +214,8 @@ export default function BrandsPage() {
                   <div className="flex items-center justify-center gap-2 mt-2">
                     <span
                       className={`px-2 py-0.5 text-xs rounded-full ${brand.isActive
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-200 text-gray-600"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-600"
                         }`}
                     >
                       {brand.isActive ? "Active" : "Inactive"}

@@ -13,8 +13,9 @@ import {
   User as UserIcon,
   Upload,
   X,
-  Loader2
+  Loader2,
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 
 interface Testimonial {
   _id: string;
@@ -259,11 +260,14 @@ export default function TestimonialsPage() {
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 {testimonial.customerImage?.url ? (
-                  <img
-                    src={testimonial.customerImage.url}
-                    alt={testimonial.customerName}
-                    className="w-12 h-12 rounded-full object-cover border"
-                  />
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border">
+                    <CloudinaryImage
+                      src={testimonial.customerImage.url}
+                      alt={testimonial.customerName}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                     <UserIcon className="w-6 h-6 text-gray-400" />
@@ -341,8 +345,8 @@ export default function TestimonialsPage() {
                 </span>
               )}
               <span className={`px-2 py-1 text-xs rounded-full ${testimonial.isActive
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-700'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-gray-100 text-gray-700'
                 }`}>
                 {testimonial.isActive ? 'Active' : 'Inactive'}
               </span>
@@ -404,16 +408,17 @@ export default function TestimonialsPage() {
                 </label>
                 <div className="flex items-center gap-4">
                   {formData.customerImage?.url ? (
-                    <div className="relative">
-                      <img
+                    <div className="relative w-16 h-16 rounded-full border overflow-hidden">
+                      <CloudinaryImage
                         src={formData.customerImage.url}
                         alt="Preview"
-                        className="w-16 h-16 rounded-full object-cover border"
+                        fill
+                        className="object-cover"
                       />
                       <button
                         type="button"
                         onClick={removeImage}
-                        className="absolute -top-1 -right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                        className="absolute right-0 top-0 p-0.5 bg-red-500 text-white rounded-bl opacity-75 hover:opacity-100 z-10"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -477,8 +482,8 @@ export default function TestimonialsPage() {
                     >
                       <Star
                         className={`w-8 h-8 transition-colors ${star <= formData.rating
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-gray-300 hover:text-yellow-300'
+                          ? 'text-yellow-400 fill-current'
+                          : 'text-gray-300 hover:text-yellow-300'
                           }`}
                       />
                     </button>

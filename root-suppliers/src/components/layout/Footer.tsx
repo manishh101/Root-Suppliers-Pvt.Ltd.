@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Phone,
   Mail,
@@ -14,6 +13,8 @@ import {
   Linkedin,
   Twitter,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface FooterProps {
   settings?: {
@@ -66,8 +67,8 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-5">
               <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white/10 border border-white/20">
-                <Image
-                  src="/images/logo.png"
+                <CloudinaryImage
+                  src={settings?.site?.logo?.url || "/images/logo.png"}
                   alt="Root Suppliers"
                   fill
                   className="object-contain p-1.5"

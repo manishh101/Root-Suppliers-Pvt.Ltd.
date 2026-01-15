@@ -14,6 +14,7 @@ export interface CategoryNode {
   image?: {
     url: string;
     alt: string;
+    publicId?: string;
   };
   productCount?: number;
   children?: CategoryNode[];

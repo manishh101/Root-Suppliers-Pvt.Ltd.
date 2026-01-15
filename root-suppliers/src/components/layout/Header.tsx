@@ -3,9 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Phone, MapPin, Menu, X, Search, Loader2, Package } from "lucide-react";
 import MobileCategoryMenu from "@/components/layout/MobileCategoryMenu";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface HeaderProps {
   settings?: {
@@ -134,13 +135,13 @@ export default function Header({ settings }: HeaderProps) {
           <div className="container-main py-2 md:py-3">
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
-              <Link href="/" className="flex-shrink-0 group">
-                <Image
-                  src="/images/logo.png"
-                  alt="Root Suppliers Pvt. Ltd."
-                  width={70}
-                  height={70}
-                  className="w-12 h-12 md:w-20 md:h-20 object-contain group-hover:scale-105 transition-transform duration-300"
+              <Link href="/" className="flex-shrink-0 group relative w-12 h-12 md:w-20 md:h-20">
+                <CloudinaryImage
+                  src={settings?.site?.logo?.url || "/images/logo.png"}
+                  alt={settings?.site?.name || "Root Suppliers Pvt. Ltd."}
+                  fill
+                  className="object-contain group-hover:scale-105 transition-transform duration-300"
+                  priority
                 />
               </Link>
 
@@ -240,18 +241,13 @@ export default function Header({ settings }: HeaderProps) {
                             className="flex items-center gap-3 px-4 py-3 hover:bg-secondary-50 transition-colors group"
                           >
                             <div className="relative w-12 h-12 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-                              {product.images?.[0]?.url ? (
-                                <Image
-                                  src={product.images[0].url}
-                                  alt={product.name}
-                                  fill
-                                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                  <Search className="h-5 w-5" />
-                                </div>
-                              )}
+                              <CloudinaryImage
+                                src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
+                                publicId={product.images?.[0]?.publicId}
+                                alt={product.name}
+                                fill
+                                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                              />
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="text-sm font-bold text-gray-900 truncate group-hover:text-secondary-600 transition-colors">
@@ -334,18 +330,13 @@ export default function Header({ settings }: HeaderProps) {
                           className="flex items-center gap-3 px-4 py-3 hover:bg-primary-50 border-b border-gray-50 last:border-0 group"
                         >
                           <div className="relative w-12 h-12 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-                            {product.images?.[0]?.url ? (
-                              <Image
-                                src={product.images[0].url}
-                                alt={product.name}
-                                fill
-                                className="object-cover group-hover:scale-110 transition-transform duration-300"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                <Search className="h-5 w-5" />
-                              </div>
-                            )}
+                            <CloudinaryImage
+                              src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
+                              publicId={product.images?.[0]?.publicId}
+                              alt={product.name}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="text-sm font-bold text-gray-900 truncate group-hover:text-primary-600 transition-colors">

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { X, Phone, Mail, MessageCircle, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface ProductInquiryModalProps {
   isOpen: boolean;
@@ -126,9 +126,9 @@ export default function ProductInquiryModal({
               <div className="flex items-center gap-4">
                 <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
                   {product.images?.[0]?.url ? (
-                    <Image
+                    <CloudinaryImage
                       src={product.images[0].url}
-                      alt={product.images[0].alt || product.name}
+                      alt={product.images[0].alt || product.name || "Product Image"}
                       fill
                       className="object-cover"
                     />

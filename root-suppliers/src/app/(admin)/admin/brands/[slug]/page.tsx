@@ -11,6 +11,7 @@ import {
   X,
   Image as ImageIcon
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { brandSchema, type BrandFormData } from '@/lib/validations';
@@ -244,18 +245,19 @@ export default function EditBrandPage({ params }: { params: { slug: string } }) 
 
             <div className="flex items-start gap-6">
               {logo?.url ? (
-                <div className="relative">
-                  <img
+                <div className="relative w-32 h-32 rounded-lg border bg-white overflow-hidden">
+                  <CloudinaryImage
                     src={logo.url}
                     alt="Brand Logo"
-                    className="w-32 h-32 object-contain rounded-lg border bg-white p-2"
+                    fill
+                    className="object-contain p-2"
                   />
                   <button
                     type="button"
                     onClick={() => setValue('logo', { url: '', publicId: '' })}
-                    className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
+                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3 h-3" />
                   </button>
                 </div>
               ) : (

@@ -1,20 +1,21 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage'
+import { PLACEHOLDER_IMAGES } from '@/lib/cloudinary'
 
 // Default fallback slides
 const defaultSlides = [
   {
-    image: { url: '/images/hero/hero.png', publicId: '' },
+    image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
     title: 'Root Suppliers',
     subtitle: 'All Construction Solutions Under One Roof',
   },
   {
-    image: { url: '/images/hero/hero1.png', publicId: '' },
+    image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
     title: 'Quality Hardware',
     subtitle: 'Construction tools and building materials',
   },
@@ -88,8 +89,9 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                 {slides.map((slide, index) => (
                   <div key={index} className="flex-[0_0_100%] min-w-0">
                     <div className="relative w-full h-[300px] md:h-[450px] lg:h-[600px]">
-                      <Image
+                      <CloudinaryImage
                         src={slide.image.url}
+                        publicId={slide.image.publicId}
                         alt={slide.title || 'Hero slide'}
                         fill
                         className="object-cover rounded-lg"
@@ -148,8 +150,8 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                     className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col border border-gray-100 hover:border-red-300 hover:-translate-y-1"
                   >
                     <div className="relative aspect-square w-full overflow-hidden">
-                      <Image
-                        src={product.images?.[0]?.url || '/images/placeholder-product.jpg'}
+                      <CloudinaryImage
+                        src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
                         alt={product.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

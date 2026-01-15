@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save, Loader2, Upload, X, FolderTree, ChevronRight, Folder } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { categorySchema, type CategoryFormData } from "@/lib/validations";
 
 interface Category {
@@ -242,8 +243,8 @@ export default function NewCategoryPage() {
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Category Image</h2>
               <div className="flex items-start gap-6">
-                <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border flex-shrink-0">
-                  {watchedImage ? <img src={watchedImage.url} alt="Category" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><FolderTree className="w-12 h-12 text-gray-400" /></div>}
+                <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border flex-shrink-0 relative">
+                  {watchedImage ? <CloudinaryImage src={watchedImage.url} alt="Category" fill className="object-cover" /> : <div className="w-full h-full flex items-center justify-center"><FolderTree className="w-12 h-12 text-gray-400" /></div>}
                 </div>
                 <div className="flex-1">
                   <label className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${isUploading ? "opacity-50" : ""}`}>

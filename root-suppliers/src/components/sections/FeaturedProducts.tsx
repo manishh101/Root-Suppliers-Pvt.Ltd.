@@ -2,8 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Star, Eye } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 interface Product {
   _id: string;
@@ -96,8 +97,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
 
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-6">
-                <Image
-                  src={product.images[0]?.url || "/images/placeholder-product.jpg"}
+                <CloudinaryImage
+                  src={product.images[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
                   alt={product.images[0]?.alt || product.name}
                   fill
                   className="object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-4 mix-blend-multiply"
@@ -167,14 +168,14 @@ export const FeaturedProductsStatic: React.FC = () => {
   }, []);
 
   const placeholderProducts = [
-    { id: 1, name: "Premium Portland Cement 50kg", category: "Construction Materials", image: "/images/products/image.png", featured: true },
-    { id: 2, name: "TMT Steel Reinforcement Bars", category: "Construction Materials", image: "/images/products/image copy.png", featured: true },
-    { id: 3, name: "Asian Paints Royale Luxury", category: "Paints & Coatings", image: "/images/products/image copy 2.png", featured: false },
-    { id: 4, name: "Professional Cordless Drill Set", category: "Power Tools", image: "/images/products/image copy 3.png", featured: false },
-    { id: 5, name: "UPVC Pipes & Fittings Kit", category: "Plumbing", image: "/images/products/image.png", featured: false },
-    { id: 6, name: "Premium Electrical Wiring Set", category: "Electrical", image: "/images/products/image copy.png", featured: true },
-    { id: 7, name: "Industrial Safety Helmet", category: "Safety Equipment", image: "/images/products/image copy 2.png", featured: false },
-    { id: 8, name: "Complete Hand Tools Kit", category: "Tools & Hardware", image: "/images/products/image copy 3.png", featured: false },
+    { id: 1, name: "Premium Portland Cement 50kg", category: "Construction Materials", image: PLACEHOLDER_IMAGES.PRODUCT, featured: true },
+    { id: 2, name: "TMT Steel Reinforcement Bars", category: "Construction Materials", image: PLACEHOLDER_IMAGES.PRODUCT, featured: true },
+    { id: 3, name: "Asian Paints Royale Luxury", category: "Paints & Coatings", image: PLACEHOLDER_IMAGES.PRODUCT, featured: false },
+    { id: 4, name: "Professional Cordless Drill Set", category: "Power Tools", image: PLACEHOLDER_IMAGES.PRODUCT, featured: false },
+    { id: 5, name: "UPVC Pipes & Fittings Kit", category: "Plumbing", image: PLACEHOLDER_IMAGES.PRODUCT, featured: false },
+    { id: 6, name: "Premium Electrical Wiring Set", category: "Electrical", image: PLACEHOLDER_IMAGES.PRODUCT, featured: true },
+    { id: 7, name: "Industrial Safety Helmet", category: "Safety Equipment", image: PLACEHOLDER_IMAGES.PRODUCT, featured: false },
+    { id: 8, name: "Complete Hand Tools Kit", category: "Tools & Hardware", image: PLACEHOLDER_IMAGES.PRODUCT, featured: false },
   ];
 
   return (
@@ -233,7 +234,7 @@ export const FeaturedProductsStatic: React.FC = () => {
 
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-6">
-                <Image
+                <CloudinaryImage
                   src={product.image}
                   alt={product.name}
                   fill

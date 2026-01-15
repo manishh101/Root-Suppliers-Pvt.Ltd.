@@ -17,6 +17,7 @@ import {
   MoreVertical,
   Calendar,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { formatDistanceToNow, format } from "date-fns";
 
 interface Blog {
@@ -231,12 +232,13 @@ export default function BlogsPage() {
                     <tr key={blog._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          <div className="relative w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                             {blog.featuredImage ? (
-                              <img
-                                src={typeof blog.featuredImage === 'string' ? blog.featuredImage : blog.featuredImage?.url}
+                              <CloudinaryImage
+                                src={typeof blog.featuredImage === 'string' ? blog.featuredImage : blog.featuredImage.url}
                                 alt={blog.title}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
@@ -260,8 +262,8 @@ export default function BlogsPage() {
                       <td className="px-6 py-4">
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${blog.isPublished
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
                             }`}
                         >
                           {blog.isPublished ? "Published" : "Draft"}

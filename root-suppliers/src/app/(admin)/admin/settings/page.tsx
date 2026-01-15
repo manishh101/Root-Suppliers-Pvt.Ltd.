@@ -18,6 +18,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const settingsSchema = z.object({
   site: z.object({
@@ -258,7 +259,7 @@ export default function SettingsPage() {
                   <div>
                     <label className="block text-sm font-medium mb-2">Logo</label>
                     <div className="flex gap-4">
-                      <div className="w-24 h-24 bg-gray-100 rounded border flex items-center justify-center">{logoUrl ? <img src={logoUrl} className="h-full object-contain p-2" /> : <Globe className="text-gray-400" />}</div>
+                      <div className="relative w-24 h-24 bg-gray-100 rounded border flex items-center justify-center overflow-hidden">{logoUrl ? <CloudinaryImage src={logoUrl} alt="Logo" fill className="object-contain p-2" /> : <Globe className="text-gray-400" />}</div>
                       <div>
                         <label className="btn-upload inline-flex items-center gap-2 px-4 py-2 border rounded cursor-pointer hover:bg-gray-50 text-sm">
                           {isUploading ? <Loader2 className="animate-spin w-4 h-4" /> : <Upload className="w-4 h-4" />} Upload
@@ -270,7 +271,7 @@ export default function SettingsPage() {
                   <div>
                     <label className="block text-sm font-medium mb-2">Favicon</label>
                     <div className="flex gap-4">
-                      <div className="w-24 h-24 bg-gray-100 rounded border flex items-center justify-center">{faviconUrl ? <img src={faviconUrl} className="w-12 h-12 object-contain" /> : <Globe className="text-gray-400" />}</div>
+                      <div className="w-24 h-24 bg-gray-100 rounded border flex items-center justify-center">{faviconUrl ? <CloudinaryImage src={faviconUrl} alt="Favicon" width={48} height={48} className="object-contain" /> : <Globe className="text-gray-400" />}</div>
                       <div>
                         <label className="btn-upload inline-flex items-center gap-2 px-4 py-2 border rounded cursor-pointer hover:bg-gray-50 text-sm">
                           {isUploading ? <Loader2 className="animate-spin w-4 h-4" /> : <Upload className="w-4 h-4" />} Upload

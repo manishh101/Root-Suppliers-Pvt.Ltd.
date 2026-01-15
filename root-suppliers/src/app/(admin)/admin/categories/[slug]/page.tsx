@@ -15,6 +15,7 @@ import {
   FolderTree,
   ChevronRight
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 import { categorySchema, type CategoryFormData } from '@/lib/validations';
 
 interface Category {
@@ -323,16 +324,17 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Category Image</h2>
               <div className="flex items-start gap-6">
                 {watchedImage ? (
-                  <div className="relative">
-                    <img
+                  <div className="relative w-40 h-40 rounded-lg border overflow-hidden">
+                    <CloudinaryImage
                       src={watchedImage.url}
                       alt="Category"
-                      className="w-40 h-40 object-cover rounded-lg border"
+                      fill
+                      className="object-cover"
                     />
                     <button
                       type="button"
                       onClick={() => setValue("image", null)}
-                      className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10"
                     >
                       <X className="w-4 h-4" />
                     </button>

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Search, 
-  Trash2, 
-  Edit2, 
+import {
+  Plus,
+  Search,
+  Trash2,
+  Edit2,
   MoreVertical,
   Shield,
   ShieldCheck,
@@ -14,6 +14,7 @@ import {
   Calendar,
   Lock
 } from 'lucide-react';
+import { CloudinaryImage } from '@/components/ui/CloudinaryImage';
 
 interface User {
   _id: string;
@@ -73,12 +74,12 @@ export default function UsersPage() {
     }
 
     try {
-      const url = editingUser 
-        ? `/api/users/${editingUser._id}` 
+      const url = editingUser
+        ? `/api/users/${editingUser._id}`
         : '/api/users';
-      
+
       // Don't send password if editing and it's empty
-      const payload = editingUser && !formData.password 
+      const payload = editingUser && !formData.password
         ? { name: formData.name, email: formData.email, role: formData.role, isActive: formData.isActive }
         : formData;
 
@@ -213,11 +214,14 @@ export default function UsersPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {user.avatar ? (
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                          <CloudinaryImage
+                            src={user.avatar}
+                            alt={user.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
                       ) : (
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cardinal-red to-navy-blue flex items-center justify-center">
                           <span className="text-white font-semibold text-sm">
@@ -235,11 +239,10 @@ export default function UsersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${
-                      user.role === 'admin' 
-                        ? 'bg-purple-100 text-purple-700' 
-                        : 'bg-blue-100 text-blue-700'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${user.role === 'admin'
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-blue-100 text-blue-700'
+                      }`}>
                       {user.role === 'admin' ? (
                         <ShieldCheck className="w-3.5 h-3.5" />
                       ) : (
@@ -249,25 +252,24 @@ export default function UsersPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
-                      user.isActive 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-gray-100 text-gray-600'
-                    }`}>
+                    <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${user.isActive
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-gray-100 text-gray-600'
+                      }`}>
                       {user.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       <Calendar className="w-4 h-4 text-gray-400" />
-                      {user.lastLogin 
+                      {user.lastLogin
                         ? new Date(user.lastLogin).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })
                         : 'Never'
                       }
                     </div>
@@ -280,7 +282,7 @@ export default function UsersPage() {
                       >
                         <MoreVertical className="w-5 h-5 text-gray-400" />
                       </button>
-                      
+
                       {deleteConfirm === user._id && (
                         <div className="absolute right-0 top-10 w-36 bg-white rounded-lg shadow-lg border py-1 z-10">
                           <button
@@ -324,7 +326,7 @@ export default function UsersPage() {
                 {editingUser ? 'Edit User' : 'Add New User'}
               </h2>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {error && (
                 <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
@@ -392,11 +394,10 @@ export default function UsersPage() {
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, role: 'editor' })}
-                    className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-colors ${
-                      formData.role === 'editor' 
-                        ? 'border-cardinal-red bg-cardinal-red/5' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-colors ${formData.role === 'editor'
+                      ? 'border-cardinal-red bg-cardinal-red/5'
+                      : 'border-gray-200 hover:border-gray-300'
+                      }`}
                   >
                     <Shield className={`w-6 h-6 ${formData.role === 'editor' ? 'text-cardinal-red' : 'text-gray-400'}`} />
                     <span className="text-sm font-medium">Editor</span>
@@ -405,11 +406,10 @@ export default function UsersPage() {
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, role: 'admin' })}
-                    className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-colors ${
-                      formData.role === 'admin' 
-                        ? 'border-cardinal-red bg-cardinal-red/5' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`p-3 border rounded-lg flex flex-col items-center gap-2 transition-colors ${formData.role === 'admin'
+                      ? 'border-cardinal-red bg-cardinal-red/5'
+                      : 'border-gray-200 hover:border-gray-300'
+                      }`}
                   >
                     <ShieldCheck className={`w-6 h-6 ${formData.role === 'admin' ? 'text-cardinal-red' : 'text-gray-400'}`} />
                     <span className="text-sm font-medium">Admin</span>

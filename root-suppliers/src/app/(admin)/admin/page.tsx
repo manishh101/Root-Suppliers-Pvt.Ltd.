@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { formatDistanceToNow } from "date-fns";
 
 interface Stats {
@@ -298,15 +299,16 @@ export default function AdminDashboardPage() {
               stats.recentProducts.map((product) => (
                 <Link
                   key={product._id}
-                  href={`/admin/products/${product.slug}/edit`}
+                  href={`/admin/products/${product.slug}`}
                   className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="relative w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {product.images && product.images[0] ? (
-                      <img
+                      <CloudinaryImage
                         src={typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">

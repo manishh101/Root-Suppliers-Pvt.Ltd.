@@ -15,6 +15,7 @@ import {
   Image as ImageIcon,
   Loader2,
 } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { productSchema, type ProductFormData } from "@/lib/validations";
 
 interface Category {
@@ -369,12 +370,12 @@ export default function EditProductPage({
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Images</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
                 {watchedImages.map((image, index) => (
-                  <div key={index} className="relative aspect-square group">
-                    <img src={image.url} alt={`Product ${index + 1}`} className="w-full h-full object-cover rounded-lg border" />
+                  <div key={index} className="relative aspect-square group rounded-lg overflow-hidden border">
+                    <CloudinaryImage src={image.url} alt={`Product ${index + 1}`} fill className="object-cover" />
                     <button type="button" onClick={() => removeImage(index)} className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                       <X className="w-4 h-4" />
                     </button>
-                    {index === 0 && <span className="absolute bottom-2 left-2 px-2 py-1 bg-cardinal-red text-white text-xs rounded">Primary</span>}
+                    {index === 0 && <span className="absolute bottom-2 left-2 px-2 py-1 bg-cardinal-red text-white text-xs rounded z-10">Primary</span>}
                   </div>
                 ))}
                 <label className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-cardinal-red hover:bg-cardinal-red/5 transition-colors">

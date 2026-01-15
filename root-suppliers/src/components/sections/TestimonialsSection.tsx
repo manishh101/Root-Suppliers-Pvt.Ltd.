@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { FALLBACK_TESTIMONIALS } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -150,7 +150,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                     <div className="flex items-center gap-4 mt-auto relative z-10">
                       <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-100 ring-2 ring-primary-100 group-hover:ring-primary-200 transition-all">
                         {testimonial.customerImage?.url ? (
-                          <Image
+                          <CloudinaryImage
                             src={testimonial.customerImage.url}
                             alt={testimonial.customerName}
                             fill

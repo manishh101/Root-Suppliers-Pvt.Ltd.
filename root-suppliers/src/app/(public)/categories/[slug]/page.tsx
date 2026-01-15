@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,6 +35,8 @@ import {
 } from "@/components/ui/SheetRadix";
 import { CategorySidebar, CategoryNode } from "@/components/categories/CategorySidebar";
 import { ProductCard } from "@/components/cards/ProductCard";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
 // --- Types ---
 interface Product {
@@ -57,6 +58,7 @@ interface Product {
   };
   images: Array<{
     url: string;
+    publicId?: string;
     alt?: string;
   }>;
   isFeatured: boolean;
@@ -69,12 +71,12 @@ interface Category {
   name: string;
   slug: string;
   parent?: string;
-  image?: { url: string; alt: string };
+  image?: { url: string; alt: string; publicId?: string };
   productCount?: number;
   description?: string;
 }
 
-
+// ... (rest of imports and interfaces)
 
 // Helper to build tree
 function buildCategoryTree(categories: Category[]): CategoryNode[] {
@@ -231,8 +233,9 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
                       >
                         {/* Image Layer */}
                         <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110 flex items-center justify-center p-4">
-                          <Image
-                            src={sub.image?.url || "/images/placeholder.jpg"}
+                          <CloudinaryImage
+                            src={sub.image?.url || PLACEHOLDER_IMAGES.PRODUCT}
+                            publicId={sub.image?.publicId}
                             alt={sub.name}
                             fill
                             className="object-contain p-4 mix-blend-multiply"
