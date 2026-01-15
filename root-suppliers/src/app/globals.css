@@ -14,48 +14,40 @@
 
 /* Define Font Variables */
 :root {
-  --font-primary: 'Inter', sans-serif;
+  --font-primary: 'Bank Gothic', 'Inter', sans-serif;
   --font-secondary: 'Inter', system-ui, sans-serif;
 }
 
-/* Apply Bank Gothic to public site specifically */
-.public-font-theme {
-  --font-primary: 'Bank Gothic', 'Inter', sans-serif;
-}
-
-/* Apply Bank Gothic to public site specifically */
-.public-font-theme h1,
-.public-font-theme h2,
-.public-font-theme h3,
-.public-font-theme h4,
-.public-font-theme h5,
-.public-font-theme h6,
-.public-font-theme .font-primary,
-.public-font-theme .btn,
-.public-font-theme nav a,
-.public-font-theme button,
-.public-font-theme a[href*="maps"],
-.public-font-theme a[href*="products"],
-.public-font-theme a[href*="categories"],
-.public-font-theme a[href*="about"],
-.public-font-theme a[href*="contact"],
-.public-font-theme a[href*="blogs"],
-.public-font-theme a[href*="tel:"] {
+/* Global Typography Styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-primary,
+.btn,
+nav a,
+button,
+a[href*="maps"],
+a[href*="products"],
+a[href*="categories"],
+a[href*="about"],
+a[href*="contact"],
+a[href*="blogs"],
+a[href*="tel:"] {
   font-family: var(--font-primary) !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* Base Headings Style (can be overridden by theme classes) */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: inherit;
-  text-transform: none;
-  letter-spacing: normal;
+  font-weight: 700;
 }
 
 

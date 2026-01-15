@@ -194,7 +194,14 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div
+      className="min-h-screen bg-gray-100"
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        ['--font-primary' as any]: "'Inter', sans-serif",
+        textTransform: 'none'
+      } as React.CSSProperties}
+    >
       {/* Mobile sidebar overlay */}
       {isSidebarOpen && (
         <div
