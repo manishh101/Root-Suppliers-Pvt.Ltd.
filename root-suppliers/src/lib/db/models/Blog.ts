@@ -37,7 +37,6 @@ const BlogSchema = new Schema<IBlog>(
       type: String,
       unique: true,
       lowercase: true,
-      index: true,
     },
     excerpt: {
       type: String,
@@ -94,7 +93,6 @@ BlogSchema.pre("save", function (next) {
 // Create indexes for performance
 BlogSchema.index({ title: "text", excerpt: "text", tags: "text" });
 BlogSchema.index({ isPublished: 1, publishedAt: -1 });
-BlogSchema.index({ slug: 1 }); // Ensure slug index is explicit for queries
 
 const Blog: Model<IBlog> =
   mongoose.models.Blog || mongoose.model<IBlog>("Blog", BlogSchema);

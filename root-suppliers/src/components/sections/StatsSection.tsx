@@ -45,9 +45,14 @@ function useCountUp(end: number, isVisible: boolean, duration: number = 2000) {
 
 const StatCard: React.FC<{ stat: StatItem; isVisible: boolean }> = ({ stat, isVisible }) => {
   const count = useCountUp(stat.value, isVisible);
+  const IconComponent = stat.icon;
 
   return (
     <div className="text-center">
+      {/* Blue Icon Circle for Color Balance */}
+      <div className="inline-flex items-center justify-center w-14 h-14 bg-secondary-100 rounded-full mb-4">
+        <IconComponent className="w-7 h-7 text-secondary-600" />
+      </div>
       <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
         {count}
         <span className="text-primary-600">{stat.suffix}</span>

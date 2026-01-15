@@ -193,7 +193,7 @@ export default function Header({ settings }: HeaderProps) {
         </div>
 
         {/* Navigation Bar */}
-        <div className="hidden md:block bg-gradient-to-r from-primary-600 via-primary-600 to-red-600">
+        <div className="hidden md:block bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800">
           <div className="container-main">
             <div className="flex items-center justify-between py-2">
               {/* Nav Links */}

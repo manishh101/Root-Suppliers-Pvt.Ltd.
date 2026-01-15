@@ -34,7 +34,6 @@ const BrandSchema = new Schema<IBrand>(
       type: String,
       unique: true,
       lowercase: true,
-      index: true,
     },
     logo: {
       url: { type: String, required: true },

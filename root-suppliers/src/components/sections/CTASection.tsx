@@ -30,13 +30,13 @@ export const CTASection: React.FC = () => {
       ref={sectionRef}
       className="py-20 relative overflow-hidden"
     >
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-700" />
+      {/* Gradient Background - Deep Navy Blue for Modern Contrast */}
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary-600 via-secondary-700 to-secondary-800" />
 
       {/* Animated background shapes */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-secondary-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-primary-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       {/* Pattern overlay */}
@@ -65,7 +65,7 @@ export const CTASection: React.FC = () => {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Link
               href="/products"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-primary-700 font-bold rounded-xl hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl group transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl hover:from-primary-400 hover:to-primary-500 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-primary-500/30 group transform hover:-translate-y-0.5"
             >
               <ShoppingBag className="h-5 w-5" />
               Browse Products

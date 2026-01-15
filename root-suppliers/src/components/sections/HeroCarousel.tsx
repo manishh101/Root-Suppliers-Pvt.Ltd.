@@ -78,7 +78,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
   }, [emblaApi])
 
   return (
-    <section className="bg-white pt-24 pb-10 min-h-[calc(100vh-160px)]">
+    <section className="bg-white pt-16 pb-10 min-h-[calc(100vh-160px)]">
       <div className="container mx-auto px-4 h-full">
         <div className="flex flex-col lg:flex-row gap-4 h-full">
           {/* Left Side - Main Carousel (larger size) */}
@@ -87,7 +87,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
               <div className="flex h-full">
                 {slides.map((slide, index) => (
                   <div key={index} className="flex-[0_0_100%] min-w-0">
-                    <div className="relative w-full h-[300px] md:h-[450px] lg:h-[550px]">
+                    <div className="relative w-full h-[300px] md:h-[450px] lg:h-[600px]">
                       <Image
                         src={slide.image.url}
                         alt={slide.title || 'Hero slide'}

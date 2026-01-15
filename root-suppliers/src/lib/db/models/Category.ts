@@ -36,7 +36,6 @@ const CategorySchema = new Schema<ICategory>(
       type: String,
       unique: true,
       lowercase: true,
-      index: true,
     },
     description: {
       type: String,
@@ -89,7 +88,6 @@ CategorySchema.pre("save", function (next) {
 
 // Create indexes for performance
 CategorySchema.index({ parent: 1 });
-CategorySchema.index({ slug: 1 }); // Already unique: true implies index, but let's be descriptive
 CategorySchema.index({ orderIndex: 1, name: 1 });
 
 // Prevent mongoose from recompiling the model
