@@ -336,7 +336,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
               </div>
 
               {/* Name */}
-              <h1 className="font-primary font-bold text-2xl md:text-3xl text-gray-900 mb-4">
+              <h1 className="font-primary font-bold text-xl md:text-3xl text-gray-900 mb-4">
                 {product.name}
               </h1>
 
@@ -349,7 +349,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
               <div className="flex items-baseline gap-3 mb-6">
                 {product.discountPrice ? (
                   <>
-                    <span className="text-3xl font-bold text-primary-600">
+                    <span className="text-2xl font-bold text-primary-600">
                       NPR {product.discountPrice?.toLocaleString() || '0'}
                     </span>
                     <span className="text-xl text-gray-400 line-through">
@@ -364,7 +364,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                     </Badge>
                   </>
                 ) : (
-                  <span className="text-3xl font-bold text-gray-900">
+                  <span className="text-2xl font-bold text-gray-900">
                     NPR {product.price?.toLocaleString() || '0'}
                   </span>
                 )}
@@ -389,7 +389,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 leading-relaxed mb-6">
+              <p className="text-sm text-gray-600 leading-relaxed mb-6">
                 {product.description}
               </p>
 
@@ -598,7 +598,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
           <div className="container-main">
             {/* Section Header */}
             <div className="mb-8">
-              <h2 className="font-primary font-bold text-3xl md:text-4xl bg-gradient-to-r from-gray-900 via-primary-600 to-gray-900 bg-clip-text text-transparent mb-2">
+              <h2 className="font-primary font-bold text-xl md:text-3xl bg-gradient-to-r from-gray-900 via-primary-600 to-gray-900 bg-clip-text text-transparent mb-2">
                 You May Also Like
               </h2>
               <p className="text-gray-600">

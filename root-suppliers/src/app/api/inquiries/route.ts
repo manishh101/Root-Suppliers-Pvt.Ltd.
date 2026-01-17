@@ -6,6 +6,8 @@ import { verifyAdmin } from "@/lib/auth";
 import { inquirySchema } from "@/lib/validations";
 import { handleApiError, successResponse } from "@/lib/errors";
 import { sanitizeHtml } from "@/lib/utils";
+import { withValidate } from "@/lib/api-middleware";
+import { inquiryLimiter } from "@/lib/rate-limit";
 
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Product };
@@ -67,18 +69,16 @@ export async function GET(req: NextRequest) {
  * POST /api/inquiries
  * 
  * Create a new inquiry.
- * Public endpoint.
+ * Public endpoint with rate limiting (3 requests / 15 mins).
  */
-export async function POST(req: NextRequest) {
-  try {
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     await connectDB();
-    const body = await req.json();
-
-    // Validation using Zod
-    const validatedData = inquirySchema.parse(body);
 
     // Sanitize message
-    validatedData.message = sanitizeHtml(validatedData.message);
+    if (validatedData.message) {
+      validatedData.message = sanitizeHtml(validatedData.message);
+    }
 
     // Create inquiry
     const inquiry = await Inquiry.create(validatedData);
@@ -94,8 +94,10 @@ export async function POST(req: NextRequest) {
       201,
       "Your inquiry has been submitted successfully. We'll get back to you soon!"
     );
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: inquirySchema,
+    limiter: inquiryLimiter,
   }
-}
+);
 

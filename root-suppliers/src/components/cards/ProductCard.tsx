@@ -70,7 +70,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
             <div>
               <Link
                 href={`/categories/${product.category?.slug}`}
-                className="text-[10px] font-bold text-primary-600/80 uppercase tracking-widest mb-1 hover:text-primary-700 transition-colors"
+                className="text-[11px] md:text-xs font-bold text-primary-600/80 mb-1 hover:text-primary-700 transition-colors capitalize"
               >
                 {product.category?.name}
               </Link>
@@ -129,11 +129,11 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       <div className={`${isCompact ? 'p-3' : 'p-4'} flex-1 flex flex-col`}>
         <Link
           href={`/categories/${product.category?.slug}`}
-          className={`${isCompact ? 'text-[9px]' : 'text-[10px]'} font-bold text-primary-600/80 uppercase tracking-widest mb-1 hover:text-primary-700 transition-colors inline-block`}
+          className="text-[11px] md:text-xs font-bold text-primary-600/80 mb-1.5 hover:text-primary-700 transition-colors inline-block capitalize"
         >
           {product.category?.name}
         </Link>
-        <h3 className={`font-bold ${isCompact ? 'text-sm' : 'text-base'} text-gray-900 line-clamp-2 ${isCompact ? 'mb-1.5' : 'mb-2'} group-hover:text-primary-600 transition-colors`}>
+        <h3 className="font-bold text-sm md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors">
           <Link href={`/products/${product.slug}`}>{product.name}</Link>
         </h3>
         <div className="mt-auto flex items-end justify-between">

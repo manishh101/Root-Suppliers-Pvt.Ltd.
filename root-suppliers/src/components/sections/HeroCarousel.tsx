@@ -115,12 +115,12 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
                         <div className="max-w-xl">
                           {slide.title && (
-                            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg animate-fade-up">
+                            <h2 className="text-xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg animate-fade-up">
                               {slide.title}
                             </h2>
                           )}
                           {slide.subtitle && (
-                            <p className="text-base md:text-lg lg:text-xl text-white/90 mb-5 md:mb-6 drop-shadow-md max-w-md">
+                            <p className="text-sm md:text-lg lg:text-xl text-white/90 mb-5 md:mb-6 drop-shadow-md max-w-md">
                               {slide.subtitle}
                             </p>
                           )}
@@ -164,8 +164,8 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                   key={index}
                   onClick={() => emblaApi?.scrollTo(index)}
                   className={`h-2 rounded-full transition-all duration-300 ${index === selectedIndex
-                      ? 'w-8 bg-white'
-                      : 'w-2 bg-white/50 hover:bg-white/70'
+                    ? 'w-8 bg-white'
+                    : 'w-2 bg-white/50 hover:bg-white/70'
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -186,7 +186,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                   <div className="p-2.5 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg">
                     <TrendingUp className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800 uppercase tracking-wide">
+                  <h2 className="text-base md:text-xl font-bold text-gray-800 capitalize">
                     Top Selling
                   </h2>
                 </div>

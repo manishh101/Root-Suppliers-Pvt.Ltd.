@@ -56,10 +56,10 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
       <div className="container-main relative z-10">
         {/* Section Header */}
         <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-sm md:text-base font-bold rounded-full mb-6 uppercase tracking-wider">
+          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-xs md:text-base font-bold rounded-full mb-6 capitalize">
             Our Best Sellers
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
             Featured Products
           </h2>
           <p className="mt-5 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
@@ -115,17 +115,17 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
 
               {/* Content */}
               <div className="p-3 md:p-4 bg-gradient-to-t from-gray-50/80 to-white">
-                <span className="inline-block px-2 py-0.5 text-[10px] md:text-xs font-bold text-primary-600 bg-primary-50 rounded-full mb-1.5">
+                <span className="inline-block px-2 py-0.5 text-xs font-bold text-primary-600 bg-primary-50 rounded-full mb-1.5">
                   {product.category?.name || "Uncategorized"}
                 </span>
-                <h3 className="text-sm md:text-base font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight">
+                <h3 className="text-base font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight">
                   {product.name}
                 </h3>
 
                 {/* View Product Link */}
-                <div className="mt-2 flex items-center text-xs md:text-sm font-bold text-gray-500 group-hover:text-primary-600 transition-colors uppercase tracking-wider">
+                <div className="mt-2 flex items-center text-sm font-bold text-gray-500 group-hover:text-primary-600 transition-colors capitalize">
                   <span>View Details</span>
-                  <ArrowRight className="h-3.5 w-3.5 md:h-4 md:w-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
@@ -136,12 +136,12 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
         <div className={`text-center mt-16 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <Link
             href="/products"
-            className="group relative inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-primary-200/50 transform hover:-translate-y-1 hover:scale-[1.02] font-primary overflow-hidden"
+            className="group relative inline-flex items-center gap-2 px-5 py-3 md:px-10 md:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-primary-200/50 transform hover:-translate-y-1 hover:scale-[1.02] font-primary overflow-hidden"
           >
             {/* Animated shine effect */}
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <span className="relative">EXPLORE ALL PRODUCTS</span>
-            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform relative" />
+            <span className="relative text-xs md:text-base tracking-wide capitalize">Explore all products</span>
+            <ArrowRight className="h-3.5 w-3.5 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform relative" />
           </Link>
           <p className="mt-4 text-sm text-gray-500">
             Browse our complete collection of products

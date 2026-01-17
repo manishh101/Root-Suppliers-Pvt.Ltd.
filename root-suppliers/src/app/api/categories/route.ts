@@ -6,6 +6,8 @@ import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { categorySchema } from "@/lib/validations";
 import { handleApiError, successResponse, AuthError, ForbiddenError } from "@/lib/errors";
 import { sanitizeHtml } from "@/lib/utils";
+import { withValidate } from "@/lib/api-middleware";
+import { publicApiLimiter } from "@/lib/rate-limit";
 
 // ... existing GET ...
 
@@ -21,8 +23,8 @@ import { sanitizeHtml } from "@/lib/utils";
  * 
  * @returns { success: boolean, categories: array }
  */
-export async function GET(req: NextRequest) {
-  try {
+export const GET = withValidate(
+  async (req: NextRequest) => {
     await connectDB();
 
     const { searchParams } = new URL(req.url);
@@ -51,40 +53,13 @@ export async function GET(req: NextRequest) {
         })
       );
 
-      return NextResponse.json(
-        {
-          success: true,
-          categories: categoriesWithCounts,
-        },
-        {
-          status: 200,
-          headers: {
-            "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-          }
-        }
-      );
+      return successResponse({ categories: categoriesWithCounts });
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        categories,
-      },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-        }
-      }
-    );
-  } catch (error) {
-    console.error("GET /api/categories error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch categories" },
-      { status: 500 }
-    );
-  }
-}
+    return successResponse({ categories });
+  },
+  { limiter: publicApiLimiter }
+);
 
 /**
  * POST /api/categories
@@ -95,17 +70,9 @@ export async function GET(req: NextRequest) {
  * @body { name, description?, image?, order?, isActive? }
  * @returns { success: boolean, category: object }
  */
-export async function POST(req: NextRequest) {
-  try {
-    // Verify authentication
-    await verifyAdmin(req);
-
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     await connectDB();
-
-    const body = await req.json();
-
-    // Validation using Zod
-    const validatedData = categorySchema.parse(body);
 
     // Transform and normalize data for Mongoose
     const categoryData: any = { ...validatedData };
@@ -140,7 +107,9 @@ export async function POST(req: NextRequest) {
     const category = await Category.create(categoryData);
 
     return successResponse({ category }, 201, "Category created successfully");
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: categorySchema,
+    requireAdmin: true,
   }
-}
+);

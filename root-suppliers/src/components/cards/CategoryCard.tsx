@@ -58,7 +58,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
 
         {/* Content Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-          <h3 className="font-bold text-lg mb-1 group-hover:text-primary-300 transition-colors">
+          <h3 className="font-bold text-lg mb-1 group-hover:text-primary-300 transition-colors capitalize">
             {category.name}
           </h3>
           {category.productCount !== undefined && (

@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { v2 as cloudinary } from "cloudinary";
 import { handleApiError, successResponse, ValidationError } from "@/lib/errors";
+import { withValidate } from "@/lib/api-middleware";
+import { z } from "zod";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -15,18 +17,9 @@ cloudinary.config({
  * 
  * Upload an image to Cloudinary.
  * Requires authentication.
- * 
- * Accepts multipart/form-data with:
- * - file: The image file to upload
- * - folder: Optional folder name (default: 'root-suppliers')
- * 
- * @returns { success: boolean, url: string, publicId: string, ... }
  */
-export async function POST(req: NextRequest) {
-  try {
-    // Verify authentication
-    await verifyAuth(req);
-
+export const POST = withValidate(
+  async (req: NextRequest) => {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const folder = (formData.get("folder") as string) || "root-suppliers";
@@ -86,40 +79,30 @@ export async function POST(req: NextRequest) {
       format: result.format,
       bytes: result.bytes,
     }, 200, "Image uploaded successfully");
-  } catch (error: any) {
-    return handleApiError(error);
-  }
-}
+  },
+  { requireAuth: true }
+);
 
 /**
  * DELETE /api/upload
  * 
  * Delete an image from Cloudinary.
  * Requires authentication (admin only).
- * 
- * @body { publicId: string }
- * @returns { success: boolean, message: string }
  */
-export async function DELETE(req: NextRequest) {
-  try {
-    await verifyAdmin(req);
-
-    const body = await req.json();
-
-    if (!body.publicId) {
-      throw new ValidationError("Public ID is required");
-    }
-
+export const DELETE = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     // Delete from Cloudinary
-    const result = await cloudinary.uploader.destroy(body.publicId);
+    const result = await cloudinary.uploader.destroy(validatedData.publicId);
 
     if (result.result !== "ok") {
       throw new ValidationError("Failed to delete image from Cloudinary");
     }
 
     return successResponse({}, 200, "Image deleted successfully");
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: z.object({ publicId: z.string().min(1) }),
+    requireAdmin: true,
   }
-}
+);
 

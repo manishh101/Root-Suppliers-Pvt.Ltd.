@@ -37,7 +37,7 @@ a[href*="contact"],
 a[href*="blogs"],
 a[href*="tel:"] {
   font-family: var(--font-primary) !important;
-  text-transform: uppercase;
+  /* text-transform: uppercase; - REMOVED to allow Title Case */
   letter-spacing: 0.05em;
 }
 
@@ -118,27 +118,27 @@ h6 {
   }
 
   h1 {
-    @apply text-5xl md:text-6xl lg:text-7xl;
+    @apply text-3xl md:text-5xl lg:text-7xl leading-tight;
   }
 
   h2 {
-    @apply text-4xl md:text-5xl;
+    @apply text-xl md:text-4xl leading-tight;
   }
 
   h3 {
-    @apply text-3xl md:text-4xl;
+    @apply text-lg md:text-3xl leading-snug;
   }
 
   h4 {
-    @apply text-2xl md:text-3xl;
+    @apply text-lg md:text-3xl font-semibold;
   }
 
   h5 {
-    @apply text-xl md:text-2xl;
+    @apply text-base md:text-2xl font-medium;
   }
 
   h6 {
-    @apply text-lg md:text-xl;
+    @apply text-xs md:text-lg font-bold text-primary-600;
   }
 
   p {
@@ -183,7 +183,7 @@ h6 {
 
   /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm md:text-base md:px-6 md:py-3 font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
@@ -211,11 +211,11 @@ h6 {
   }
 
   .btn-sm {
-    @apply px-4 py-2 text-sm;
+    @apply px-4 py-2.5 text-sm;
   }
 
   .btn-lg {
-    @apply px-8 py-4 text-lg;
+    @apply px-6 py-3.5 md:px-8 md:py-4 text-lg;
   }
 
   /* Cards */

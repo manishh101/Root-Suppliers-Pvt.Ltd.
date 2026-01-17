@@ -4,3 +4,4 @@ export * from "./category.schema";
 export * from "./brand.schema";
 export * from "./inquiry.schema";
 export * from "./blog.schema";
+export * from "./user.schema";

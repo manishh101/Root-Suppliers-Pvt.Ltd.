@@ -7,6 +7,8 @@ import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { productSchema } from "@/lib/validations";
 import { handleApiError, successResponse, AuthError } from "@/lib/errors";
 import { sanitizeHtml } from "@/lib/utils";
+import { withValidate } from "@/lib/api-middleware";
+import { publicApiLimiter } from "@/lib/rate-limit";
 
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Category, Brand };
@@ -43,8 +45,8 @@ const _models = { Category, Brand };
  * 
  * @returns { success: boolean, products: array, pagination: object }
  */
-export async function GET(req: NextRequest) {
-  try {
+export const GET = withValidate(
+  async (req: NextRequest) => {
     await connectDB();
 
     const { searchParams } = new URL(req.url);
@@ -57,6 +59,9 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get("sort") || "-createdAt";
     const ids = searchParams.get("ids"); // Comma-separated IDs
 
+    // ... rest of the logic remains same ...
+    // Note: I'm keeping the logic inside but simplifying the wrapper
+
     // Build query
     const query: any = {};
 
@@ -65,9 +70,6 @@ export async function GET(req: NextRequest) {
       const rootCategory = await (Category as any).findOne({ slug: categorySlug }).select("_id");
 
       if (rootCategory) {
-        // Find all descendants recursively
-        // Note: This is a simple recursive fetch. For very large trees, a graph lookup or materialized path is better.
-        // Assuming the category tree is relatively small (< 100 items), this is fine.
         const getAllDescendantIds = async (parentId: string): Promise<string[]> => {
           const children = await (Category as any).find({ parent: parentId }).select("_id");
           const childIds = children.map((c: any) => c._id.toString());
@@ -83,8 +85,6 @@ export async function GET(req: NextRequest) {
         const descendantIds = await getAllDescendantIds(rootCategory._id.toString());
         query.category = { $in: [rootCategory._id, ...descendantIds] };
       } else {
-        // If category not found, return empty or ignore? 
-        // Better to return empty to indicate invalid filter
         query.category = null;
       }
     }
@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Filter by tags (find products that have at least one matching tag)
+    // Filter by tags
     const tags = searchParams.get("tags");
     if (tags) {
       const tagList = tags.split(",").map((t) => t.trim()).filter((t) => t);
@@ -142,10 +142,8 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Calculate pagination
     const skip = (page - 1) * limit;
 
-    // Fetch products
     const [products, total] = await Promise.all([
       Product.find(query)
         .populate("category", "name slug")
@@ -159,29 +157,20 @@ export async function GET(req: NextRequest) {
 
     const totalPages = Math.ceil(total / limit);
 
-    return NextResponse.json(
-      {
-        success: true,
-        products,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages,
-          hasNext: page < totalPages,
-          hasPrev: page > 1,
-        },
+    return successResponse({
+      products,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
       },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("GET /api/products error:", error);
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch products" },
-      { status: 500 }
-    );
-  }
-}
+    });
+  },
+  { limiter: publicApiLimiter }
+);
 
 
 /**
@@ -193,17 +182,9 @@ export async function GET(req: NextRequest) {
  * @body { name, description, shortDescription?, category, images, specifications?, isActive? }
  * @returns { success: boolean, product: object }
  */
-export async function POST(req: NextRequest) {
-  try {
-    // Verify authentication
-    await verifyAdmin(req);
-
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     await connectDB();
-
-    const body = await req.json();
-
-    // Validation using Zod
-    const validatedData = productSchema.parse(body);
 
     // Transform and normalize data for Mongoose
     const productData: any = { ...validatedData };
@@ -244,7 +225,9 @@ export async function POST(req: NextRequest) {
     await product.populate("category", "name slug");
 
     return successResponse({ product }, 201, "Product created successfully");
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: productSchema,
+    requireAdmin: true,
   }
-}
+);

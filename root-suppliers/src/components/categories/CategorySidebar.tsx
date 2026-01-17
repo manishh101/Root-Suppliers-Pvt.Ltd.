@@ -148,7 +148,7 @@ export function CategorySidebar({ categories, activeSlug, className, onLinkClick
   return (
     <div className={cn("bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 shadow-sm overflow-hidden", className)}>
       <div className="p-4 border-b border-gray-100/50 bg-gradient-to-b from-gray-50/50 to-transparent">
-        <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">
+        <h3 className="font-bold text-gray-900 text-sm capitalize">
           Categories
         </h3>
       </div>

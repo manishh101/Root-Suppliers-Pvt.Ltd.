@@ -3,6 +3,9 @@ import { SignJWT } from "jose";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
 import { handleApiError, successResponse, ValidationError, AuthError, ForbiddenError } from "@/lib/errors";
+import { withValidate } from "@/lib/api-middleware";
+import { loginLimiter } from "@/lib/rate-limit";
+import { loginSchema } from "@/lib/validations";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -17,20 +20,13 @@ const JWT_SECRET = new TextEncoder().encode(secret);
  * 
  * Authenticates a user with email and password.
  * Returns a JWT token if credentials are valid.
- * 
- * @body { email: string, password: string }
- * @returns { success: boolean, token?: string, user?: object, message?: string }
+ * Public endpoint with strict rate limiting (5 attempts / 15 mins).
  */
-export async function POST(req: NextRequest) {
-  try {
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     await connectDB();
 
-    const { email, password } = await req.json();
-
-    // Validation
-    if (!email || !password) {
-      throw new ValidationError("Email and password are required");
-    }
+    const { email, password } = validatedData;
 
     // Find user
     const user = await User.findOne({ email }).select("+password");
@@ -90,8 +86,10 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error) {
-    return handleApiError(error);
+  },
+  {
+    schema: loginSchema,
+    limiter: loginLimiter,
   }
-}
+);
 

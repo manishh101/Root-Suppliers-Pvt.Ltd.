@@ -1,82 +1,70 @@
-type Options = {
-  uniqueTokenPerInterval?: number;
-  interval?: number;
-};
-
-export default function rateLimit(options?: Options) {
-  const tokenCache = new Map();
-  const { uniqueTokenPerInterval = 500, interval = 60000 } = options || {};
-
-  return {
-    check: (res: any, limit: number, token: string) =>
-      new Promise<void>((resolve, reject) => {
-        const tokenCount = tokenCache.get(token) || [0];
-        if (tokenCount[0] === 0) {
-          tokenCache.set(token, tokenCount);
-        }
-        tokenCount[0] += 1;
-
-        const currentUsage = tokenCount[0];
-        const isRateLimited = currentUsage >= limit;
-
-        // Simple cleanup
-        if (tokenCache.size > uniqueTokenPerInterval) {
-          tokenCache.clear();
-          // In a real prod env, we'd use LRU, but this is a safe fallback to prevent OOM
-        }
-
-        // Reset count after interval
-        // This is a naive implementation where the "window" is effectively reset
-        // strictly by time if we used timestamps, but here we just rely on checks.
-        // Actually, for a proper window, we should store timestamps. 
-        // Let's improve this to a standard fixed window counter.
-      }),
-  };
-}
-
-// Improved implementation for robustness
+/**
+ * Simple Fixed Window Rate Limiter
+ */
 export class RateLimiter {
   private tokens: Map<string, { count: number; expiresAt: number }>;
   private interval: number;
-  private limit: number;
+  public readonly limit: number;
 
-  constructor(limit: number = 10, interval: number = 60000) {
+  constructor(limit: number = 20, intervalMs: number = 60000) {
     this.tokens = new Map();
     this.limit = limit;
-    this.interval = interval;
+    this.interval = intervalMs;
   }
 
+  /**
+   * Check if a token (e.g., IP) has exceeded the limit
+   * @returns boolean true if allowed, false if limited
+   */
   public check(token: string): boolean {
     const now = Date.now();
-    const cleanToken = this.tokens.get(token);
+    const bucket = this.tokens.get(token);
 
-    if (cleanToken && now < cleanToken.expiresAt) {
-      if (cleanToken.count >= this.limit) {
+    if (bucket && now < bucket.expiresAt) {
+      if (bucket.count >= this.limit) {
         return false;
       }
-      cleanToken.count++;
+      bucket.count++;
       return true;
     }
 
-    // Reset or new
+    // Reset or new bucket
     this.tokens.set(token, {
       count: 1,
       expiresAt: now + this.interval,
     });
 
-    // Cleanup old tokens occasionally
-    if (this.tokens.size > 1000) {
-      this.cleanup(now);
+    // Proactive cleanup if map grows too large
+    if (this.tokens.size > 2000) {
+      this.cleanup();
     }
 
     return true;
   }
 
-  private cleanup(now: number) {
-    this.tokens.forEach((value, key) => {
-      if (now > value.expiresAt) {
-        this.tokens.delete(key);
+  /**
+   * Remove expired buckets to prevent memory leaks
+   */
+  private cleanup() {
+    const now = Date.now();
+    this.tokens.forEach((bucket, token) => {
+      if (now > bucket.expiresAt) {
+        this.tokens.delete(token);
       }
     });
   }
+
+  /**
+   * Get remaining attempts for a token
+   */
+  public getRemaining(token: string): number {
+    const bucket = this.tokens.get(token);
+    if (!bucket || Date.now() > bucket.expiresAt) return this.limit;
+    return Math.max(0, this.limit - bucket.count);
+  }
 }
+
+// Pre-defined limiters for common use cases
+export const loginLimiter = new RateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 mins
+export const inquiryLimiter = new RateLimiter(3, 15 * 60 * 1000); // 3 inquiries per 15 mins
+export const publicApiLimiter = new RateLimiter(60, 60 * 1000); // 60 requests per minute

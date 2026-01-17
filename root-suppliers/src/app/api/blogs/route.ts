@@ -6,6 +6,8 @@ import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
 import { blogSchema } from "@/lib/validations";
 import { sanitizeHtml } from "@/lib/utils";
+import { withValidate } from "@/lib/api-middleware";
+import { publicApiLimiter } from "@/lib/rate-limit";
 
 // Ensure models are registered
 const _models = { Blog, User };
@@ -26,11 +28,11 @@ const _models = { Blog, User };
  * 
  * @returns { success: boolean, blogs: array, pagination: object }
  */
-export async function GET(req: NextRequest) {
-  try {
+export const GET = withValidate(
+  async (req: NextRequest) => {
     await connectDB();
 
-    const user = await verifyAuth(req);
+    const user = await verifyAuth(req).catch(() => null);
     const { searchParams } = new URL(req.url);
 
     const page = parseInt(searchParams.get("page") || "1");
@@ -89,10 +91,9 @@ export async function GET(req: NextRequest) {
         hasPrev: page > 1,
       },
     });
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
+  },
+  { limiter: publicApiLimiter }
+);
 
 /**
  * POST /api/blogs
@@ -103,16 +104,10 @@ export async function GET(req: NextRequest) {
  * @body { title, content, excerpt, featuredImage, author, tags?, isPublished? }
  * @returns { success: boolean, blog: object }
  */
-export async function POST(req: NextRequest) {
-  try {
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     const user = await verifyAdmin(req);
-
     await connectDB();
-
-    const body = await req.json();
-
-    // Validation using Zod
-    const validatedData = blogSchema.parse(body);
 
     // Transform and normalize data for Mongoose
     const blogData: any = { ...validatedData };
@@ -155,8 +150,10 @@ export async function POST(req: NextRequest) {
     const blog = await Blog.create(blogData);
 
     return successResponse({ blog }, 201, "Blog post created successfully");
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: blogSchema,
+    requireAdmin: true,
   }
-}
+);
 

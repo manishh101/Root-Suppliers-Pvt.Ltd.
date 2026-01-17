@@ -16,12 +16,12 @@ interface HeaderProps {
 }
 
 const navLinks = [
-  { href: "/", label: "HOME" },
-  { href: "/products", label: "PRODUCTS" },
-  { href: "/categories", label: "CATEGORIES" },
-  { href: "/blogs", label: "BLOGS" },
-  { href: "/contact", label: "CONTACT US" },
-  { href: "/about", label: "ABOUT US" },
+  { href: "/", label: "Home" },
+  { href: "/products", label: "Products" },
+  { href: "/categories", label: "Categories" },
+  { href: "/blogs", label: "Blogs" },
+  { href: "/contact", label: "Contact Us" },
+  { href: "/about", label: "About Us" },
 ];
 
 export default function Header({ settings }: HeaderProps) {
@@ -203,7 +203,7 @@ export default function Header({ settings }: HeaderProps) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-4 lg:px-6 py-2.5 text-base font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 uppercase tracking-widest hover:scale-105"
+                    className="px-4 lg:px-6 py-2.5 text-base font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 hover:scale-105"
                   >
                     {link.label}
                   </Link>
@@ -366,7 +366,7 @@ export default function Header({ settings }: HeaderProps) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-sm font-bold text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all uppercase tracking-wide border-b border-gray-50 last:border-0"
+                  className="text-base font-bold text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all border-b border-gray-50 last:border-0"
                 >
                   {link.label}
                 </Link>
@@ -419,13 +419,13 @@ export default function Header({ settings }: HeaderProps) {
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
             </div>
-            <span className="text-[10px] font-medium">Home</span>
+            <span className="text-[11px] font-medium">Home</span>
           </Link>
           <Link href="/products" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${pathname?.startsWith('/products') ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${pathname?.startsWith('/products') ? 'bg-primary-50' : ''}`}>
               <Package className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-medium">Products</span>
+            <span className="text-[11px] font-medium">Products</span>
           </Link>
           <button onClick={() => setMobileCategoryOpen(true)} className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${mobileCategoryOpen ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${mobileCategoryOpen ? 'bg-primary-50' : ''}`}>
@@ -436,13 +436,13 @@ export default function Header({ settings }: HeaderProps) {
                 <rect width="7" height="7" x="3" y="14" rx="1" />
               </svg>
             </div>
-            <span className="text-[10px] font-medium">Categories</span>
+            <span className="text-[11px] font-medium">Categories</span>
           </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${mobileMenuOpen ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${mobileMenuOpen ? 'bg-primary-50' : ''}`}>
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </div>
-            <span className="text-[10px] font-medium">Menu</span>
+            <span className="text-[11px] font-medium">Menu</span>
           </button>
         </div>
       </div>

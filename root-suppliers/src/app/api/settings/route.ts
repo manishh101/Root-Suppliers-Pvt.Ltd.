@@ -5,6 +5,8 @@ import { verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
 import { DEFAULT_STATS } from "@/lib/constants";
 import { recordAuditLog } from "@/lib/audit";
+import { withValidate } from "@/lib/api-middleware";
+import { publicApiLimiter } from "@/lib/rate-limit";
 
 /**
  * GET /api/settings
@@ -14,8 +16,8 @@ import { recordAuditLog } from "@/lib/audit";
  * 
  * @returns { success: boolean, settings: object }
  */
-export async function GET() {
-  try {
+export const GET = withValidate(
+  async () => {
     await connectDB();
 
     // There should only be one settings document
@@ -70,22 +72,10 @@ export async function GET() {
       settings = newSettings.toObject();
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        settings,
-      },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-        },
-      }
-    );
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
+    return successResponse({ settings });
+  },
+  { limiter: publicApiLimiter }
+);
 
 /**
  * PUT /api/settings
@@ -96,43 +86,35 @@ export async function GET() {
  * @body Partial<Settings>
  * @returns { success: boolean, settings: object }
  */
-export async function PUT(req: NextRequest) {
-  try {
-    const user = await verifyAdmin(req);
-
+export const PUT = withValidate(
+  async (req: NextRequest, validatedData: any) => {
+    // We already have verifyAdmin in withValidate, but we need the user object for audit log
+    const user: any = await verifyAdmin(req);
     await connectDB();
 
-    const body = await req.json();
+    const body = validatedData;
 
     // Don't allow changing _id
     delete body._id;
 
-    // Find existing settings or create new
+    // ... same update logic ...
     let settings = await Settings.findOne();
 
     if (!settings) {
-      // Create new settings with the provided data
       settings = await Settings.create(body);
     } else {
-      // Update existing settings
       const updateData: any = {};
-
-      // Helper to flatten nested objects for $set, EXCEPT for arrays which we want to replace
-      const flatten = (obj: any, prefix = '') => {
+      const flatten = (obj: any, prefix = "") => {
         Object.keys(obj).forEach(key => {
           const val = obj[key];
           const type = typeof val;
-          if (val !== null && type === 'object' && !Array.isArray(val)) {
-            flatten(val, prefix + key + '.');
+          if (val !== null && type === "object" && !Array.isArray(val)) {
+            flatten(val, prefix + key + ".");
           } else {
             updateData[prefix + key] = val;
           }
         });
       };
-
-      // We only want to flatten specific top-level fields that map to nested schemas
-      // 'homepage' contains 'stats' (array) and 'heroSlides' (array).
-      // If we flatten 'homepage', 'homepage.stats' will be treated as value.
 
       const topLevel = ["site", "contact", "social", "seo"];
       topLevel.forEach(field => {
@@ -141,17 +123,10 @@ export async function PUT(req: NextRequest) {
         }
       });
 
-      // For homepage, we might want to be careful. 
-      // If the body sends the whole homepage object, we can flatten it to update specific fields
-      // but arrays like stats need to be set as a whole.
       if (body.homepage) {
-        // We can just rely on the body being structured correctly.
-        // If we use $set with "homepage.stats": [...], it replaces the array.
-        // If we use $set with "homepage.featuredProductsTitle": "...", it updates string.
         flatten(body.homepage, "homepage.");
       }
 
-      // For businessHours, it's an array of objects. We replace the whole array.
       if (body.businessHours) {
         updateData.businessHours = body.businessHours;
       }
@@ -168,7 +143,7 @@ export async function PUT(req: NextRequest) {
 
     // Record audit log
     await recordAuditLog({
-      userId: (user as any).userId,
+      userId: user.userId,
       action: "UPDATE",
       resource: "Settings",
       resourceId: settings?._id.toString(),
@@ -176,7 +151,6 @@ export async function PUT(req: NextRequest) {
     });
 
     return successResponse({ settings }, 200, "Settings updated successfully");
-  } catch (error: any) {
-    return handleApiError(error);
-  }
-}
+  },
+  { requireAdmin: true }
+);

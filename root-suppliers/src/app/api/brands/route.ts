@@ -5,6 +5,8 @@ import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { brandSchema } from "@/lib/validations";
 import { handleApiError, successResponse } from "@/lib/errors";
 import { sanitizeHtml } from "@/lib/utils";
+import { withValidate } from "@/lib/api-middleware";
+import { publicApiLimiter } from "@/lib/rate-limit";
 
 // ... GET function ...
 
@@ -20,11 +22,11 @@ import { sanitizeHtml } from "@/lib/utils";
  * 
  * @returns { success: boolean, brands: array }
  */
-export async function GET(req: NextRequest) {
-  try {
+export const GET = withValidate(
+  async (req: NextRequest) => {
     await connectDB();
 
-    const user = await verifyAuth(req);
+    const user = await verifyAuth(req).catch(() => null);
     const { searchParams } = new URL(req.url);
 
     const isActive = searchParams.get("isActive");
@@ -49,23 +51,13 @@ export async function GET(req: NextRequest) {
       .sort({ order: 1, name: 1 })
       .lean();
 
-    return NextResponse.json(
-      {
-        success: true,
-        brands,
-        total: brands.length,
-      },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-        }
-      }
-    );
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
+    return successResponse({
+      brands,
+      total: brands.length,
+    });
+  },
+  { limiter: publicApiLimiter }
+);
 
 /**
  * POST /api/brands
@@ -76,17 +68,9 @@ export async function GET(req: NextRequest) {
  * @body { name, logo, website?, description?, order?, isActive?, isFeatured? }
  * @returns { success: boolean, brand: object }
  */
-export async function POST(req: NextRequest) {
-  try {
-    // Verify authentication
-    await verifyAdmin(req);
-
+export const POST = withValidate(
+  async (req: NextRequest, validatedData: any) => {
     await connectDB();
-
-    const body = await req.json();
-
-    // Validation using Zod
-    const validatedData = brandSchema.parse(body);
 
     // Transform and normalize data for Mongoose
     const brandData: any = { ...validatedData };
@@ -110,7 +94,9 @@ export async function POST(req: NextRequest) {
     const brand = await Brand.create(brandData);
 
     return successResponse({ brand }, 201, "Brand created successfully");
-  } catch (error: any) {
-    return handleApiError(error);
+  },
+  {
+    schema: brandSchema,
+    requireAdmin: true,
   }
-}
+);
