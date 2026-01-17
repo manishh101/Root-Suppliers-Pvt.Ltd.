@@ -246,7 +246,7 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
 
                         {/* Content Layer */}
                         <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end transform transition-transform duration-500 group-hover:translate-y-[-4px]">
-                          <h4 className="font-bold text-white text-sm md:text-base mb-1 tracking-tight group-hover:text-primary-300 transition-colors">
+                          <h4 className="font-bold !text-white text-sm md:text-base mb-1 tracking-tight group-hover:text-primary-300 transition-colors">
                             {sub.name}
                           </h4>
                           <div className="flex items-center justify-between items-center">
