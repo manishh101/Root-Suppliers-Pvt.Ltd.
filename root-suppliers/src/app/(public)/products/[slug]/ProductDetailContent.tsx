@@ -319,20 +319,22 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
             {/* Product Info */}
             <div>
               {/* Category & Brand */}
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                 <Link
                   href={`/categories/${product.category?.slug}`}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                  className="text-xs md:text-sm text-primary-600 hover:text-primary-700 font-bold uppercase tracking-wider bg-primary-50 px-2 py-1 rounded"
                 >
                   {product.category?.name}
                 </Link>
-                <span className="text-gray-300">|</span>
-                <span className="text-sm text-gray-600">
-                  Brand:{" "}
-                  <span className="font-medium text-gray-900">
-                    {product.brand?.name}
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-300 hidden md:inline">|</span>
+                  <span className="text-xs md:text-sm text-gray-500">
+                    Brand:{" "}
+                    <span className="font-bold text-gray-900 uppercase">
+                      {product.brand?.name}
+                    </span>
                   </span>
-                </span>
+                </div>
               </div>
 
               {/* Name */}
@@ -346,30 +348,31 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
               )}
 
               {/* Price */}
-              <div className="flex items-baseline gap-3 mb-6">
-                {product.discountPrice ? (
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+                {product.discountPrice && product.discountPrice < product.price ? (
                   <>
-                    <span className="text-2xl font-bold text-primary-600">
-                      NPR {product.discountPrice?.toLocaleString() || '0'}
-                    </span>
-                    <span className="text-xl text-gray-400 line-through">
-                      NPR {product.price?.toLocaleString() || '0'}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xl md:text-3xl font-bold text-primary-600">
+                        NPR {product.discountPrice?.toLocaleString() || '0'}
+                      </span>
+                      <span className="text-sm md:text-lg text-gray-400 line-through">
+                        NPR {product.price?.toLocaleString() || '0'}
+                      </span>
+                    </div>
                     <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-700"
+                      className="bg-green-600 text-white font-bold h-7 animate-pulse-subtle"
                     >
                       Save NPR{" "}
                       {((product.price || 0) - (product.discountPrice || 0)).toLocaleString()}
                     </Badge>
                   </>
                 ) : (
-                  <span className="text-2xl font-bold text-gray-900">
+                  <span className="text-2xl md:text-4xl font-bold text-gray-900">
                     NPR {product.price?.toLocaleString() || '0'}
                   </span>
                 )}
                 {product.unit && (
-                  <span className="text-gray-500">/ {product.unit}</span>
+                  <span className="text-sm md:text-base text-gray-500 font-medium">/ {product.unit}</span>
                 )}
               </div>
 
