@@ -14,8 +14,8 @@ import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
 export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings }) => {
   // Format business hours for display
+  // Format business hours for display
   const hours = formatBusinessHours(settings?.businessHours);
-  const businessHoursDisplay = `${hours.weekday} | ${hours.saturday}`;
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
@@ -109,7 +109,9 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings }) => {
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
                   <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Business Hours:</h4>
                   <p className="text-gray-600 text-base">
-                    {businessHoursDisplay}
+                    {hours.map((line, i) => (
+                      <span key={i} className="block">{line}</span>
+                    ))}
                   </p>
                 </div>
               </div>

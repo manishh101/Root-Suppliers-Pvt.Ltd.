@@ -178,8 +178,9 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
               <li className="flex items-start gap-3 text-secondary-200 text-sm">
                 <Clock className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-300" />
                 <div>
-                  <span className="block">{hours.weekday}</span>
-                  <span className="block">{hours.saturday}</span>
+                  {hours.map((line, i) => (
+                    <span key={i} className="block">{line}</span>
+                  ))}
                 </div>
               </li>
             </ul>
