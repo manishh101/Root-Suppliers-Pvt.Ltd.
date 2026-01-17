@@ -6,5 +6,8 @@
   "tailwindCSS.includeLanguages": {
     "plaintext": "ts",
     "html": "typescriptreact"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   }
 }
