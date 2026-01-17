@@ -210,19 +210,19 @@ export default function BlogsPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Post
                     </th>
                     <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Author
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Status
                     </th>
                     <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Date
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Actions
                     </th>
                   </tr>

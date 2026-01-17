@@ -59,7 +59,7 @@ export default function BlogClient({ blog }: BlogClientProps) {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="container-main max-w-4xl text-center text-white relative z-10 p-4">
             {blog.tags && blog.tags.length > 0 && (
-              <span className="inline-block px-3 py-1 rounded-full bg-primary-600/80 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wide mb-6">
+              <span className="inline-block px-3 py-1 rounded-full bg-primary-600/80 backdrop-blur-sm text-white text-xs font-bold capitalize tracking-wide mb-6">
                 {blog.tags[0]}
               </span>
             )}
@@ -103,7 +103,7 @@ export default function BlogClient({ blog }: BlogClientProps) {
           {/* Tags Footer */}
           {blog.tags && blog.tags.length > 0 && (
             <div className="mt-12 pt-8 border-t border-gray-100">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">Tags</h3>
+              <h3 className="text-sm font-bold text-gray-900 capitalize tracking-wide mb-4">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {blog.tags.map((tag) => (
                   <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200 transition-colors cursor-pointer">

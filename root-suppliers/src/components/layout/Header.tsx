@@ -147,11 +147,11 @@ export default function Header({ settings }: HeaderProps) {
 
               {/* Tagline - Center */}
               <div className="hidden lg:block text-center flex-1">
-                <h2 className="text-base lg:text-lg font-extrabold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
-                  ALL CONSTRUCTION
+                <h2 className="text-base lg:text-lg font-extrabold text-gray-900 capitalize tracking-[0.05em] leading-tight font-secondary">
+                  All Construction
                 </h2>
-                <p className="text-base lg:text-lg font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
-                  SOLUTIONS UNDER ONE ROOF
+                <p className="text-base lg:text-lg font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent capitalize tracking-[0.05em] font-secondary">
+                  Solutions Under One Roof
                 </p>
               </div>
 

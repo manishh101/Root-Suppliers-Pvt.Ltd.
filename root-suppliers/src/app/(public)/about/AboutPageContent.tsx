@@ -203,7 +203,7 @@ export default function AboutPageContent() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
-                ABOUT <span className="text-primary-600 block sm:inline">ROOT SUPPLIERS</span>
+                About <span className="text-primary-600 block sm:inline">Root Suppliers</span>
               </h1>
               <div className="h-1.5 w-20 md:w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />
               <p className="text-gray-500 mt-4 md:mt-6 text-base md:text-lg font-medium max-w-lg leading-relaxed">
@@ -234,7 +234,7 @@ export default function AboutPageContent() {
 
                 {/* Floating Badge */}
                 <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border-l-4 border-primary-600 max-w-[180px]">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Since</p>
+                  <p className="text-xs font-bold text-gray-400 capitalize mb-1">Since</p>
                   <p className="text-3xl font-bold text-gray-900">2010</p>
                 </div>
               </div>
@@ -251,7 +251,7 @@ export default function AboutPageContent() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-7"
             >
-              <span className="inline-block py-1 px-3 rounded-full bg-primary-50 text-primary-700 font-bold text-xs uppercase tracking-widest mb-4">
+              <span className="inline-block py-1 px-3 rounded-full bg-primary-50 text-primary-700 font-bold text-xs capitalize mb-4">
                 Our Story
               </span>
               <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 md:mb-8 leading-snug">
@@ -317,7 +317,7 @@ export default function AboutPageContent() {
           <div className="container-main">
             <div className="flex flex-col md:flex-row justify-between items-end mb-12">
               <div>
-                <span className="text-primary-600 font-bold uppercase tracking-wider text-sm mb-2 block">Gallery</span>
+                <span className="text-primary-600 font-bold capitalize text-sm mb-2 block">Gallery</span>
                 <h2 className="text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>
               <p className="text-gray-500 max-w-sm text-right hidden md:block">
@@ -348,7 +348,7 @@ export default function AboutPageContent() {
             {/* Static Fallback Gallery */}
             <div className="flex flex-col md:flex-row justify-between items-end mb-12">
               <div>
-                <span className="text-primary-600 font-bold uppercase tracking-wider text-sm mb-2 block">Gallery</span>
+                <span className="text-primary-600 font-bold capitalize text-sm mb-2 block">Gallery</span>
                 <h2 className="text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>
               <p className="text-gray-500 max-w-sm text-right hidden md:block">

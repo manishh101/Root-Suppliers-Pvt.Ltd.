@@ -75,10 +75,10 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                 />
               </div>
               <div>
-                <span className="font-primary font-bold text-lg text-white block tracking-tight uppercase">
+                <span className="font-secondary font-bold text-lg text-white block tracking-tight capitalize">
                   Root Suppliers
                 </span>
-                <span className="text-secondary-200 text-xs font-semibold uppercase tracking-wider font-primary">Pvt. Ltd.</span>
+                <span className="text-secondary-200 text-xs font-semibold capitalize tracking-wider font-secondary">Pvt. Ltd.</span>
               </div>
             </Link>
             <p className="text-secondary-200 text-sm mb-6 leading-relaxed">
@@ -102,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-sm text-white uppercase tracking-wider mb-5">
+            <h4 className="font-semibold text-sm text-white capitalize mb-5">
               Quick Links
             </h4>
             <ul className="space-y-2.5">
@@ -110,7 +110,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
+                    className="text-secondary-200 hover:text-white text-sm transition-colors font-secondary capitalize tracking-wider"
                   >
                     {link.label}
                   </Link>
@@ -121,7 +121,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
 
           {/* Product Categories */}
           <div>
-            <h4 className="font-semibold text-sm text-white uppercase tracking-wider mb-5">
+            <h4 className="font-semibold text-sm text-white capitalize mb-5">
               Categories
             </h4>
             <ul className="space-y-2.5">
@@ -129,7 +129,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
+                    className="text-secondary-200 hover:text-white text-sm transition-colors font-secondary capitalize tracking-wider"
                   >
                     {link.label}
                   </Link>
@@ -140,8 +140,8 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-semibold text-sm text-white uppercase tracking-wider mb-5">
-              Contact
+            <h4 className="font-semibold text-sm text-white capitalize mb-5">
+              Contact Us
             </h4>
             <ul className="space-y-4">
               <li>
@@ -149,7 +149,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                   href={settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-secondary-200 hover:text-white text-sm transition-colors font-primary uppercase tracking-wider"
+                  className="flex items-start gap-4 text-secondary-200 hover:text-white text-sm transition-colors font-secondary capitalize"
                 >
                   <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-300" />
                   <span>

@@ -429,9 +429,9 @@ export default function SettingsPage() {
                   <div className="space-y-3">
                     {statFields.map((field, index) => (
                       <div key={field.id} className="flex flex-col md:flex-row gap-3 items-start p-3 bg-gray-50 rounded border">
-                        <div className="flex-1"><label className="text-xs font-bold text-gray-500 uppercase">Label</label><input {...register(`homepage.stats.${index}.label`)} className="w-full p-2 border rounded" /></div>
-                        <div className="w-32"><label className="text-xs font-bold text-gray-500 uppercase">Value</label><input type="number" {...register(`homepage.stats.${index}.value`, { valueAsNumber: true })} className="w-full p-2 border rounded" /></div>
-                        <div className="w-24"><label className="text-xs font-bold text-gray-500 uppercase">Suffix</label><input {...register(`homepage.stats.${index}.suffix`)} className="w-full p-2 border rounded" /></div>
+                        <div className="flex-1"><label className="text-xs font-bold text-gray-500 capitalize">Label</label><input {...register(`homepage.stats.${index}.label`)} className="w-full p-2 border rounded" /></div>
+                        <div className="w-32"><label className="text-xs font-bold text-gray-500 capitalize">Value</label><input type="number" {...register(`homepage.stats.${index}.value`, { valueAsNumber: true })} className="w-full p-2 border rounded" /></div>
+                        <div className="w-24"><label className="text-xs font-bold text-gray-500 capitalize">Suffix</label><input {...register(`homepage.stats.${index}.suffix`)} className="w-full p-2 border rounded" /></div>
                         <button type="button" onClick={() => removeStat(index)} className="text-gray-400 hover:text-red-500 mt-6"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     ))}

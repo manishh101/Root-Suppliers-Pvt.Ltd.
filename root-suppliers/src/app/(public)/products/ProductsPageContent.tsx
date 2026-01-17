@@ -139,7 +139,7 @@ function FilterSidebar({
       <div>
         <h4 className="font-bold text-gray-900 mb-4 flex items-center justify-between">
           Brands
-          <span className="text-[10px] text-gray-400 font-normal uppercase tracking-wider">{brands.length} Available</span>
+          <span className="text-[10px] text-gray-400 font-normal capitalize tracking-wider">{brands.length} Available</span>
         </h4>
         <div className="space-y-2.5 max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
           {brands.map((brand) => (

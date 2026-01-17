@@ -60,7 +60,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-2 block">
+            <span className="text-primary-600 font-bold tracking-wider capitalize text-sm mb-2 block">
               Our Catalog
             </span>
             <h2 className="font-primary font-bold text-3xl md:text-5xl text-gray-900 leading-tight">

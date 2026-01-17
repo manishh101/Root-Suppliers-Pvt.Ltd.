@@ -164,7 +164,7 @@ export default function ContactContent({ settings }: { settings: any }) {
                 <button
                   type="button"
                   onClick={() => setStatus("idle")}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors uppercase tracking-wide group"
+                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors capitalize group"
                 >
                   Send Another Message
                   <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -173,7 +173,7 @@ export default function ContactContent({ settings }: { settings: any }) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors uppercase tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors capitalize tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>

@@ -144,7 +144,7 @@ export default function BlogPage() {
                           {/* Desktop Category Badge */}
                           {post.tags && post.tags.length > 0 && (
                             <div className="hidden md:block mb-4">
-                              <span className="inline-block px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-bold uppercase tracking-wide">
+                              <span className="inline-block px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-bold capitalize tracking-wide">
                                 {post.tags[0]}
                               </span>
                             </div>

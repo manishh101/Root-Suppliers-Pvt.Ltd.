@@ -66,7 +66,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           onError={() => setImageError(true)}
         />
       ) : fallback ? (
-        <span className="uppercase">{fallback}</span>
+        <span>{fallback}</span>
       ) : (
         <User className={iconSizes[size]} />
       )}

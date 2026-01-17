@@ -215,19 +215,19 @@ export default function ProductsPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Product
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Category
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Status
                     </th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Created
                     </th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 capitalize tracking-wider">
                       Actions
                     </th>
                   </tr>

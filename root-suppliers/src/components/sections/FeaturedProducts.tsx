@@ -200,7 +200,7 @@ export const FeaturedProductsStatic: React.FC = () => {
       <div className="container-main relative z-10">
         {/* Section Header */}
         <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-sm md:text-base font-bold rounded-full mb-6 uppercase tracking-wider">
+          <span className="inline-block px-5 py-2 bg-primary-100 text-primary-700 text-sm md:text-base font-bold rounded-full mb-6 capitalize tracking-wider">
             Our Best Sellers
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -262,7 +262,7 @@ export const FeaturedProductsStatic: React.FC = () => {
                 </h3>
 
                 {/* View Product Link */}
-                <div className="mt-4 flex items-center text-sm md:text-base font-bold text-gray-500 group-hover:text-primary-600 transition-colors uppercase tracking-wider">
+                <div className="mt-4 flex items-center text-sm md:text-base font-bold text-gray-500 group-hover:text-primary-600 transition-colors capitalize tracking-wider">
                   <span>View Details</span>
                   <ArrowRight className="h-4 w-4 md:h-5 md:w-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -277,7 +277,7 @@ export const FeaturedProductsStatic: React.FC = () => {
             href="/products"
             className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white font-bold rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary-100/50 group transform hover:-translate-y-0.5"
           >
-            <span>EXPLORE ALL PRODUCTS</span>
+            <span>Explore all products</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <p className="mt-3 text-sm text-gray-500">

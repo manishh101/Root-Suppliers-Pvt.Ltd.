@@ -57,7 +57,7 @@ const StatCard: React.FC<{ stat: StatItem; isVisible: boolean; isLast?: boolean 
         {count}
         <span className="text-primary-600">{stat.suffix}</span>
       </div>
-      <div className="text-gray-600 text-sm font-semibold uppercase tracking-wider">{stat.label}</div>
+      <div className="text-gray-600 text-sm font-semibold capitalize tracking-wider">{stat.label}</div>
 
       {/* Vertical Divider (hidden on last item and mobile) */}
       {!isLast && (
@@ -125,7 +125,7 @@ export const StatsSection: React.FC<StatsSectionProps> = ({ stats: customStats }
       <div className="container-main relative z-10">
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">By The Numbers</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 capitalize tracking-wide">By The Numbers</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-primary-500 to-secondary-500 mx-auto mt-4 rounded-full" />
         </div>
 

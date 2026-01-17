@@ -72,7 +72,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-700 text-sm font-bold uppercase tracking-wider mb-4 border border-primary-100/50">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-700 text-sm font-bold capitalize tracking-wider mb-4 border border-primary-100/50">
             <Star className="w-4 h-4 fill-primary-700" />
             Client Stories
           </span>

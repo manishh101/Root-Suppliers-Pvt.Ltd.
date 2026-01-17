@@ -60,7 +60,7 @@ export const CTASection: React.FC = () => {
       <div className="container-main relative z-10">
         <div className={`max-w-4xl mx-auto text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Badge */}
-          <span className="inline-block px-4 py-1.5 bg-white/10 text-white/90 text-sm font-semibold rounded-full mb-6 backdrop-blur-sm border border-white/10">
+          <span className="inline-block px-4 py-1.5 bg-primary-50 text-primary-700 text-sm font-bold rounded-full mb-6 capitalize tracking-wider border border-primary-100">
             Your One-Stop Hardware Shop
           </span>
 

@@ -59,10 +59,10 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
             <div className="w-2 h-2 rounded-full bg-primary-600"></div>
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary-600"></div>
           </div>
-          <h2 className="font-bold text-2xl md:text-3xl text-gray-900 uppercase tracking-wide mb-2">
+          <h2 className="font-bold text-2xl md:text-3xl text-gray-900 capitalize tracking-wide mb-2">
             Top Brands
           </h2>
-          <p className="text-sm text-gray-600 uppercase tracking-widest">Under One Roof</p>
+          <p className="text-sm text-gray-600 capitalize tracking-widest">Under One Roof</p>
         </div>
 
         {/* Brands Carousel */}
