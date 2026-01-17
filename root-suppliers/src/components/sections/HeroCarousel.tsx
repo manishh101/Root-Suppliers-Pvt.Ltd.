@@ -219,8 +219,8 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                       </div>
                     </div>
                     <div className="p-2.5 text-center mt-auto bg-gradient-to-t from-gray-50 to-white">
-                      <span className="inline-block px-4 py-1.5 bg-primary-600/20 backdrop-blur-md text-primary-400 text-sm font-bold rounded-full mb-6 capitalize tracking-wide border border-primary-500/20">
-                        Top Selling
+                      <span className="text-xs md:text-sm font-bold text-gray-700 group-hover:text-primary-600 transition-colors line-clamp-2 leading-tight">
+                        {product.name}
                       </span>
                     </div>
                   </Link>

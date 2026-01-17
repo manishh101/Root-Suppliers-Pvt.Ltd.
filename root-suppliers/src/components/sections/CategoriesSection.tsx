@@ -87,24 +87,24 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-8"
         >
           {categories.map((category) => (
             <motion.div key={category._id} variants={itemVariants}>
               <Link
                 href={`/categories/${category.slug}`}
-                className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-500"
+                className="group relative block aspect-square overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-500"
               >
                 {/* Image Container */}
-                <div className="absolute inset-0 p-6 md:p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-white">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white">
                   <div className="relative w-full h-full transform group-hover:scale-110 transition-transform duration-700 ease-out">
                     <CloudinaryImage
                       src={category.image?.url || PLACEHOLDER_IMAGES.PRODUCT}
                       publicId={category.image?.publicId}
                       alt={category.name}
                       fill
-                      className="object-contain mix-blend-multiply"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 33vw"
                     />
                   </div>
                 </div>

@@ -101,16 +101,16 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
               </div>
 
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-3">
+              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
                 <CloudinaryImage
                   src={product.images[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
                   alt={product.images[0]?.alt || product.name}
                   fill
-                  className="object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-2 mix-blend-multiply"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
@@ -240,16 +240,16 @@ export const FeaturedProductsStatic: React.FC = () => {
               </div>
 
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center p-6">
+              <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
                 <CloudinaryImage
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-4 mix-blend-multiply"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
