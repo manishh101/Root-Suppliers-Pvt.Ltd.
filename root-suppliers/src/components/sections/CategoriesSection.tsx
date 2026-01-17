@@ -87,7 +87,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"
         >
           {categories.map((category) => (
             <motion.div key={category._id} variants={itemVariants}>
@@ -104,7 +104,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                       alt={category.name}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 33vw"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     />
                   </div>
                 </div>
