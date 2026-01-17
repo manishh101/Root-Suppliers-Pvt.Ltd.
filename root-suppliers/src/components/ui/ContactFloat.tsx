@@ -8,6 +8,7 @@ interface ContactFloatProps {
   settings?: {
     contact?: {
       primaryPhone?: string;
+      secondaryPhone?: string;
       googleMapsLink?: string;
     };
   } | null;
@@ -16,13 +17,14 @@ interface ContactFloatProps {
 export default function ContactFloat({ settings }: ContactFloatProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Default values
+  // Dynamic values from backend settings
   const phoneNumber = settings?.contact?.primaryPhone || "9851235637";
-  const cleanPhone = phoneNumber.replace(/\D/g, "");
+  const whatsappNumber = settings?.contact?.secondaryPhone || phoneNumber; // Fallback to primary if whatsapp not set
+  const cleanWhatsapp = whatsappNumber.replace(/\D/g, "");
   const mapLink = settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8";
 
   // WhatsApp Link
-  const whatsappLink = `https://wa.me/${cleanPhone}`;
+  const whatsappLink = `https://wa.me/${cleanWhatsapp}`;
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
