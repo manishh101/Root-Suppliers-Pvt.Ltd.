@@ -232,16 +232,16 @@ function CategoryDetailContent({ params }: { params: { slug: string } }) {
                         className="group relative h-40 md:h-48 overflow-hidden rounded-2xl bg-gray-100 transition-all duration-500 hover:shadow-xl hover:shadow-gray-200/50 block"
                       >
                         {/* Image Layer */}
-                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110 flex items-center justify-center">
                           <CloudinaryImage
                             src={sub.image?.url || PLACEHOLDER_IMAGES.PRODUCT}
                             publicId={sub.image?.publicId}
                             alt={sub.name}
                             fill
-                            className="object-contain p-4 mix-blend-multiply"
+                            className="object-cover"
                           />
                           {/* Modern Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                         </div>
 
                         {/* Content Layer */}
