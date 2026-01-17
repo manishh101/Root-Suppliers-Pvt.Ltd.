@@ -92,7 +92,7 @@ export const PUT = withValidate(
     const user: any = await verifyAdmin(req);
     await connectDB();
 
-    const body = validatedData;
+    const body = validatedData || await req.json();
     delete body._id;
 
     let settings = await Settings.findOne();
