@@ -1,5 +1,4 @@
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+
 import {
   HeroCarousel,
   TopBrands,
@@ -119,38 +118,34 @@ export default async function Home() {
 
   return (
     <>
-      <Header settings={settings} />
-      <main className="min-h-screen">
-        {/* Hero Section */}
-        <HeroCarousel topProducts={topProducts} heroSlides={heroSlides} />
+      {/* Hero Section */}
+      <HeroCarousel topProducts={topProducts} heroSlides={heroSlides} />
 
 
 
-        {/* Featured Products */}
-        <FeaturedProducts products={featuredProducts} />
+      {/* Featured Products */}
+      <FeaturedProducts products={featuredProducts} />
 
-        {/* CTA Section */}
-        <CTASection />
+      {/* CTA Section */}
+      <CTASection />
 
-        {/* Top Brands */}
-        <TopBrands brands={brands} />
+      {/* Top Brands */}
+      <TopBrands brands={brands} />
 
-        {/* Categories */}
-        <CategoriesSection categories={categories} />
+      {/* Categories */}
+      <CategoriesSection categories={categories} />
 
-        {/* About Section */}
-        <AboutSection />
+      {/* About Section */}
+      <AboutSection />
 
-        {/* Stats Section */}
-        <StatsSection stats={stats} />
+      {/* Stats Section */}
+      <StatsSection stats={stats} />
 
-        {/* Testimonials */}
-        <TestimonialsSectionStatic />
+      {/* Testimonials */}
+      <TestimonialsSectionStatic />
 
-        {/* Visit Us / Map Section */}
-        <VisitUsSection settings={settings} />
-      </main>
-      <Footer settings={settings} />
+      {/* Visit Us / Map Section */}
+      <VisitUsSection settings={settings} />
     </>
   );
 }
