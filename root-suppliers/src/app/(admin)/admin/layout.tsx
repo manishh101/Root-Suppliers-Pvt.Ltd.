@@ -76,11 +76,7 @@ const menuItems = [
     href: "/admin/testimonials",
     icon: Star,
   },
-  {
-    label: "Media",
-    href: "/admin/media",
-    icon: Image,
-  },
+
   {
     label: "Users",
     href: "/admin/users",

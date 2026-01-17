@@ -90,15 +90,18 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
                   key={brand._id || brand.name}
                   className="flex-none w-44 h-36"
                 >
-                  <div className="bg-white rounded-xl p-5 h-full flex items-center justify-center shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-200 group cursor-pointer relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-50/0 via-primary-50/0 to-primary-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="bg-white rounded-xl p-5 h-full flex items-center justify-center shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary-200 group cursor-pointer relative overflow-hidden hover:scale-105">
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-50/0 via-primary-50/0 to-primary-100/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-primary-600 to-red-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                     <CloudinaryImage
                       src={brand.logo?.url || PLACEHOLDER_IMAGES.BRAND}
                       publicId={brand.logo?.publicId}
                       alt={brand.name}
                       width={120}
                       height={60}
-                      className="object-contain max-h-24 relative z-10 transition-all duration-300"
+                      className="object-contain max-h-24 relative z-10 transition-all duration-500 grayscale group-hover:grayscale-0"
                     />
                   </div>
                 </div>

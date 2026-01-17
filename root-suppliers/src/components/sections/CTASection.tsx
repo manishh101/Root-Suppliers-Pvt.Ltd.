@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Phone, ArrowRight, ShoppingBag } from "lucide-react";
+import { Phone, ArrowRight, ShoppingBag, Hammer, Wrench, PaintBucket } from "lucide-react";
 
 export const CTASection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,6 +37,17 @@ export const CTASection: React.FC = () => {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" />
         <div className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-primary-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+
+        {/* Floating decorative icons */}
+        <div className="absolute top-20 left-[15%] text-white/10 animate-bounce" style={{ animationDuration: '3s' }}>
+          <Hammer className="w-16 h-16" />
+        </div>
+        <div className="absolute bottom-20 right-[15%] text-white/10 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+          <Wrench className="w-14 h-14" />
+        </div>
+        <div className="absolute top-1/3 right-[10%] text-white/10 animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}>
+          <PaintBucket className="w-12 h-12" />
+        </div>
       </div>
 
       {/* Pattern overlay */}
@@ -65,11 +76,13 @@ export const CTASection: React.FC = () => {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Link
               href="/products"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl hover:from-primary-400 hover:to-primary-500 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-primary-500/30 group transform hover:-translate-y-0.5"
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl hover:from-primary-400 hover:to-primary-500 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-primary-500/30 transform hover:-translate-y-1 overflow-hidden"
             >
-              <ShoppingBag className="h-5 w-5" />
-              Browse Products
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              {/* Pulse glow effect */}
+              <div className="absolute inset-0 rounded-xl bg-primary-400/50 animate-pulse opacity-0 group-hover:opacity-50 blur-md transition-opacity duration-300" />
+              <ShoppingBag className="h-5 w-5 relative z-10" />
+              <span className="relative z-10">Browse Products</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" />
             </Link>
             <a
               href="tel:+9779851235637"

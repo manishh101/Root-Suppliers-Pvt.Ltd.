@@ -22,7 +22,7 @@ export const ADMIN_NAV_LINKS = [
   { label: "Inquiries", href: "/admin/inquiries", icon: "MessageSquare" },
   { label: "Testimonials", href: "/admin/testimonials", icon: "Star" },
   { label: "Brands", href: "/admin/brands", icon: "Award" },
-  { label: "Media", href: "/admin/media", icon: "Image" },
+
   { label: "Settings", href: "/admin/settings", icon: "Settings" },
   { label: "Users", href: "/admin/users", icon: "Users" },
 ] as const;
@@ -99,7 +99,7 @@ export const API_ENDPOINTS = {
   inquiries: "/api/inquiries",
   testimonials: "/api/testimonials",
   brands: "/api/brands",
-  media: "/api/media",
+
   settings: "/api/settings",
   auth: "/api/auth",
   upload: "/api/upload",

@@ -43,21 +43,26 @@ function useCountUp(end: number, isVisible: boolean, duration: number = 2000) {
   return count;
 }
 
-const StatCard: React.FC<{ stat: StatItem; isVisible: boolean }> = ({ stat, isVisible }) => {
+const StatCard: React.FC<{ stat: StatItem; isVisible: boolean; isLast?: boolean }> = ({ stat, isVisible, isLast }) => {
   const count = useCountUp(stat.value, isVisible);
   const IconComponent = stat.icon;
 
   return (
-    <div className="text-center">
-      {/* Blue Icon Circle for Color Balance */}
-      <div className="inline-flex items-center justify-center w-14 h-14 bg-secondary-100 rounded-full mb-4">
-        <IconComponent className="w-7 h-7 text-secondary-600" />
+    <div className="text-center relative group">
+      {/* Gradient Icon Circle */}
+      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-700 rounded-2xl mb-5 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+        <IconComponent className="w-8 h-8 text-white" />
       </div>
-      <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+      <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-2 transition-all duration-300 group-hover:text-primary-600">
         {count}
         <span className="text-primary-600">{stat.suffix}</span>
       </div>
-      <div className="text-gray-500 text-sm font-medium">{stat.label}</div>
+      <div className="text-gray-600 text-sm font-semibold uppercase tracking-wider">{stat.label}</div>
+
+      {/* Vertical Divider (hidden on last item and mobile) */}
+      {!isLast && (
+        <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
+      )}
     </div>
   );
 };
@@ -109,14 +114,28 @@ export const StatsSection: React.FC<StatsSectionProps> = ({ stats: customStats }
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-16 bg-gray-50">
-      <div className="container-main">
+    <section ref={sectionRef} className="py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+        }} />
+      </div>
+
+      <div className="container-main relative z-10">
+        {/* Section Title */}
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">By The Numbers</h2>
+          <div className="w-20 h-1 bg-gradient-to-r from-primary-500 to-secondary-500 mx-auto mt-4 rounded-full" />
+        </div>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-          {displayStats.map((stat) => (
+          {displayStats.map((stat, index) => (
             <StatCard
               key={stat.label}
               stat={{ ...stat, icon: getIcon(stat.label), suffix: stat.suffix || "+" }}
               isVisible={isVisible}
+              isLast={index === displayStats.length - 1}
             />
           ))}
         </div>

@@ -69,6 +69,127 @@ const settingsSchema = z.object({
 
 type SettingsFormData = z.infer<typeof settingsSchema>;
 
+// Helper to parse "09:00" to "9:00 AM"
+const formatTime = (time: string) => {
+  if (!time) return "";
+  const [h, m] = time.split(":");
+  const hour = parseInt(h);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${m} ${ampm}`;
+};
+
+// Helper Component for parsing time string "9:00 AM" to "09:00"
+const parseTo24Hour = (timeStr: string) => {
+  if (!timeStr) return "09:00";
+  const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!match) return "09:00";
+
+  let [_, h, m, ampm] = match;
+  let hour = parseInt(h);
+
+  if (ampm.toUpperCase() === "PM" && hour < 12) hour += 12;
+  if (ampm.toUpperCase() === "AM" && hour === 12) hour = 0;
+
+  return `${hour.toString().padStart(2, '0')}:${m}`;
+};
+
+// Helper component for individual business hour row
+function BusinessHourRow({
+  day,
+  value,
+  onChange
+}: {
+  day: string;
+  value: string | undefined;
+  onChange: (value: string) => void;
+}) {
+  // Parse initial value or default
+  const isClosed = !value || value.toLowerCase() === "closed";
+  const [isOpen, setIsOpen] = useState(!isClosed);
+
+  // Try to extract times from string like "7:00am- 8:00pm" or "9:00 AM - 5:00 PM"
+  // This is a basic parser, might handle standardized format best.
+  // We'll default to 9-5 if parsing fails or closed.
+  const [startTime, setStartTime] = useState("09:00");
+  const [endTime, setEndTime] = useState("17:00");
+
+  useEffect(() => {
+    if (value && value.toLowerCase() !== "closed") {
+      const parts = value.split("-");
+      if (parts.length === 2) {
+        setStartTime(parseTo24Hour(parts[0].trim()));
+        setEndTime(parseTo24Hour(parts[1].trim()));
+      }
+    }
+  }, [value]);
+
+  const updateValue = (open: boolean, start: string, end: string) => {
+    if (!open) {
+      onChange("Closed");
+    } else {
+      onChange(`${formatTime(start)} - ${formatTime(end)}`);
+    }
+  };
+
+  const handleToggle = (checked: boolean) => {
+    setIsOpen(checked);
+    updateValue(checked, startTime, endTime);
+  };
+
+  const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStartTime(e.target.value);
+    if (isOpen) updateValue(true, e.target.value, endTime);
+  };
+
+  const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndTime(e.target.value);
+    if (isOpen) updateValue(true, startTime, e.target.value);
+  };
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+      <div className="w-32 flex items-center gap-3">
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" className="sr-only peer" checked={isOpen} onChange={(e) => handleToggle(e.target.checked)} />
+          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+        </label>
+        <span className="capitalize font-medium text-gray-700">{day}</span>
+      </div>
+
+      <div className="flex-1 flex items-center gap-4">
+        {isOpen ? (
+          <>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-gray-400" />
+              <input
+                type="time"
+                value={startTime}
+                onChange={handleStartChange}
+                className="px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm"
+              />
+            </div>
+            <span className="text-gray-400">-</span>
+            <div className="flex items-center gap-2">
+              <input
+                type="time"
+                value={endTime}
+                onChange={handleEndChange}
+                className="px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm"
+              />
+            </div>
+            <div className="text-xs text-gray-500 ml-2 pt-1">
+              ({formatTime(startTime)} - {formatTime(endTime)})
+            </div>
+          </>
+        ) : (
+          <span className="text-sm text-gray-500 italic px-2">Closed</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -333,9 +454,31 @@ export default function SettingsPage() {
               </div>
             )}
             {activeTab === "hours" && (
-              <div className="space-y-2">
-                {["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].map(day => (
-                  <div key={day} className="flex items-center gap-4"><span className="w-24 capitalize text-sm font-medium">{day}</span><input {...register(`businessHours.${day}` as any)} className="flex-1 px-4 py-2 border rounded focus:ring-2 ring-primary/20 outline-none" /></div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-semibold text-gray-900">Weekly Schedule</h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const sunday = watch("businessHours.sunday");
+                      if (sunday) {
+                        ["monday", "tuesday", "wednesday", "thursday", "friday"].forEach(day =>
+                          setValue(`businessHours.${day}` as any, sunday, { shouldDirty: true })
+                        );
+                      }
+                    }}
+                    className="text-sm text-primary hover:text-primary/80 font-medium"
+                  >
+                    Copy Sunday to Weekdays
+                  </button>
+                </div>
+                {["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].map(day => (
+                  <BusinessHourRow
+                    key={day}
+                    day={day}
+                    value={watch(`businessHours.${day}` as any)}
+                    onChange={(val) => setValue(`businessHours.${day}` as any, val, { shouldDirty: true })}
+                  />
                 ))}
               </div>
             )}

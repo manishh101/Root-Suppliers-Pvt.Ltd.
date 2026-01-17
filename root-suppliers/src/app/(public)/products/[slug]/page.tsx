@@ -22,14 +22,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
 
-    const product = await response.json();
+    const data = await response.json();
+    const product = data.product;
+
+    // Ensure product exists and has required fields
+    if (!product || !product.name) {
+      return {
+        title: "Product | Root Suppliers",
+      };
+    }
+
+    // Use custom SEO meta fields if available, otherwise fall back to product name/description
+    const seoTitle = (product.meta?.title && product.meta.title.trim()) || product.name;
+    const seoDescription = (product.meta?.description && product.meta.description.trim()) || product.description?.substring(0, 160) || '';
 
     return {
-      title: `${product.name} | Root Suppliers`,
-      description: product.description?.substring(0, 160),
+      title: `${seoTitle} | Root Suppliers`,
+      description: seoDescription,
       openGraph: {
-        title: product.name,
-        description: product.description?.substring(0, 160),
+        title: seoTitle,
+        description: seoDescription,
+        images: product.images?.[0]?.url ? [product.images[0].url] : [],
+      },
+      // Additional SEO tags for better indexing
+      keywords: product.tags?.join(', ') || '',
+      twitter: {
+        card: 'summary_large_image',
+        title: seoTitle,
+        description: seoDescription,
         images: product.images?.[0]?.url ? [product.images[0].url] : [],
       },
     };

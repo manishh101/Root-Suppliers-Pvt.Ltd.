@@ -90,10 +90,10 @@ function CategoryItem({
 
         {/* Level Badge */}
         <span className={`px-2 py-0.5 text-xs rounded-full ${level === 0
-            ? "bg-purple-100 text-purple-700"
-            : level === 1
-              ? "bg-blue-100 text-blue-700"
-              : "bg-teal-100 text-teal-700"
+          ? "bg-purple-100 text-purple-700"
+          : level === 1
+            ? "bg-blue-100 text-blue-700"
+            : "bg-teal-100 text-teal-700"
           }`}>
           {level === 0 ? "Main" : level === 1 ? "Subcategory" : "Sub-subcategory"}
         </span>
@@ -305,7 +305,7 @@ export default function CategoriesPage() {
   const fetchCategories = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/categories");
+      const response = await fetch("/api/categories?includeProductCount=true");
       const data = await response.json();
 
       if (data.success) {
@@ -354,21 +354,7 @@ export default function CategoriesPage() {
         </Link>
       </div>
 
-      {/* Info Card */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <FolderTree className="w-5 h-5 text-blue-600 mt-0.5" />
-          <div className="text-sm text-blue-800">
-            <p className="font-medium mb-1">How to organize categories:</p>
-            <ul className="list-disc list-inside space-y-1 text-blue-700">
-              <li><strong>Main Category</strong> – Top level (e.g., "Electronics", "Clothing")</li>
-              <li><strong>Subcategory</strong> – Under main category (e.g., "Phones" under "Electronics")</li>
-              <li><strong>Sub-subcategory</strong> – Under subcategory (e.g., "Smartphones" under "Phones")</li>
-            </ul>
-            <p className="mt-2">Click the <Plus className="w-3 h-3 inline text-green-600" /> button on any category to add a child category.</p>
-          </div>
-        </div>
-      </div>
+
 
       {/* Search */}
       <div className="bg-white rounded-xl shadow-sm border p-4">
