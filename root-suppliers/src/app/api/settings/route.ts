@@ -93,44 +93,69 @@ export const PUT = withValidate(
     await connectDB();
 
     const body = validatedData;
-
-    // Don't allow changing _id
     delete body._id;
 
-    // ... same update logic ...
     let settings = await Settings.findOne();
 
     if (!settings) {
       settings = await Settings.create(body);
     } else {
+      // Use explicit update instead of aggressive flattening to prevent crashes
       const updateData: any = {};
-      const flatten = (obj: any, prefix = "") => {
-        Object.keys(obj).forEach(key => {
-          const val = obj[key];
-          const type = typeof val;
-          if (val !== null && type === "object" && !Array.isArray(val)) {
-            flatten(val, prefix + key + ".");
-          } else {
-            updateData[prefix + key] = val;
-          }
-        });
-      };
 
-      const topLevel = ["site", "contact", "social", "seo"];
-      topLevel.forEach(field => {
-        if (body[field]) {
-          flatten(body[field], `${field}.`);
+      // Site
+      if (body.site) {
+        if (body.site.name !== undefined) updateData["site.name"] = body.site.name;
+        if (body.site.tagline !== undefined) updateData["site.tagline"] = body.site.tagline;
+        if (body.site.logo) {
+          if (body.site.logo.url !== undefined) updateData["site.logo.url"] = body.site.logo.url;
+          if (body.site.logo.publicId !== undefined) updateData["site.logo.publicId"] = body.site.logo.publicId;
         }
-      });
+        if (body.site.favicon) {
+          if (body.site.favicon.url !== undefined) updateData["site.favicon.url"] = body.site.favicon.url;
+          if (body.site.favicon.publicId !== undefined) updateData["site.favicon.publicId"] = body.site.favicon.publicId;
+        }
+      }
 
+      // Contact
+      if (body.contact) {
+        if (body.contact.primaryPhone !== undefined) updateData["contact.primaryPhone"] = body.contact.primaryPhone;
+        if (body.contact.secondaryPhone !== undefined) updateData["contact.secondaryPhone"] = body.contact.secondaryPhone;
+        if (body.contact.primaryEmail !== undefined) updateData["contact.primaryEmail"] = body.contact.primaryEmail;
+        if (body.contact.secondaryEmail !== undefined) updateData["contact.secondaryEmail"] = body.contact.secondaryEmail;
+        if (body.contact.address !== undefined) updateData["contact.address"] = body.contact.address;
+        if (body.contact.googleMapsEmbed !== undefined) updateData["contact.googleMapsEmbed"] = body.contact.googleMapsEmbed;
+        if (body.contact.googleMapsLink !== undefined) updateData["contact.googleMapsLink"] = body.contact.googleMapsLink;
+      }
+
+      // Social
+      if (body.social) {
+        if (body.social.facebook !== undefined) updateData["social.facebook"] = body.social.facebook;
+        if (body.social.instagram !== undefined) updateData["social.instagram"] = body.social.instagram;
+        if (body.social.youtube !== undefined) updateData["social.youtube"] = body.social.youtube;
+        if (body.social.linkedin !== undefined) updateData["social.linkedin"] = body.social.linkedin;
+        if (body.social.twitter !== undefined) updateData["social.twitter"] = body.social.twitter;
+      }
+
+      // SEO
+      if (body.seo) {
+        if (body.seo.defaultTitle !== undefined) updateData["seo.defaultTitle"] = body.seo.defaultTitle;
+        if (body.seo.defaultDescription !== undefined) updateData["seo.defaultDescription"] = body.seo.defaultDescription;
+        if (body.seo.googleAnalyticsId !== undefined) updateData["seo.googleAnalyticsId"] = body.seo.googleAnalyticsId;
+      }
+
+      // Homepage
       if (body.homepage) {
-        flatten(body.homepage, "homepage.");
+        if (body.homepage.featuredProductsTitle !== undefined) updateData["homepage.featuredProductsTitle"] = body.homepage.featuredProductsTitle;
+        if (body.homepage.featuredProductsSubtitle !== undefined) updateData["homepage.featuredProductsSubtitle"] = body.homepage.featuredProductsSubtitle;
+        if (body.homepage.aboutSectionContent !== undefined) updateData["homepage.aboutSectionContent"] = body.homepage.aboutSectionContent;
+        if (body.homepage.stats) updateData["homepage.stats"] = body.homepage.stats;
+        if (body.homepage.heroSlides) updateData["homepage.heroSlides"] = body.homepage.heroSlides;
+        if (body.homepage.about) updateData["homepage.about"] = body.homepage.about;
       }
 
-      if (body.businessHours) {
-        updateData.businessHours = body.businessHours;
-      }
-
+      // Arrays & Others
+      if (body.businessHours) updateData.businessHours = body.businessHours;
       if (body.enableInquiryNotifications !== undefined) updateData.enableInquiryNotifications = body.enableInquiryNotifications;
       if (body.inquiryEmailRecipients !== undefined) updateData.inquiryEmailRecipients = body.inquiryEmailRecipients;
 
