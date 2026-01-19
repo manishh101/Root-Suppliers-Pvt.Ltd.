@@ -1,16 +1,37 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogClient from "./BlogClient";
+import connectDB from "@/lib/db/connect";
+import Blog from "@/lib/db/models/Blog";
+
+// Revalidate every hour
+export const revalidate = 3600;
+
+// Allow dynamic params
+export const dynamicParams = true;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-async function getBlog(slug: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+export async function generateStaticParams() {
   try {
+    await connectDB();
+    const blogs = await Blog.find({ isPublished: true }).select("slug").lean();
+    return blogs.map((blog) => ({
+      slug: blog.slug,
+    }));
+  } catch (error) {
+    console.error("Error generating static params for blogs:", error);
+    return [];
+  }
+}
+
+async function getBlog(slug: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/blogs/${slug}`, {
-      cache: "no-store", // Ensure fresh data
+      next: { revalidate: 3600 }
     });
 
     if (!res.ok) return null;

@@ -1,0 +1,117 @@
+
+> root-suppliers-v2@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+✅ MongoDB connected successfully
+✅ MongoDB connected successfully
+✅ MongoDB connected successfully
+   Generating static pages (0/453) ...
+{"level":50,"time":1768835221909,"env":"production","err":{"type":"B","message":"Dynamic server usage: Route /api/auth/session couldn't be rendered statically because it used `request.cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/auth/session couldn't be rendered statically because it used `request.cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at V (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)\n    at Object.get (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)\n    at p (/home/manish/Documents/Root_Suppliers/root-suppliers/.next/server/app/api/auth/session/route.js:1:1392)\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/server/lib/trace/tracer.js:140:36\n    at NoopContextManager.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)\n    at ContextAPI.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)\n    at NoopTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)\n    at ProxyTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/server/lib/trace/tracer.js:122:103","description":"Route /api/auth/session couldn't be rendered statically because it used `request.cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","digest":"DYNAMIC_SERVER_USAGE"},"msg":"API Error Occurred"}
+Auth verification error: B [Error]: Dynamic server usage: Route /api/stats couldn't be rendered statically because it used `request.cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at i (/home/manish/Documents/Root_Suppliers/root-suppliers/.next/server/app/api/brands/[slug]/route.js:1:3012)
+    at f (/home/manish/Documents/Root_Suppliers/root-suppliers/.next/server/app/api/stats/route.js:1:1628)
+    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+  description: "Route /api/stats couldn't be rendered statically because it used `request.cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+{"level":50,"time":1768835221982,"env":"production","err":{"type":"B","message":"Dynamic server usage: Route /api/stats couldn't be rendered statically because it used `nextUrl.searchParams`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/stats couldn't be rendered statically because it used `nextUrl.searchParams`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at V (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)\n    at Object.get (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29137)\n    at f (/home/manish/Documents/Root_Suppliers/root-suppliers/.next/server/app/api/stats/route.js:1:1664)\n    at async /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38411\n    at async e_.execute (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:27880)\n    at async e_.handle (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:39943)\n    at async exportAppRoute (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/export/routes/app-route.js:77:26)\n    at async exportPageImpl (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/export/worker.js:175:20)\n    at async Span.traceAsyncFn (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/trace/trace.js:154:20)\n    at async Object.exportPage (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/export/worker.js:237:20)","description":"Route /api/stats couldn't be rendered statically because it used `nextUrl.searchParams`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","digest":"DYNAMIC_SERVER_USAGE"},"msg":"API Error Occurred"}
+{"level":50,"time":1768835224215,"env":"production","err":{"type":"B","message":"Dynamic server usage: Route /api/settings couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/settings couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at V (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)\n    at Object.get (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/.next/server/app/api/upload/route.js:11:126623\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/server/lib/trace/tracer.js:140:36\n    at NoopContextManager.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)\n    at ContextAPI.with (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)\n    at NoopTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)\n    at ProxyTracer.startActiveSpan (/home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)\n    at /home/manish/Documents/Root_Suppliers/root-suppliers/node_modules/next/dist/server/lib/trace/tracer.js:122:103","description":"Route /api/settings couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","digest":"DYNAMIC_SERVER_USAGE"},"msg":"API Error Occurred"}
+   Generating static pages (113/453) 
+   Generating static pages (226/453) 
+   Generating static pages (339/453) 
+ ✓ Generating static pages (453/453)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                      Size     First Load JS
+┌ ○ /                                                            3.15 kB         218 kB
+├ ○ /_not-found                                                  880 B            89 kB
+├ ○ /about                                                       4.83 kB         214 kB
+├ ○ /admin                                                       4.05 kB         165 kB
+├ ○ /admin/about                                                 4.45 kB         163 kB
+├ ○ /admin/blogs                                                 4.44 kB         169 kB
+├ ƒ /admin/blogs/[slug]                                          3.33 kB         174 kB
+├ ○ /admin/blogs/new                                             2.86 kB         173 kB
+├ ○ /admin/brands                                                4.04 kB         161 kB
+├ ƒ /admin/brands/[slug]                                         4.5 kB          172 kB
+├ ○ /admin/brands/new                                            4.45 kB         172 kB
+├ ○ /admin/categories                                            4.54 kB         101 kB
+├ ƒ /admin/categories/[slug]                                     5.39 kB         173 kB
+├ ○ /admin/categories/new                                        5.16 kB         173 kB
+├ ○ /admin/hero-slides                                           4.59 kB         153 kB
+├ ○ /admin/inquiries                                             4.76 kB         109 kB
+├ ○ /admin/login                                                 2.24 kB         123 kB
+├ ○ /admin/products                                              4.66 kB         166 kB
+├ ƒ /admin/products/[slug]                                       6.27 kB         174 kB
+├ ○ /admin/products/new                                          5.84 kB         173 kB
+├ ○ /admin/settings                                              6.49 kB         165 kB
+├ ○ /admin/testimonials                                          5.13 kB         154 kB
+├ ○ /admin/users                                                 4.76 kB         153 kB
+├ ƒ /api/auth/login                                              0 B                0 B
+├ ƒ /api/auth/logout                                             0 B                0 B
+├ ƒ /api/auth/session                                            0 B                0 B
+├ ƒ /api/blogs                                                   0 B                0 B
+├ ƒ /api/blogs/[slug]                                            0 B                0 B
+├ ƒ /api/brands                                                  0 B                0 B
+├ ƒ /api/brands/[slug]                                           0 B                0 B
+├ ƒ /api/categories                                              0 B                0 B
+├ ƒ /api/categories/[slug]                                       0 B                0 B
+├ ○ /api/health                                                  0 B                0 B
+├ ƒ /api/inquiries                                               0 B                0 B
+├ ƒ /api/inquiries/[id]                                          0 B                0 B
+├ ƒ /api/products                                                0 B                0 B
+├ ƒ /api/products/[slug]                                         0 B                0 B
+├ ƒ /api/settings                                                0 B                0 B
+├ ƒ /api/stats                                                   0 B                0 B
+├ ƒ /api/testimonials                                            0 B                0 B
+├ ƒ /api/testimonials/[id]                                       0 B                0 B
+├ ƒ /api/upload                                                  0 B                0 B
+├ ƒ /api/users                                                   0 B                0 B
+├ ƒ /api/users/[id]                                              0 B                0 B
+├ ○ /blogs                                                       3.64 kB         203 kB
+├ ● /blogs/[slug]                                                2.54 kB         202 kB
+├   ├ /blogs/the-future-of-construction-sustainable-materials
+├   ├ /blogs/top-10-tools-every-contractor-needs
+├   ├ /blogs/how-to-choose-the-right-cement-for-your-foundation
+├   └ [+7 more paths]
+├ ○ /categories                                                  5.42 kB         199 kB
+├ ● /categories/[slug]                                           3 kB            233 kB
+├   ├ /categories/cement-and-aggregates
+├   ├ /categories/opc-cement-43-grade
+├   ├ /categories/ppc-cement
+├   └ [+69 more paths]
+├ ○ /contact                                                     5.91 kB         232 kB
+├ ○ /products                                                    5.61 kB         236 kB
+├ ● /products/[slug]                                             9.57 kB         210 kB
+├   ├ /products/heavy-duty-opc-cement-43-grade-type-a
+├   ├ /products/durable-opc-cement-43-grade-type-b
+├   ├ /products/weather-resistant-opc-cement-43-grade-type-c
+├   └ [+327 more paths]
+├ ○ /robots.txt                                                  0 B                0 B
+└ ○ /sitemap.xml                                                 0 B                0 B
++ First Load JS shared by all                                    88.1 kB
+  ├ chunks/2117-850a318f6149203a.js                              31.9 kB
+  ├ chunks/fd9d1056-175135dbaad28189.js                          53.6 kB
+  └ other shared chunks (total)                                  2.54 kB
+
+
+ƒ Middleware                                                     32.9 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses getStaticProps)
+ƒ  (Dynamic)  server-rendered on demand
+

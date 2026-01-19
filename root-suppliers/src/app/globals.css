@@ -2,19 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Bank Gothic';
-  src: url('/fonts/bank-gothic.woff') format('woff'),
-    url('/fonts/bank-gothic.ttf') format('truetype');
-  font-weight: 500;
-  /* Medium */
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Define Font Variables */
 :root {
-  --font-primary: 'Bank Gothic', 'Inter', sans-serif;
+  /* Using the CSS variable defined by next/font/local in layout.tsx */
+  --font-primary: var(--font-primary), 'Inter', sans-serif;
   --font-secondary: 'Inter', system-ui, sans-serif;
 }
 

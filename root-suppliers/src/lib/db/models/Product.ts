@@ -22,6 +22,7 @@ export interface IProduct extends Document {
   stock: number;
   brand?: mongoose.Types.ObjectId;
   modelName?: string;
+  sku?: string;
   unit?: string;
   features: string[];
   tags: string[];
@@ -100,6 +101,11 @@ const ProductSchema = new Schema<IProduct>(
     features: [String],
     tags: [String],
     modelName: String,
+    sku: {
+      type: String,
+      trim: true,
+      index: true,
+    },
     isFeatured: {
       type: Boolean,
       default: false,

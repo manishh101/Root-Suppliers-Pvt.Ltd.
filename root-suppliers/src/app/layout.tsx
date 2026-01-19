@@ -1,5 +1,23 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+const bankGothic = localFont({
+  src: [
+    {
+      path: './fonts/bank-gothic.woff',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './fonts/bank-gothic.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-primary',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -71,7 +89,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className={`antialiased ${bankGothic.variable}`}>{children}</body>
     </html>
   );
 }

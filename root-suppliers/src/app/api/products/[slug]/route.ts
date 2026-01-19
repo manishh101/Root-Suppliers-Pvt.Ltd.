@@ -17,6 +17,9 @@ interface RouteParams {
   };
 }
 
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/products/[slug]
  * 
@@ -40,6 +43,8 @@ export async function GET(
     if (!product) {
       throw new NotFoundError("Product not found");
     }
+
+    // console.log(`[GET] Product ${params.slug} stock:`, product.stock);
 
     return successResponse({ product });
   } catch (error) {
@@ -65,6 +70,8 @@ export async function PUT(
 
     await connectDB();
     const body = await req.json();
+
+    // console.log(`[PUT] Update request for ${params.slug}. Stock in payload:`, body.stock);
 
     const validatedData = productSchema.partial().parse(body);
 

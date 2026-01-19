@@ -13,6 +13,9 @@ import { publicApiLimiter } from "@/lib/rate-limit";
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Category, Brand };
 
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/products
  * 

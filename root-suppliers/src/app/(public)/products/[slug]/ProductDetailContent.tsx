@@ -77,7 +77,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${slug}`);
+        const response = await fetch(`/api/products/${slug}?t=${Date.now()}`, { cache: "no-store" });
         if (!response.ok) {
           setProduct(null);
           return;
@@ -342,10 +342,19 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                 {product.name}
               </h1>
 
-              {/* SKU */}
-              {product.sku && (
-                <p className="text-sm text-gray-500 mb-4">SKU: {product.sku}</p>
-              )}
+              {/* SKU & Stock */}
+              <div className="flex flex-col gap-1 mb-6">
+                {product.sku && (
+                  <p className="text-sm font-medium text-gray-600">
+                    SKU: <span className="text-gray-900">{product.sku}</span>
+                  </p>
+                )}
+                <p className="text-sm font-medium text-gray-600">
+                  Stock: <span className={product.stock > 0 ? "text-green-600" : "text-red-500"}>
+                    {product.stock > 0 ? `${product.stock} ${product.unit || 'items'} available` : "Out of Stock"}
+                  </span>
+                </p>
+              </div>
 
               {/* Price */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">

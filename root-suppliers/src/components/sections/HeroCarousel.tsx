@@ -105,7 +105,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                         alt={slide.title || 'Hero slide'}
                         fill
                         className="object-cover"
-                        priority
+                        priority={index === 0}
                       />
                       {/* Gradient Overlay for Text Contrast */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -210,6 +210,7 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                         alt={product.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 15vw"
                       />
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-primary-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
