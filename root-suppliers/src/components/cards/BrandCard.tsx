@@ -30,7 +30,7 @@ export const BrandCard: React.FC<BrandCardProps> = ({ brand }) => {
           src={brand.logo || PLACEHOLDER_IMAGES.BRAND}
           alt={brand.name}
           fill
-          className="object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-300"
+          className="object-contain transition-all duration-300 group-hover:scale-110"
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         />
       </div>

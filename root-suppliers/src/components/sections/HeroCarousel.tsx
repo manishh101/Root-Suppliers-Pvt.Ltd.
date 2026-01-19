@@ -115,19 +115,19 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
                         <div className="max-w-xl">
                           {slide.title && (
-                            <h2 className="text-xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg animate-fade-up">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg animate-fade-up">
                               {slide.title}
                             </h2>
                           )}
                           {slide.subtitle && (
-                            <p className="text-sm md:text-lg lg:text-xl text-white/90 mb-5 md:mb-6 drop-shadow-md max-w-md">
+                            <p className="text-base md:text-lg lg:text-xl text-white/90 mb-5 md:mb-6 drop-shadow-md max-w-md font-primary">
                               {slide.subtitle}
                             </p>
                           )}
                           {slide.ctaText && slide.ctaLink && (
                             <Link
                               href={slide.ctaLink}
-                              className="inline-flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 group/btn hover:scale-105"
+                              className="inline-flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group/btn hover:scale-105 font-primary"
                             >
                               <span>{slide.ctaText}</span>
                               <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />

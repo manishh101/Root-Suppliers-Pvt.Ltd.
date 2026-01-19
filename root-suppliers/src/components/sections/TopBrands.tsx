@@ -101,7 +101,7 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
                       alt={brand.name}
                       width={120}
                       height={60}
-                      className="object-contain max-h-24 relative z-10 transition-all duration-500 grayscale group-hover:grayscale-0"
+                      className="object-contain max-h-24 relative z-10 transition-all duration-500 hover:scale-110"
                     />
                   </div>
                 </div>

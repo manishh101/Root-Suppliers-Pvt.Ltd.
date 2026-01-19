@@ -110,6 +110,18 @@ export default function Header({ settings }: HeaderProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
+
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (searchQuery.trim()) {
@@ -147,10 +159,10 @@ export default function Header({ settings }: HeaderProps) {
 
               {/* Tagline - Center */}
               <div className="hidden lg:block text-center flex-1">
-                <h2 className="text-base lg:text-lg font-extrabold text-gray-900 capitalize tracking-[0.05em] leading-tight font-secondary">
+                <h2 className="text-base lg:text-lg font-bold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
                   All Construction
                 </h2>
-                <p className="text-base lg:text-lg font-extrabold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent capitalize tracking-[0.05em] font-secondary">
+                <p className="text-base lg:text-lg font-bold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
                   Solutions Under One Roof
                 </p>
               </div>
@@ -175,7 +187,7 @@ export default function Header({ settings }: HeaderProps) {
                   href={settings?.contact?.googleMapsLink || 'https://maps.app.goo.gl/jRWqSiE9fjLfv45r8'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white text-sm font-bold rounded-lg hover:from-primary-500 hover:to-primary-600 transition-all shadow-md hover:shadow-lg hover:scale-105 duration-300"
+                  className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:text-white text-sm font-bold rounded-full hover:from-primary-500 hover:to-primary-600 transition-all shadow-md hover:shadow-lg hover:scale-105 duration-300 font-primary"
                 >
                   Get Directions
                 </a>
@@ -184,10 +196,26 @@ export default function Header({ settings }: HeaderProps) {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors z-50 relative"
                 aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                <div className="w-6 h-5 relative flex flex-col justify-between">
+                  {/* Top Line */}
+                  <span
+                    className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-in-out origin-left ${mobileMenuOpen ? "rotate-45 translate-x-px translate-y-px" : ""
+                      }`}
+                  />
+                  {/* Middle Line */}
+                  <span
+                    className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-in-out ${mobileMenuOpen ? "opacity-0 translate-x-3" : "opacity-100"
+                      }`}
+                  />
+                  {/* Bottom Line */}
+                  <span
+                    className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-in-out origin-left ${mobileMenuOpen ? "-rotate-45 translate-x-px -translate-y-px" : ""
+                      }`}
+                  />
+                </div>
               </button>
             </div>
           </div>
@@ -283,7 +311,7 @@ export default function Header({ settings }: HeaderProps) {
       {/* Mobile Menu - Outside header so it's visible when header hides */}
       {/* Mobile Menu - Outside header so it's visible when header hides */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-white z-[60] overflow-y-auto">
+        <div className="md:hidden fixed inset-0 bg-white z-[60] overflow-y-auto hide-scrollbar">
           <div className="container-main py-4 space-y-6">
             {/* Close Button */}
             <div className="flex justify-end">
