@@ -223,7 +223,10 @@ export default function InquiriesPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Inquiry List */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border overflow-hidden">
+        <div
+          className={`lg:col-span-2 bg-white rounded-xl shadow-sm border overflow-hidden ${selectedInquiry ? "hidden lg:block" : "block"
+            }`}
+        >
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -244,9 +247,8 @@ export default function InquiriesPage() {
                     <button
                       key={inquiry._id}
                       onClick={() => setSelectedInquiry(inquiry)}
-                      className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${
-                        selectedInquiry?._id === inquiry._id ? "bg-primary/5" : ""
-                      }`}
+                      className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${selectedInquiry?._id === inquiry._id ? "bg-primary/5" : ""
+                        }`}
                     >
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -308,9 +310,21 @@ export default function InquiriesPage() {
         </div>
 
         {/* Inquiry Detail */}
-        <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+        <div
+          className={`bg-white rounded-xl shadow-sm border overflow-hidden ${selectedInquiry ? "block" : "hidden lg:block"
+            }`}
+        >
           {selectedInquiry ? (
             <div className="p-6 space-y-6">
+              {/* Back button for mobile */}
+              <button
+                onClick={() => setSelectedInquiry(null)}
+                className="lg:hidden flex items-center gap-2 text-gray-500 hover:text-gray-900 -ml-2 px-2 py-1"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Back to Inquiries
+              </button>
+
               {/* Header */}
               <div className="flex items-start justify-between">
                 <div>
@@ -390,11 +404,10 @@ export default function InquiriesPage() {
                         key={status.value}
                         onClick={() => updateStatus(selectedInquiry._id, status.value)}
                         disabled={isUpdating || selectedInquiry.status === status.value}
-                        className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors ${
-                          selectedInquiry.status === status.value
+                        className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors ${selectedInquiry.status === status.value
                             ? status.color + " font-medium"
                             : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        }`}
+                          }`}
                       >
                         <StatusIcon className="w-4 h-4" />
                         {status.label}

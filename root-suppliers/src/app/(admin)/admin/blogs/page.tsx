@@ -39,7 +39,7 @@ interface Pagination {
   page: number;
   limit: number;
   total: number;
-  pages: number;
+  totalPages: number;
 }
 
 export default function BlogsPage() {
@@ -50,7 +50,7 @@ export default function BlogsPage() {
     page: 1,
     limit: 10,
     total: 0,
-    pages: 0,
+    totalPages: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -205,8 +205,8 @@ export default function BlogsPage() {
           </div>
         ) : (
           <>
-            {/* Table View */}
-            <div className="overflow-x-auto">
+            {/* Table View (Desktop) */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
@@ -311,8 +311,100 @@ export default function BlogsPage() {
               </table>
             </div>
 
+            {/* Mobile Cards (Mobile) */}
+            <div className="md:hidden divide-y">
+              {blogs.map((blog) => (
+                <div key={blog._id} className="p-4 bg-white">
+                  <div className="flex items-start gap-4">
+                    <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                      {blog.featuredImage ? (
+                        <CloudinaryImage
+                          src={typeof blog.featuredImage === 'string' ? blog.featuredImage : blog.featuredImage.url}
+                          alt={blog.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <FileText className="w-8 h-8 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 truncate">{blog.title}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span
+                          className={`px-2 py-0.5 text-xs rounded-full ${blog.isPublished
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                            }`}
+                        >
+                          {blog.isPublished ? "Published" : "Draft"}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {blog.author?.name || "Unknown"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {blog.publishedAt
+                          ? format(new Date(blog.publishedAt), "MMM d, yyyy")
+                          : formatDistanceToNow(new Date(blog.createdAt), {
+                            addSuffix: true,
+                          })}
+                      </p>
+                    </div>
+                    <div className="relative">
+                      <button
+                        onClick={() =>
+                          setOpenMenu(openMenu === blog._id ? null : blog._id)
+                        }
+                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
+                      >
+                        <MoreVertical className="w-5 h-5" />
+                      </button>
+                      {openMenu === blog._id && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setOpenMenu(null)}
+                          />
+                          <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+                            <Link
+                              href={`/blogs/${blog.slug}`}
+                              target="_blank"
+                              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <Eye className="w-4 h-4" />
+                              View
+                            </Link>
+                            <Link
+                              href={`/admin/blogs/${blog.slug}`}
+                              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <Edit className="w-4 h-4" />
+                              Edit
+                            </Link>
+                            <button
+                              onClick={() => {
+                                setOpenMenu(null);
+                                setDeleteConfirm(blog.slug);
+                              }}
+                              className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Delete
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {/* Pagination */}
-            {pagination.pages > 1 && (
+            {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t">
                 <p className="text-sm text-gray-600">
                   Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
@@ -328,11 +420,11 @@ export default function BlogsPage() {
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <span className="text-sm text-gray-600">
-                    Page {pagination.page} of {pagination.pages}
+                    Page {pagination.page} of {pagination.totalPages}
                   </span>
                   <button
                     onClick={() => handlePageChange(pagination.page + 1)}
-                    disabled={pagination.page === pagination.pages}
+                    disabled={pagination.page === pagination.totalPages}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="w-5 h-5" />

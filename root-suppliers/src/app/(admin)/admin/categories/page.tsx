@@ -55,85 +55,90 @@ function CategoryItem({
     <div className="select-none">
       {/* Category Row */}
       <div
-        className={`flex items-center gap-2 py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors ${level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200 ml-4'
-          }`}
-        style={{ marginLeft: level > 0 ? `${level * 24}px` : '0' }}
+        className={`flex flex-col sm:flex-row sm:items-center gap-2 py-3 sm:py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors ${level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200'
+          } ml-[calc(var(--level)*12px)] sm:ml-[calc(var(--level)*24px)]`}
+        style={{ "--level": level } as React.CSSProperties}
       >
-        {/* Expand/Collapse Button */}
-        <button
-          onClick={onToggle}
-          className={`p-1 rounded hover:bg-gray-200 transition-colors ${!hasChildren ? 'invisible' : ''
-            }`}
-        >
-          {expanded ? (
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          {/* Expand/Collapse Button */}
+          <button
+            onClick={onToggle}
+            className={`p-1 rounded hover:bg-gray-200 transition-colors ${!hasChildren ? 'invisible' : ''
+              }`}
+          >
+            {expanded ? (
+              <ChevronDown className="w-4 h-4 text-gray-500" />
+            ) : (
+              <ChevronRight className="w-4 h-4 text-gray-500" />
+            )}
+          </button>
+
+          {/* Folder Icon */}
+          {hasChildren && expanded ? (
+            <FolderOpen className="w-5 h-5 text-amber-500 flex-shrink-0" />
+          ) : hasChildren ? (
+            <Folder className="w-5 h-5 text-amber-500 flex-shrink-0" />
           ) : (
-            <ChevronRight className="w-4 h-4 text-gray-500" />
+            <Folder className="w-5 h-5 text-gray-400 flex-shrink-0" />
           )}
-        </button>
 
-        {/* Folder Icon */}
-        {hasChildren && expanded ? (
-          <FolderOpen className="w-5 h-5 text-amber-500" />
-        ) : hasChildren ? (
-          <Folder className="w-5 h-5 text-amber-500" />
-        ) : (
-          <Folder className="w-5 h-5 text-gray-400" />
-        )}
+          {/* Category Name */}
+          <span className={`font-medium flex-1 truncate ${level === 0 ? 'text-gray-900' : 'text-gray-700'}`}>
+            {category.name}
+          </span>
+        </div>
 
+        <div className="flex items-center gap-2 sm:gap-4 ml-8 sm:ml-0 flex-wrap sm:flex-nowrap">
+          {/* Level Badge */}
+          <span className={`px-2 py-0.5 text-xs rounded-full whitespace-nowrap ${level === 0
+            ? "bg-purple-100 text-purple-700"
+            : level === 1
+              ? "bg-blue-100 text-blue-700"
+              : "bg-teal-100 text-teal-700"
+            }`}>
+            {level === 0 ? "Main" : level === 1 ? "Subcategory" : "Sub-sub"}
+          </span>
 
+          {/* Status */}
+          <span className={`px-2 py-0.5 text-xs rounded-full ${category.isActive ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"
+            }`}>
+            {category.isActive ? "Active" : "Inactive"}
+          </span>
 
-        {/* Category Name */}
-        <span className={`font-medium flex-1 ${level === 0 ? 'text-gray-900' : 'text-gray-700'}`}>
-          {category.name}
-        </span>
+          {/* Product Count */}
+          <span className="text-xs text-gray-500 flex items-center gap-1 min-w-[60px]">
+            <Package className="w-3 h-3" />
+            {category.productCount || 0}
+          </span>
+        </div>
 
-        {/* Level Badge */}
-        <span className={`px-2 py-0.5 text-xs rounded-full ${level === 0
-          ? "bg-purple-100 text-purple-700"
-          : level === 1
-            ? "bg-blue-100 text-blue-700"
-            : "bg-teal-100 text-teal-700"
-          }`}>
-          {level === 0 ? "Main" : level === 1 ? "Subcategory" : "Sub-subcategory"}
-        </span>
-
-        {/* Status */}
-        <span className={`px-2 py-0.5 text-xs rounded-full ${category.isActive ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"
-          }`}>
-          {category.isActive ? "Active" : "Inactive"}
-        </span>
-
-        {/* Product Count */}
-        <span className="text-xs text-gray-500 flex items-center gap-1 min-w-[60px]">
-          <Package className="w-3 h-3" />
-          {category.productCount || 0}
-        </span>
-
-        {/* Actions */}
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Actions - Always visible on mobile, hover on desktop */}
+        <div className="flex items-center justify-end sm:justify-start gap-1 w-full sm:w-auto mt-2 sm:mt-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity border-t sm:border-0 pt-2 sm:pt-0">
           {level < 2 && (
             <button
               onClick={onAddChild}
-              className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg"
+              className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg flex items-center gap-1"
               title={level === 0 ? "Add Subcategory" : "Add Sub-subcategory"}
             >
               <Plus className="w-4 h-4" />
+              <span className="sm:hidden text-xs font-medium">Add Sub</span>
             </button>
           )}
           <button
             onClick={onEdit}
-            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"
+            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-1"
             title="Edit"
           >
             <Edit className="w-4 h-4" />
+            <span className="sm:hidden text-xs font-medium">Edit</span>
           </button>
           <button
             onClick={onDelete}
-            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg"
+            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-1"
             title="Delete"
           >
             <Trash2 className="w-4 h-4" />
+            <span className="sm:hidden text-xs font-medium">Delete</span>
           </button>
         </div>
       </div>

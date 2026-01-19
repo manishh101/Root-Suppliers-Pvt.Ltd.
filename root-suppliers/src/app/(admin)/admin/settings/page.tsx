@@ -148,16 +148,21 @@ function BusinessHourRow({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
-      <div className="w-32 flex items-center gap-3">
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" className="sr-only peer" checked={isOpen} onChange={(e) => handleToggle(e.target.checked)} />
-          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-        </label>
-        <span className="capitalize font-medium text-gray-700">{day}</span>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+      <div className="w-full sm:w-32 flex items-center justify-between sm:justify-start gap-3">
+        <div className="flex items-center gap-3">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" className="sr-only peer" checked={isOpen} onChange={(e) => handleToggle(e.target.checked)} />
+            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+          </label>
+          <span className="capitalize font-medium text-gray-700">{day}</span>
+        </div>
+        <span className="sm:hidden text-xs text-gray-500">
+          {isOpen ? 'Open' : 'Closed'}
+        </span>
       </div>
 
-      <div className="flex-1 flex items-center gap-4">
+      <div className="flex-1 flex flex-wrap items-center gap-2 sm:gap-4">
         {isOpen ? (
           <>
             <div className="flex items-center gap-2">
@@ -166,7 +171,7 @@ function BusinessHourRow({
                 type="time"
                 value={startTime}
                 onChange={handleStartChange}
-                className="px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm"
+                className="px-2 sm:px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm w-28 sm:w-auto"
               />
             </div>
             <span className="text-gray-400">-</span>
@@ -175,15 +180,15 @@ function BusinessHourRow({
                 type="time"
                 value={endTime}
                 onChange={handleEndChange}
-                className="px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm"
+                className="px-2 sm:px-3 py-1.5 border rounded-lg focus:ring-2 ring-primary/20 outline-none text-sm w-28 sm:w-auto"
               />
             </div>
-            <div className="text-xs text-gray-500 ml-2 pt-1">
+            <div className="text-xs text-gray-500 pt-1 w-full sm:w-auto sm:ml-2">
               ({formatTime(startTime)} - {formatTime(endTime)})
             </div>
           </>
         ) : (
-          <span className="text-sm text-gray-500 italic px-2">Closed</span>
+          <span className="hidden sm:inline text-sm text-gray-500 italic px-2">Closed</span>
         )}
       </div>
     </div>
@@ -362,12 +367,12 @@ export default function SettingsPage() {
       {success && <div className="p-4 bg-green-50 text-green-700 rounded-lg">{success}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="bg-white rounded-xl shadow-sm border">
-          <div className="border-b flex overflow-x-auto">
+          <div className="border-b flex overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${activeTab === tab.id ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-gray-600 hover:bg-gray-50'}`}>
+                  className={`flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors first:ml-0 ${activeTab === tab.id ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-gray-600 hover:bg-gray-50'}`}>
                   <Icon className="w-4 h-4" /> {tab.label}
                 </button>
               );

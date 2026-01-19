@@ -183,12 +183,16 @@ export default function AboutAdminPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">About Us Page</h1>
           <p className="text-gray-500">Manage content for the public About Us page.</p>
         </div>
-        <button onClick={handleSubmit(onSubmit)} disabled={isSaving} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50">
+        <button
+          onClick={handleSubmit(onSubmit)}
+          disabled={isSaving}
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-sm"
+        >
           {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />}
           Save Changes
         </button>
@@ -218,7 +222,7 @@ export default function AboutAdminPage() {
           </div>
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Story Image</label>
-            <div className="relative w-full aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden border">
+            <div className="relative w-full aspect-video sm:aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden border">
               {storyImage ? (
                 <CloudinaryImage
                   src={storyImage.url}
@@ -231,8 +235,8 @@ export default function AboutAdminPage() {
                 <div className="flex items-center justify-center h-full text-gray-400">No Image</div>
               )}
             </div>
-            <label className="block w-full text-center py-2 border rounded-lg cursor-pointer hover:bg-gray-50">
-              Change Image
+            <label className="block w-full text-center py-2.5 border border-dashed rounded-lg cursor-pointer hover:bg-gray-50 font-medium text-gray-600 transition-colors">
+              {storyImage ? "Change Image" : "Upload Image"}
               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'story')} disabled={isUploading} />
             </label>
           </div>
@@ -280,7 +284,7 @@ export default function AboutAdminPage() {
             No images in gallery. Upload some to showcase your company.
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {gallery.map((img, idx) => (
               <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border">
                 <CloudinaryImage
@@ -290,9 +294,14 @@ export default function AboutAdminPage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button onClick={() => removeGalleryImage(idx)} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
-                    <Trash2 className="w-4 h-4" />
+                {/* Delete button - corner visible on mobile, overlay on desktop hover */}
+                <div className="absolute top-1 right-1 sm:inset-0 sm:bg-black/40 sm:opacity-0 sm:group-hover:opacity-100 transition-all flex items-center justify-center pointer-events-none">
+                  <button
+                    onClick={() => removeGalleryImage(idx)}
+                    className="pointer-events-auto p-1.5 sm:p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-md sm:shadow-none transition-transform hover:scale-110 active:scale-95"
+                    title="Remove Image"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
                 </div>
               </div>

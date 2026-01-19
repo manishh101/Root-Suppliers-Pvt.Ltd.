@@ -40,6 +40,7 @@ export default function TestimonialsPage() {
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -283,46 +284,63 @@ export default function TestimonialsPage() {
                 </div>
               </div>
 
-              <div className="relative group">
+              <div className="relative">
                 <button
-                  onClick={() => setDeleteConfirm(deleteConfirm === testimonial._id ? null : testimonial._id)}
-                  className="p-1 hover:bg-gray-100 rounded"
+                  onClick={() => setOpenMenu(openMenu === testimonial._id ? null : testimonial._id)}
+                  className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <MoreVertical className="w-5 h-5 text-gray-400" />
+                  <MoreVertical className="w-5 h-5" />
                 </button>
 
-                <div className={`absolute right-0 top-8 w-36 bg-white rounded-lg shadow-lg border py-1 z-10 ${deleteConfirm === testimonial._id || 'hidden group-hover:block'}`}>
-                  <button
-                    onClick={() => handleEdit(testimonial)}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => toggleFeatured(testimonial)}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                  >
-                    {testimonial.isFeatured ? (
-                      <>
-                        <StarOff className="w-4 h-4" />
-                        Unfeature
-                      </>
-                    ) : (
-                      <>
-                        <Star className="w-4 h-4" />
-                        Feature
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(testimonial._id)}
-                    className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </button>
-                </div>
+                {openMenu === testimonial._id && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setOpenMenu(null)}
+                    />
+                    <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border py-1 z-20">
+                      <button
+                        onClick={() => {
+                          handleEdit(testimonial);
+                          setOpenMenu(null);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit Testimonial
+                      </button>
+                      <button
+                        onClick={() => {
+                          toggleFeatured(testimonial);
+                          setOpenMenu(null);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        {testimonial.isFeatured ? (
+                          <>
+                            <StarOff className="w-4 h-4" />
+                            Unfeature
+                          </>
+                        ) : (
+                          <>
+                            <Star className="w-4 h-4" />
+                            Feature
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDeleteConfirm(testimonial._id);
+                          setOpenMenu(null);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete Testimonial
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -529,6 +547,32 @@ export default function TestimonialsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Testimonial?</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this testimonial? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

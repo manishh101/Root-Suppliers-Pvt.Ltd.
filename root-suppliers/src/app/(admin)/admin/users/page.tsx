@@ -196,7 +196,8 @@ export default function UsersPage() {
 
       {/* Users Table */}
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
@@ -307,6 +308,98 @@ export default function UsersPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-gray-100">
+          {filteredUsers.map((user) => (
+            <div key={user._id} className={`p-4 bg-white ${!user.isActive ? 'opacity-60' : ''}`}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  {user.avatar ? (
+                    <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                      <CloudinaryImage
+                        src={user.avatar}
+                        alt={user.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cardinal-red to-navy-blue flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">
+                        {user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-medium text-gray-900">{user.name}</h3>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mt-0.5">
+                      <Mail className="w-3.5 h-3.5" />
+                      {user.email}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <button
+                    onClick={() => setDeleteConfirm(deleteConfirm === user._id ? null : user._id)}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <MoreVertical className="w-5 h-5 text-gray-400" />
+                  </button>
+
+                  {deleteConfirm === user._id && (
+                    <div className="absolute right-0 top-10 w-36 bg-white rounded-lg shadow-lg border py-1 z-10">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user._id)}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center gap-3 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${user.role === 'admin'
+                  ? 'bg-purple-100 text-purple-700'
+                  : 'bg-blue-100 text-blue-700'
+                  }`}>
+                  {user.role === 'admin' ? (
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                  ) : (
+                    <Shield className="w-3.5 h-3.5" />
+                  )}
+                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                </span>
+
+                <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${user.isActive
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-gray-100 text-gray-600'
+                  }`}>
+                  {user.isActive ? 'Active' : 'Inactive'}
+                </span>
+
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 ml-auto">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {user.lastLogin
+                    ? new Date(user.lastLogin).toLocaleDateString()
+                    : 'Never'
+                  }
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {filteredUsers.length === 0 && (

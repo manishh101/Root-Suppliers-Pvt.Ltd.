@@ -231,21 +231,24 @@ export default function HeroSlidesPage() {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl shadow-sm border p-4 flex items-center gap-4"
+            className="bg-white rounded-xl shadow-sm border p-4 flex flex-col sm:flex-row sm:items-center gap-4"
           >
-            {/* Drag Handle */}
-            <div className="flex flex-col gap-1">
-              <button
-                onClick={() => moveSlide(index, 'up')}
-                disabled={index === 0}
-                className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"
-              >
-                <GripVertical className="w-5 h-5 text-gray-400" />
-              </button>
+            {/* Header / Drag Handle (Mobile) */}
+            <div className="flex items-center justify-between w-full sm:w-auto sm:block">
+              <span className="font-bold text-gray-400 sm:hidden">Slide #{index + 1}</span>
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={() => moveSlide(index, 'up')}
+                  disabled={index === 0}
+                  className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"
+                >
+                  <GripVertical className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
             </div>
 
             {/* Image Preview */}
-            <div className="relative w-48 h-28 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+            <div className="relative w-full sm:w-48 h-48 sm:h-28 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
               {slide.image?.url ? (
                 <CloudinaryImage
                   src={slide.image.url}
@@ -261,7 +264,7 @@ export default function HeroSlidesPage() {
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 w-full text-center sm:text-left">
               <h3 className="font-semibold text-gray-900 truncate">
                 {slide.title || 'No title'}
               </h3>
@@ -275,13 +278,13 @@ export default function HeroSlidesPage() {
               )}
             </div>
 
-            {/* Order Badge */}
-            <div className="text-lg font-bold text-gray-300">
+            {/* Order Badge (Desktop) */}
+            <div className="hidden sm:block text-lg font-bold text-gray-300">
               #{index + 1}
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-0 pt-2 sm:pt-0 mt-2 sm:mt-0">
               <button
                 onClick={() => handleEdit(index)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
