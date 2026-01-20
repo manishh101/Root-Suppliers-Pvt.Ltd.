@@ -15,6 +15,8 @@ const _models = { Category, Brand };
 
 // Force this route to be dynamic and not cached
 export const dynamic = 'force-dynamic';
+// Use Node.js runtime for database operations
+export const runtime = 'nodejs';
 
 /**
  * GET /api/products
