@@ -4,45 +4,57 @@ import React from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  Award,
-  Users,
-  Truck,
-  Shield,
-  Package,
-  Clock
+  BadgeCheck,
+  Headphones,
+  Warehouse,
+  Timer,
+  ShieldCheck,
+  CalendarCheck
 } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const whyChooseUs = [
   {
-    icon: Award,
+    icon: BadgeCheck,
     title: "Quality Products",
     description: "Premium construction materials from trusted brands",
+    color: "from-blue-500 to-blue-600",
+    bgLight: "bg-blue-50",
   },
   {
-    icon: Package,
+    icon: Warehouse,
     title: "Wide Selection",
     description: "1000+ products under one roof",
+    color: "from-emerald-500 to-emerald-600",
+    bgLight: "bg-emerald-50",
   },
   {
-    icon: Users,
+    icon: Headphones,
     title: "Expert Guidance",
     description: "Knowledgeable staff to assist you",
+    color: "from-violet-500 to-violet-600",
+    bgLight: "bg-violet-50",
   },
   {
-    icon: Truck,
+    icon: Timer,
     title: "Fast Delivery",
     description: "Quick and reliable delivery service",
+    color: "from-orange-500 to-orange-600",
+    bgLight: "bg-orange-50",
   },
   {
-    icon: Shield,
+    icon: ShieldCheck,
     title: "Warranty Support",
     description: "Comprehensive warranty assistance",
+    color: "from-cyan-500 to-cyan-600",
+    bgLight: "bg-cyan-50",
   },
   {
-    icon: Clock,
+    icon: CalendarCheck,
     title: "15+ Years",
     description: "Trusted experience since 2010",
+    color: "from-rose-500 to-rose-600",
+    bgLight: "bg-rose-50",
   },
 ];
 
@@ -102,13 +114,25 @@ export const AboutSection: React.FC = () => {
               {whyChooseUs.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl p-5 shadow-md text-center hover:shadow-lg transition-shadow"
+                  className="group bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
                 >
-                  <div className="w-12 h-12 mx-auto rounded-full bg-primary-100 flex items-center justify-center mb-3">
-                    <item.icon className="h-6 w-6 text-primary-600" />
+                  {/* Subtle background gradient on hover */}
+                  <div className={`absolute inset-0 ${item.bgLight} opacity-0 group-hover:opacity-50 transition-opacity duration-300`} />
+                  
+                  {/* Icon container with gradient */}
+                  <div className={`relative z-10 w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>
+                    <item.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
                   </div>
-                  <h4 className="font-semibold text-gray-900 text-sm mb-1">{item.title}</h4>
-                  <p className="text-xs text-gray-500">{item.description}</p>
+                  
+                  {/* Title - Using secondary font instead of Bank Gothic */}
+                  <h4 className="relative z-10 font-semibold text-gray-800 text-sm mb-2 font-secondary tracking-normal">
+                    {item.title}
+                  </h4>
+                  
+                  {/* Description */}
+                  <p className="relative z-10 text-xs text-gray-500 leading-relaxed font-secondary">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
