@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import { handleApiError, successResponse } from "@/lib/errors";
 
+// Force this route to be dynamic (uses cookies)
+export const dynamic = 'force-dynamic';
+
 /**
  * POST /api/auth/logout
  * 

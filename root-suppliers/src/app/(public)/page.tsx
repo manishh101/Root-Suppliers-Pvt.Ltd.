@@ -17,9 +17,8 @@ import Category from "@/lib/db/models/Category";
 import Brand from "@/lib/db/models/Brand";
 import Settings from "@/lib/db/models/Settings";
 
-
-
-
+// Revalidate every hour for ISR
+export const revalidate = 3600;
 
 async function getSettings() {
   try {

@@ -4,9 +4,19 @@ import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
 import { handleApiError, successResponse, AuthError, NotFoundError, ForbiddenError } from "@/lib/errors";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || "your-secret-key-min-32-characters"
-);
+// Force this route to be dynamic (uses cookies)
+export const dynamic = 'force-dynamic';
+// Use Node.js runtime for database operations
+export const runtime = 'nodejs';
+
+// Get JWT secret lazily to avoid build-time issues
+function getJWTSecret(): Uint8Array {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error("NEXTAUTH_SECRET is not defined");
+  }
+  return new TextEncoder().encode(secret);
+}
 
 /**
  * GET /api/auth/session
@@ -25,7 +35,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Verify token
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJWTSecret());
 
     await connectDB();
 

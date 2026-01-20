@@ -5,6 +5,11 @@ import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse, NotFoundError, ForbiddenError, ValidationError } from "@/lib/errors";
 import bcrypt from "bcryptjs";
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic';
+// Use Node.js runtime for database operations
+export const runtime = 'nodejs';
+
 interface RouteParams {
   params: {
     id: string;

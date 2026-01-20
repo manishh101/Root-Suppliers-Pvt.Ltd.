@@ -5,6 +5,11 @@ import Product from "@/lib/db/models/Product";
 import { verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic';
+// Use Node.js runtime for database operations
+export const runtime = 'nodejs';
+
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Product };
 

@@ -2,13 +2,14 @@ import { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { AuthError, ForbiddenError } from "@/lib/errors";
 
-const secret = process.env.NEXTAUTH_SECRET;
-
-if (!secret) {
-  throw new Error("NEXTAUTH_SECRET is not defined");
+// Get secret lazily to avoid build-time errors
+function getJWTSecret(): Uint8Array {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error("NEXTAUTH_SECRET is not defined");
+  }
+  return new TextEncoder().encode(secret);
 }
-
-const JWT_SECRET = new TextEncoder().encode(secret);
 
 export interface AuthUser {
   userId: string;
@@ -30,7 +31,7 @@ export async function verifyAuth(req: NextRequest): Promise<AuthUser | null> {
       return null;
     }
 
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJWTSecret());
 
     return {
       userId: payload.userId as string,
