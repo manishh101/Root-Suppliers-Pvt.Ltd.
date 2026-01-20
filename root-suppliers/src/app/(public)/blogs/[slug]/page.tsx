@@ -34,7 +34,10 @@ async function getBlog(slug: string) {
       .populate("author", "name avatar")
       .lean();
 
-    return blog;
+    if (!blog) return null;
+
+    // Transform to plain object to handle MongoDB specific types like ObjectId and Date
+    return JSON.parse(JSON.stringify(blog));
   } catch (error) {
     console.error("Error fetching blog:", error);
     return null;
@@ -63,8 +66,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: seoTitle,
       description: seoDescription,
       type: "article",
-      publishedTime: blog.publishedAt || blog.createdAt,
-      authors: [typeof blog.author === 'object' ? blog.author.name : 'Root Suppliers'],
+      publishedTime: new Date(blog.publishedAt || blog.createdAt).toISOString(),
+      authors: [blog.author && typeof blog.author === 'object' ? (blog.author as any).name : 'Root Suppliers'],
       images: blog.featuredImage?.url ? [blog.featuredImage.url] : [],
     },
     twitter: {
@@ -85,5 +88,5 @@ export default async function BlogDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <BlogClient blog={blog} />;
+  return <BlogClient blog={blog as any} />;
 }
