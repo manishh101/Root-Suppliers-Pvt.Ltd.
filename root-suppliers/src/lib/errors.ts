@@ -84,6 +84,8 @@ export function handleApiError(error: any) {
   }
 
   // Default server error
+  console.error("Critical API Error:", error);
+
   return NextResponse.json(
     { success: false, message: "Internal Server Error" },
     { status: 500 }

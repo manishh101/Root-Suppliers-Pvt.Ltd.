@@ -8,6 +8,9 @@ import { recordAuditLog } from "@/lib/audit";
 import { withValidate } from "@/lib/api-middleware";
 import { publicApiLimiter } from "@/lib/rate-limit";
 
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/settings
  * 

@@ -9,7 +9,11 @@ import { sanitizeHtml } from "@/lib/utils";
 import { withValidate } from "@/lib/api-middleware";
 import { publicApiLimiter } from "@/lib/rate-limit";
 
-// ... existing GET ...
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
+// Ensure models are registered to prevent MissingSchemaError during population
+const _models = { Product };
 
 /**
  * GET /api/categories

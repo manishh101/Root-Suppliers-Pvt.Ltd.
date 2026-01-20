@@ -12,6 +12,9 @@ import { inquiryLimiter } from "@/lib/rate-limit";
 // Ensure models are registered to prevent MissingSchemaError during population
 const _models = { Product };
 
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/inquiries
  * 
@@ -71,33 +74,32 @@ export async function GET(req: NextRequest) {
  * Create a new inquiry.
  * Public endpoint with rate limiting (3 requests / 15 mins).
  */
-export const POST = withValidate(
-  async (req: NextRequest, validatedData: any) => {
-    await connectDB();
+async function POST_Handler(req: NextRequest, validatedData: any) {
+  await connectDB();
 
-    // Sanitize message
-    if (validatedData.message) {
-      validatedData.message = sanitizeHtml(validatedData.message);
-    }
-
-    // Create inquiry
-    const inquiry = await Inquiry.create(validatedData);
-
-    return successResponse(
-      {
-        inquiry: {
-          id: inquiry._id,
-          source: inquiry.source,
-          createdAt: inquiry.createdAt,
-        },
-      },
-      201,
-      "Your inquiry has been submitted successfully. We'll get back to you soon!"
-    );
-  },
-  {
-    schema: inquirySchema,
-    limiter: inquiryLimiter,
+  // Sanitize message
+  if (validatedData.message) {
+    validatedData.message = sanitizeHtml(validatedData.message);
   }
-);
+
+  // Create inquiry
+  const inquiry = await Inquiry.create(validatedData);
+
+  return successResponse(
+    {
+      inquiry: {
+        id: inquiry._id,
+        source: inquiry.source,
+        createdAt: inquiry.createdAt,
+      },
+    },
+    201,
+    "Your inquiry has been submitted successfully. We'll get back to you soon!"
+  );
+}
+
+export const POST = withValidate(POST_Handler, {
+  schema: inquirySchema,
+  limiter: inquiryLimiter,
+});
 

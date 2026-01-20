@@ -8,7 +8,8 @@ import { sanitizeHtml } from "@/lib/utils";
 import { withValidate } from "@/lib/api-middleware";
 import { publicApiLimiter } from "@/lib/rate-limit";
 
-// ... GET function ...
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/brands

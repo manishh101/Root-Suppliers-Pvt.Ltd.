@@ -10,6 +10,9 @@ import Testimonial from "@/lib/db/models/Testimonial";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
 import { handleApiError, successResponse } from "@/lib/errors";
 
+// Force this route to be dynamic and not cached
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/stats
  * 
