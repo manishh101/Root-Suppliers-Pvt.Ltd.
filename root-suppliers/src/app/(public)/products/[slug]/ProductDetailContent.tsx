@@ -73,6 +73,23 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
   const [quantity, setQuantity] = useState(1);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [settings, setSettings] = useState<any>(null);
+
+  // Fetch settings for WhatsApp and phone number
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        const data = await response.json();
+        if (data.success) {
+          setSettings(data.settings);
+        }
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -184,7 +201,11 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
     const message = encodeURIComponent(
       `Hi, I'm interested in ${product.name}. Please provide more information.`
     );
-    window.open(`https://wa.me/9779800000000?text=${message}`, "_blank");
+    const whatsappNumber = settings?.contact?.whatsapp || settings?.contact?.primaryPhone || '9779800000000';
+    // Remove any non-digit characters and ensure it starts with country code
+    const cleanNumber = whatsappNumber.replace(/\D/g, '');
+    const formattedNumber = cleanNumber.startsWith('977') ? cleanNumber : `977${cleanNumber}`;
+    window.open(`https://wa.me/${formattedNumber}?text=${message}`, "_blank");
   };
 
   const handleShare = async () => {
@@ -451,21 +472,22 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                     <Button
                       size="lg"
                       variant="outline"
-                      className="flex-1 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium"
+                      className="flex-1 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium whitespace-nowrap"
                       onClick={() => setInquiryModalOpen(true)}
                     >
-                      <Mail className="h-5 w-5 mr-2" />
+                      <Mail className="h-5 w-5 mr-2 flex-shrink-0" />
                       Inquiry
                     </Button>
                     <Button
                       size="lg"
                       variant="outline"
-                      className="flex-1 border-2 border-gray-200 text-gray-700 hover:border-primary-600 hover:text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium"
-                      onClick={() =>
-                        (window.location.href = "tel:+9779800000000")
-                      }
+                      className="flex-1 border-2 border-gray-200 text-gray-700 hover:border-primary-600 hover:text-primary-600 hover:bg-primary-50 h-12 transition-all font-medium whitespace-nowrap"
+                      onClick={() => {
+                        const phoneNumber = settings?.contact?.primaryPhone || '+9779800000000';
+                        window.location.href = `tel:${phoneNumber}`;
+                      }}
                     >
-                      <Phone className="h-4 w-4 mr-2" />
+                      <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
                       Call Now
                     </Button>
                   </div>

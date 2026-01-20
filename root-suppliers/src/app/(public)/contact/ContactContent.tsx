@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, CheckCircle } from "lucide-react";
 import { VisitUsSection } from "@/components/sections";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,6 +46,10 @@ export default function ContactContent({ settings }: { settings: any }) {
       if (res.ok && result.success) {
         setStatus("success");
         reset();
+        // Auto hide success message after 3 seconds
+        setTimeout(() => {
+          setStatus("idle");
+        }, 3000);
       } else {
         setStatus("error");
         setErrorMessage(result.message || "Failed to submit inquiry");
@@ -95,6 +99,35 @@ export default function ContactContent({ settings }: { settings: any }) {
             className="max-w-3xl mx-auto"
           >
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Get in Touch With Us</h2>
+            
+            {/* Success Modal Overlay */}
+            {status === "success" && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              >
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                <div className="relative bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md mx-auto">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center animate-bounce">
+                    <CheckCircle className="h-10 w-10 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Message Sent Successfully!
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Thank you for reaching out! We&apos;ll get back to you within 24 hours.
+                  </p>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="px-6 py-2.5 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             <form className="space-y-6 bg-gray-50 p-8 md:p-10 rounded-2xl border border-gray-100" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-2">
                 <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700">Full Name *</label>
@@ -149,45 +182,29 @@ export default function ContactContent({ settings }: { settings: any }) {
               </div>
 
               {status === "error" && (
-                <div className="p-4 rounded-lg bg-red-50 text-red-600 border border-red-200 text-sm">
-                  {errorMessage}
+                <div className="p-4 rounded-lg bg-red-50 text-red-700 border border-red-200 text-sm flex items-start gap-2">
+                  <span className="text-red-600 font-bold text-lg">⚠</span>
+                  <span>{errorMessage}</span>
                 </div>
               )}
 
-              {status === "success" && (
-                <div className="p-4 rounded-lg bg-green-50 text-green-600 border border-green-200 text-sm">
-                  Thank you! Your message has been sent successfully. We will contact you shortly.
-                </div>
-              )}
-
-              {status === "success" ? (
-                <button
-                  type="button"
-                  onClick={() => setStatus("idle")}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors capitalize group"
-                >
-                  Send Another Message
-                  <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-500 transition-colors capitalize tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Submit Message
-                      <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
-              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 text-white hover:text-white font-bold rounded-lg hover:bg-primary-700 transition-all capitalize tracking-wide group disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Submit Message
+                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
             </form>
           </motion.div>
         </div>

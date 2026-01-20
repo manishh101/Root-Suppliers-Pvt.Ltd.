@@ -170,10 +170,10 @@ export default function Header({ settings }: HeaderProps) {
               {/* Contact Info - Right */}
               <div className="hidden md:flex items-center gap-4 lg:gap-6">
                 <div className="flex items-center gap-2 group">
-                  <div className="p-2 rounded-full bg-primary-50 group-hover:bg-primary-100 transition-colors">
+                  <div className="p-2 rounded-full bg-primary-50 group-hover:bg-primary-100 transition-colors flex-shrink-0">
                     <Phone className="h-4 w-4 text-primary-600" />
                   </div>
-                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 hover:text-secondary-600 transition-colors">
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 hover:text-secondary-600 transition-colors whitespace-nowrap">
                     {settings?.contact?.primaryPhone || '9851222637'}
                   </a>
                 </div>
@@ -404,12 +404,12 @@ export default function Header({ settings }: HeaderProps) {
             {/* Mobile Contact Info */}
             <div className="mt-8 pt-6 border-t border-gray-100 space-y-4">
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                <div className="p-2.5 rounded-full bg-primary-100">
+                <div className="p-2.5 rounded-full bg-primary-100 flex-shrink-0">
                   <Phone className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Call Us Now</p>
-                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 tracking-wide">{settings?.contact?.primaryPhone || '9851222637'}</a>
+                  <p className="text-xs text-gray-500 font-medium whitespace-nowrap">Call Us Now</p>
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 tracking-wide whitespace-nowrap">{settings?.contact?.primaryPhone || '9851222637'}</a>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
