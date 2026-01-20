@@ -66,10 +66,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: seoTitle,
       description: seoDescription,
       type: "article",
-      publishedTime: new Date(blog.publishedAt || blog.createdAt).toISOString(),
+      publishedTime: String(blog.publishedAt || blog.createdAt || new Date().toISOString()),
       authors: [blog.author && typeof blog.author === 'object' ? (blog.author as any).name : 'Root Suppliers'],
       images: blog.featuredImage?.url ? [blog.featuredImage.url] : [],
-    },
+    } as any,
     twitter: {
       card: 'summary_large_image',
       title: seoTitle,
