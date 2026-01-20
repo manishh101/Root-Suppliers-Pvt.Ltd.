@@ -156,6 +156,26 @@ export default function NewBrandPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Brand Information</h2>
 
             <div className="space-y-4">
+              {/* Featured checkbox at top for easy access */}
+              <div className="flex items-center gap-6 pb-4 border-b border-gray-200">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    {...register('isFeatured')}
+                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Featured Brand</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    {...register('isActive')}
+                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Active</span>
+                </label>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Brand Name *
@@ -267,31 +287,11 @@ export default function NewBrandPage() {
             </div>
           </div>
 
-          {/* Settings */}
+          {/* Display Settings */}
           <div className="bg-white rounded-xl shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Settings</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Display Settings</h2>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-6">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    {...register('isActive')}
-                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
-                  />
-                  <span className="text-sm text-gray-700">Active</span>
-                </label>
-
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    {...register('isFeatured')}
-                    className="w-4 h-4 text-cardinal-red focus:ring-cardinal-red rounded"
-                  />
-                  <span className="text-sm text-gray-700">Featured</span>
-                </label>
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Display Order
