@@ -63,7 +63,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
             <span className="text-primary-600 font-bold tracking-wider capitalize text-sm mb-2 block">
               Our Catalog
             </span>
-            <h2 className="font-primary font-bold text-3xl md:text-5xl text-gray-900 leading-tight">
+            <h2 className="font-primary font-bold text-2xl sm:text-3xl md:text-5xl text-gray-900 leading-tight whitespace-nowrap">
               Browse by <span className="text-primary-600">Category</span>
             </h2>
           </motion.div>
