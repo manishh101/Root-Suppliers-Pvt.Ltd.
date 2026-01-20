@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtmlLib from "sanitize-html";
 
 /**
  * Merges Tailwind CSS classes with clsx
@@ -11,13 +11,20 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Sanitize HTML content to prevent XSS
+ * Uses sanitize-html which is server-compatible (no jsdom dependency)
  */
 export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      "b", "i", "em", "strong", "a", "p", "ul", "ol", "li", "br", "h1", "h2", "h3", "h4", "h5", "h6", "img", "blockquote", "code", "pre"
+  return sanitizeHtmlLib(html, {
+    allowedTags: [
+      "b", "i", "em", "strong", "a", "p", "ul", "ol", "li", "br",
+      "h1", "h2", "h3", "h4", "h5", "h6", "img", "blockquote", "code", "pre"
     ],
-    ALLOWED_ATTR: ["href", "src", "alt", "title", "target", "rel", "class"]
+    allowedAttributes: {
+      a: ["href", "title", "target", "rel"],
+      img: ["src", "alt", "title", "class"],
+      "*": ["class"]
+    },
+    allowedSchemes: ["http", "https", "mailto"]
   });
 }
 
