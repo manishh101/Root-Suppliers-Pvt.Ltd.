@@ -29,15 +29,12 @@ export async function generateStaticParams() {
 
 async function getBlog(slug: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/blogs/${slug}`, {
-      next: { revalidate: 3600 }
-    });
+    await connectDB();
+    const blog = await Blog.findOne({ slug, isPublished: true })
+      .populate("author", "name avatar")
+      .lean();
 
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    return data.success ? data.blog : null;
+    return blog;
   } catch (error) {
     console.error("Error fetching blog:", error);
     return null;

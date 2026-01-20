@@ -34,23 +34,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    // We can use the DB directly here too for better performance during build
-    // but keeping fetch for consistency with existing logic if desired.
-    // However, since we are in a server component with DB access, direct DB call is often better for metadata too.
-    // Let's stick to fetch for now to match the existing pattern unless it fails.
-    const response = await fetch(`${baseUrl}/api/products/${slug}`, {
-      next: { revalidate: 3600 }
-    });
+    await connectDB();
+    const product = await Product.findOne({ slug, isActive: true }).lean();
 
-    if (!response.ok) {
+    if (!product) {
       return {
         title: "Product Not Found | Root Suppliers",
       };
     }
-
-    const data = await response.json();
-    const product = data.product;
 
     // Ensure product exists and has required fields
     if (!product || !product.name) {
