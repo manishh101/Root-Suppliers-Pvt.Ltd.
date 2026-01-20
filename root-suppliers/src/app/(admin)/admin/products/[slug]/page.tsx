@@ -518,7 +518,7 @@ export default function EditProductPage({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-                  <input type="number" {...register("stock", { valueAsNumber: true })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+                  <input type="number" step="1" min="0" {...register("stock", { valueAsNumber: true })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
                 </div>
               </div>
             </div>

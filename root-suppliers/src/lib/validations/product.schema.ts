@@ -19,7 +19,7 @@ export const productSchema = z.object({
   unit: z.string().optional(),
   price: z.number().optional(),
   discountPrice: z.number().optional(),
-  stock: z.number().optional().default(0),
+  stock: z.coerce.number().int().min(0).optional().default(0),
   images: z.array(imageSchema).default([]),
   specifications: z.array(
     z.object({

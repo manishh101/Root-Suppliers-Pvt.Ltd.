@@ -54,11 +54,12 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   return (
     <section className="py-16 md:py-24 bg-gray-50 overflow-hidden" ref={ref}>
       <div className="container-main">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6 }}
+            className="text-center md:text-left"
           >
             <span className="text-primary-600 font-bold tracking-wider capitalize text-sm mb-2 block">
               Our Catalog
