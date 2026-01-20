@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
@@ -228,6 +229,14 @@ export const POST = withValidate(
 
     // Populate category
     await product.populate("category", "name slug");
+
+    // Revalidate all pages that display products
+    revalidatePath("/", "layout");
+    revalidatePath("/products");
+    if (product.category) {
+      revalidatePath(`/categories/${(product.category as any).slug}`);
+    }
+    revalidateTag("products");
 
     return successResponse({ product }, 201, "Product created successfully");
   },

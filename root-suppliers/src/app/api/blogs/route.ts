@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Blog from "@/lib/db/models/Blog";
 import User from "@/lib/db/models/User";
@@ -148,6 +149,11 @@ export const POST = withValidate(
 
     // Create blog
     const blog = await Blog.create(blogData);
+
+    // Revalidate all pages that display blogs
+    revalidatePath("/", "layout");
+    revalidatePath("/blogs");
+    revalidateTag("blogs");
 
     return successResponse({ blog }, 201, "Blog post created successfully");
   },

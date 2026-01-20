@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
@@ -117,6 +118,15 @@ export async function PUT(
       throw new NotFoundError("Product not found");
     }
 
+    // Revalidate all pages that display products
+    revalidatePath("/", "layout"); // Revalidate all pages
+    revalidatePath("/products"); // Products listing
+    revalidatePath(`/products/${product.slug}`); // Specific product page
+    if (product.category) {
+      revalidatePath(`/categories/${(product.category as any).slug}`); // Category page
+    }
+    revalidateTag("products"); // All product-related data
+
     return successResponse({ product }, 200, "Product updated successfully");
   } catch (error: any) {
     return handleApiError(error);
@@ -145,6 +155,11 @@ export async function DELETE(
     if (!product) {
       throw new NotFoundError("Product not found");
     }
+
+    // Revalidate all pages that display products
+    revalidatePath("/", "layout");
+    revalidatePath("/products");
+    revalidateTag("products");
 
     return successResponse({}, 200, "Product deleted successfully");
   } catch (error) {

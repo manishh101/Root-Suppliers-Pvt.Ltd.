@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Testimonial from "@/lib/db/models/Testimonial";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
@@ -79,6 +80,11 @@ export async function PUT(
       throw new NotFoundError("Testimonial not found");
     }
 
+    // Revalidate pages that display testimonials
+    revalidatePath("/", "layout");
+    revalidatePath("/about");
+    revalidateTag("testimonials");
+
     return successResponse({ testimonial }, 200, "Testimonial updated successfully");
   } catch (error) {
     return handleApiError(error);
@@ -107,6 +113,11 @@ export async function DELETE(
     if (!testimonial) {
       throw new NotFoundError("Testimonial not found");
     }
+
+    // Revalidate pages that display testimonials
+    revalidatePath("/", "layout");
+    revalidatePath("/about");
+    revalidateTag("testimonials");
 
     return successResponse({}, 200, "Testimonial deleted successfully");
   } catch (error) {

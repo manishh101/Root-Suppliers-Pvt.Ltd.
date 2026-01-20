@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Category from "@/lib/db/models/Category";
 import Product from "@/lib/db/models/Product";
@@ -76,6 +77,13 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       throw new NotFoundError("Category not found");
     }
 
+    // Revalidate all pages that display categories
+    revalidatePath("/", "layout");
+    revalidatePath("/categories");
+    revalidatePath(`/categories/${category.slug}`);
+    revalidatePath("/products"); // Products are listed by category
+    revalidateTag("categories");
+
     return successResponse({ category }, 200, "Category updated successfully");
   } catch (error: any) {
     return handleApiError(error);
@@ -103,6 +111,13 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     }
 
     await Category.findByIdAndDelete(category._id);
+
+    // Revalidate all pages that display categories
+    revalidatePath("/", "layout");
+    revalidatePath("/categories");
+    revalidatePath("/products");
+    revalidateTag("categories");
+
     return successResponse({}, 200, "Category deleted successfully");
   } catch (error) {
     return handleApiError(error);

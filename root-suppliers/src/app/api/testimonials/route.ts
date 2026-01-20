@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Testimonial from "@/lib/db/models/Testimonial";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
@@ -76,6 +77,11 @@ export async function POST(req: NextRequest) {
 
     // Create testimonial
     const testimonial = await Testimonial.create(body);
+
+    // Revalidate pages that display testimonials
+    revalidatePath("/", "layout");
+    revalidatePath("/about");
+    revalidateTag("testimonials");
 
     return successResponse({ testimonial }, 201, "Testimonial created successfully");
   } catch (error: any) {

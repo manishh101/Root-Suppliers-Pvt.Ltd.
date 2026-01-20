@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Category from "@/lib/db/models/Category";
 import Product from "@/lib/db/models/Product";
@@ -111,6 +112,12 @@ export const POST = withValidate(
 
     // Create category
     const category = await Category.create(categoryData);
+
+    // Revalidate all pages that display categories
+    revalidatePath("/", "layout");
+    revalidatePath("/categories");
+    revalidatePath("/products");
+    revalidateTag("categories");
 
     return successResponse({ category }, 201, "Category created successfully");
   },

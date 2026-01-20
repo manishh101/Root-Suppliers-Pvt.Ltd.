@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Brand from "@/lib/db/models/Brand";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
@@ -95,6 +96,11 @@ export const POST = withValidate(
 
     // Create brand
     const brand = await Brand.create(brandData);
+
+    // Revalidate all pages that display brands
+    revalidatePath("/", "layout");
+    revalidatePath("/brands");
+    revalidateTag("brands");
 
     return successResponse({ brand }, 201, "Brand created successfully");
   },

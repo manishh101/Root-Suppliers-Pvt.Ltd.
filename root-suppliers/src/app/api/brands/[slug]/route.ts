@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Brand from "@/lib/db/models/Brand";
 import { verifyAdmin } from "@/lib/auth";
@@ -88,6 +89,11 @@ export async function PUT(
       throw new NotFoundError("Brand not found");
     }
 
+    // Revalidate all pages that display brands
+    revalidatePath("/", "layout"); // Revalidate all pages
+    revalidatePath("/brands"); // Brands listing page
+    revalidateTag("brands"); // All brand-related data
+
     return successResponse({ brand }, 200, "Brand updated successfully");
   } catch (error: any) {
     return handleApiError(error);
@@ -116,6 +122,11 @@ export async function DELETE(
     if (!brand) {
       throw new NotFoundError("Brand not found");
     }
+
+    // Revalidate all pages that display brands
+    revalidatePath("/", "layout");
+    revalidatePath("/brands");
+    revalidateTag("brands");
 
     return successResponse({}, 200, "Brand deleted successfully");
   } catch (error) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/db/connect";
 import Blog from "@/lib/db/models/Blog";
 import { verifyAuth, verifyAdmin } from "@/lib/auth";
@@ -119,6 +120,12 @@ export async function PUT(
       throw new NotFoundError("Blog post not found");
     }
 
+    // Revalidate all pages that display blogs
+    revalidatePath("/", "layout");
+    revalidatePath("/blogs");
+    revalidatePath(`/blogs/${blog.slug}`);
+    revalidateTag("blogs");
+
     return successResponse({ blog }, 200, "Blog post updated successfully");
   } catch (error: any) {
     return handleApiError(error);
@@ -147,6 +154,11 @@ export async function DELETE(
     if (!blog) {
       throw new NotFoundError("Blog post not found");
     }
+
+    // Revalidate all pages that display blogs
+    revalidatePath("/", "layout");
+    revalidatePath("/blogs");
+    revalidateTag("blogs");
 
     return successResponse({}, 200, "Blog post deleted successfully");
   } catch (error) {

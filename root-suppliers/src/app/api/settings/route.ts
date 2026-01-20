@@ -7,6 +7,7 @@ import { DEFAULT_STATS } from "@/lib/constants";
 import { recordAuditLog } from "@/lib/audit";
 import { withValidate } from "@/lib/api-middleware";
 import { publicApiLimiter } from "@/lib/rate-limit";
+import { revalidateSettings } from "@/lib/revalidation";
 
 // Force this route to be dynamic and not cached
 export const dynamic = 'force-dynamic';
@@ -177,6 +178,9 @@ export const PUT = withValidate(
       resourceId: settings?._id.toString(),
       req,
     });
+
+    // Revalidate entire site since settings affect everything
+    revalidateSettings();
 
     return successResponse({ settings }, 200, "Settings updated successfully");
   },

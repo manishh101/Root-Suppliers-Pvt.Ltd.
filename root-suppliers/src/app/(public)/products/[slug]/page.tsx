@@ -5,7 +5,8 @@ import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 
 // Revalidate every hour
-export const revalidate = 3600;
+// Revalidate every 60 seconds (1 minute) for faster updates
+export const revalidate = 60;
 
 // Allow dynamic params for products not yet generated
 export const dynamicParams = true;

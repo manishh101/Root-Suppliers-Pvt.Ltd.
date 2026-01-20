@@ -4,8 +4,8 @@ import BlogClient from "./BlogClient";
 import connectDB from "@/lib/db/connect";
 import Blog from "@/lib/db/models/Blog";
 
-// Revalidate every hour
-export const revalidate = 3600;
+// Revalidate every 60 seconds (1 minute) for faster updates
+export const revalidate = 60;
 
 // Allow dynamic params
 export const dynamicParams = true;
