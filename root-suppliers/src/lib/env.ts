@@ -24,35 +24,17 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
 
-// Lazy validation to avoid build-time errors
-let _cachedEnv: z.infer<typeof envSchema> | null = null;
+const _env = envSchema.safeParse(process.env);
 
-function validateEnv() {
-  if (_cachedEnv) return _cachedEnv;
-  
-  const result = envSchema.safeParse(process.env);
-  
-  if (!result.success) {
-    console.error(
-      "❌ Invalid environment variables:",
-      result.error.flatten().fieldErrors
-    );
-    // Don't throw during build, only log warning
-    console.warn("⚠️ Some environment variables are missing or invalid. API routes may fail.");
-    return null;
-  }
-  
-  _cachedEnv = result.data;
-  return _cachedEnv;
+if (!_env.success) {
+  console.error(
+    "❌ Invalid environment variables:",
+    _env.error.flatten().fieldErrors
+  );
+  throw new Error("Invalid environment variables");
 }
 
-// Export getter function instead of throwing at module load
-export function getEnv() {
-  return validateEnv();
-}
-
-// For backward compatibility, but may be null during build
-export const env = validateEnv();
+export const env = _env.data;
 
 /**
  * Helper to ensure we don't accidentally expose secrets to the client

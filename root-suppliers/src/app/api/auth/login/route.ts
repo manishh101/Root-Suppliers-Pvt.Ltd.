@@ -7,19 +7,13 @@ import { withValidate } from "@/lib/api-middleware";
 import { loginLimiter } from "@/lib/rate-limit";
 import { loginSchema } from "@/lib/validations";
 
-// Force this route to be dynamic (uses cookies)
-export const dynamic = 'force-dynamic';
-// Use Node.js runtime for database operations
-export const runtime = 'nodejs';
+const secret = process.env.NEXTAUTH_SECRET;
 
-// Get JWT secret lazily to avoid build-time errors
-function getJWTSecret(): Uint8Array {
-  const secret = process.env.NEXTAUTH_SECRET;
-  if (!secret) {
-    throw new Error("NEXTAUTH_SECRET is not defined");
-  }
-  return new TextEncoder().encode(secret);
+if (!secret) {
+  throw new Error("NEXTAUTH_SECRET is not defined");
 }
+
+const JWT_SECRET = new TextEncoder().encode(secret);
 
 /**
  * POST /api/auth/login
@@ -62,7 +56,7 @@ export const POST = withValidate(
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("7d")
-      .sign(getJWTSecret());
+      .sign(JWT_SECRET);
 
     // Update last login
     user.lastLogin = new Date();

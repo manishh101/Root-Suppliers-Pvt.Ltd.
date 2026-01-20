@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import connectDB from "@/lib/db/connect";
 import User from "@/lib/db/models/User";
@@ -26,9 +27,10 @@ function getJWTSecret(): Uint8Array {
  * 
  * @returns { success: boolean, user?: object, message?: string }
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const token = req.cookies.get("auth-token")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth-token")?.value;
 
     if (!token) {
       throw new AuthError("Not authenticated");

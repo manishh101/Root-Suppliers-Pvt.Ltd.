@@ -5,11 +5,6 @@ import { handleApiError, successResponse, ValidationError } from "@/lib/errors";
 import { withValidate } from "@/lib/api-middleware";
 import { z } from "zod";
 
-// Force this route to be dynamic
-export const dynamic = 'force-dynamic';
-// Use Node.js runtime for Cloudinary operations
-export const runtime = 'nodejs';
-
 // Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,

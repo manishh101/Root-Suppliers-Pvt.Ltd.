@@ -9,11 +9,6 @@ import { sanitizeHtml } from "@/lib/utils";
 import { withValidate } from "@/lib/api-middleware";
 import { publicApiLimiter } from "@/lib/rate-limit";
 
-// Force this route to be dynamic
-export const dynamic = 'force-dynamic';
-// Use Node.js runtime for database operations
-export const runtime = 'nodejs';
-
 // Ensure models are registered
 const _models = { Blog, User };
 

@@ -6,11 +6,6 @@ import { brandSchema } from "@/lib/validations";
 import { handleApiError, successResponse, NotFoundError } from "@/lib/errors";
 import { sanitizeHtml } from "@/lib/utils";
 
-// Force this route to be dynamic
-export const dynamic = 'force-dynamic';
-// Use Node.js runtime for database operations
-export const runtime = 'nodejs';
-
 interface RouteParams {
   params: {
     slug: string;
