@@ -5,8 +5,7 @@ import Category from "@/lib/db/models/Category";
 import CategoryClient from "./CategoryClient";
 import { Loader2 } from "lucide-react";
 
-// Revalidate every hour
-// Revalidate every 60 seconds (1 minute) for faster updates
+// Revalidate every 60 seconds for faster updates
 export const revalidate = 60;
 
 // Allow dynamic params

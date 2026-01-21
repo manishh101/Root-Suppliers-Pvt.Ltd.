@@ -80,6 +80,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+// Generate article structured data for SEO
+function getArticleStructuredData(blog: any) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: blog.title,
+    description: blog.excerpt || "",
+    image: blog.featuredImage?.url || "",
+    datePublished: blog.publishedAt || blog.createdAt,
+    dateModified: blog.updatedAt || blog.publishedAt || blog.createdAt,
+    author: {
+      "@type": "Person",
+      name: blog.author && typeof blog.author === 'object' ? blog.author.name : 'Root Suppliers',
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Root Suppliers",
+      logo: {
+        "@type": "ImageObject",
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rootsuppliers.com.np'}/images/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rootsuppliers.com.np'}/blogs/${blog.slug}`,
+    },
+    keywords: blog.tags?.join(', ') || '',
+  };
+}
+
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const blog = await getBlog(slug);
@@ -88,5 +118,15 @@ export default async function BlogDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <BlogClient blog={blog as any} />;
+  const structuredData = getArticleStructuredData(blog);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <BlogClient blog={blog as any} />
+    </>
+  );
 }

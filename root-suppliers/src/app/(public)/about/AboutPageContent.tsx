@@ -289,7 +289,7 @@ export default function AboutPageContent() {
               className="lg:col-span-7"
             >
               <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 font-bold text-xs uppercase tracking-wider mb-6">
-                <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+                {/* <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" /> */}
                 Our Story
               </span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
@@ -331,7 +331,7 @@ export default function AboutPageContent() {
             className="max-w-3xl mx-auto text-center mb-16"
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full text-primary-600 font-semibold text-sm mb-6 font-secondary">
-              <Target className="w-4 h-4" />
+              {/* <Target className="w-4 h-4" /> */}
               Our Purpose
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
@@ -412,7 +412,7 @@ export default function AboutPageContent() {
             >
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-sm mb-4 font-secondary">
-                  📸 Our Gallery
+                  Our Gallery
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>

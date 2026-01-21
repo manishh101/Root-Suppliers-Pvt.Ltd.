@@ -73,7 +73,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-50 text-primary-700 text-sm font-bold capitalize tracking-wider mb-4 border border-primary-100/50">
-            <Star className="w-4 h-4 fill-primary-700" />
+            {/* <Star className="w-4 h-4 fill-primary-700" /> */}
             Client Stories
           </span>
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">

@@ -80,7 +80,7 @@ export const CTASection: React.FC = () => {
             >
               {/* Pulse glow effect */}
               <div className="absolute inset-0 rounded-xl bg-primary-400/50 animate-pulse opacity-0 group-hover:opacity-50 blur-md transition-opacity duration-300" />
-              <ShoppingBag className="h-5 w-5 relative z-10" />
+              {/* <ShoppingBag className="h-5 w-5 relative z-10" /> */}
               <span className="relative z-10">Browse Products</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" />
             </Link>
@@ -88,7 +88,7 @@ export const CTASection: React.FC = () => {
               href="tel:+9779851235637"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-white/50 text-white font-bold rounded-xl hover:bg-white hover:text-primary-700 transition-all duration-300 backdrop-blur-sm group"
             >
-              <Phone className="h-5 w-5" />
+              {/* <Phone className="h-5 w-5" /> */}
               Call: 9851235637
             </a>
           </div>
@@ -99,3 +99,5 @@ export const CTASection: React.FC = () => {
 };
 
 export default CTASection;
+
+

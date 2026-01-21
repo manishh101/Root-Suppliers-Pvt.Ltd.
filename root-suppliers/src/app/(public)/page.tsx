@@ -1,4 +1,4 @@
-
+import { Metadata } from "next";
 import {
   HeroCarousel,
   TopBrands,
@@ -16,6 +16,13 @@ import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
 import Brand from "@/lib/db/models/Brand";
 import Settings from "@/lib/db/models/Settings";
+
+// Home page specific metadata (supplements root layout metadata)
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 
 

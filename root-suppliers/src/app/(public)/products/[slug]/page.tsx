@@ -4,8 +4,7 @@ import ProductDetailContent from "./ProductDetailContent";
 import connectDB from "@/lib/db/connect";
 import Product from "@/lib/db/models/Product";
 
-// Revalidate every hour
-// Revalidate every 60 seconds (1 minute) for faster updates
+// Revalidate every 60 seconds for faster updates
 export const revalidate = 60;
 
 // Allow dynamic params for products not yet generated
@@ -79,8 +78,53 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+// Generate product structured data for SEO
+async function getProductStructuredData(slug: string) {
+  try {
+    await connectDB();
+    const product = await Product.findOne({ slug, isActive: true }).lean();
+    
+    if (!product) return null;
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description || "",
+      image: product.images?.map((img: { url?: string }) => img.url).filter(Boolean) || [],
+      sku: product.sku || product.slug,
+      brand: {
+        "@type": "Brand",
+        name: "Root Suppliers",
+      },
+      offers: {
+        "@type": "Offer",
+        availability: product.isActive 
+          ? "https://schema.org/InStock" 
+          : "https://schema.org/OutOfStock",
+        priceCurrency: "NPR",
+        priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rootsuppliers.com.np'}/products/${slug}`,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
+  const structuredData = await getProductStructuredData(slug);
 
-  return <ProductDetailContent slug={slug} />;
+  return (
+    <>
+      {structuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      )}
+      <ProductDetailContent slug={slug} />
+    </>
+  );
 }
