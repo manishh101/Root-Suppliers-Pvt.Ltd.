@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Star, Eye, MessageCircle } from "lucide-react";
+import { ArrowRight, Star, Eye } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 
@@ -94,9 +94,6 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
               <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <span className="flex items-center justify-center w-9 h-9 bg-white/95 backdrop-blur-sm rounded-full shadow-lg hover:bg-primary-600 hover:text-white transition-all hover:scale-110">
                   <Eye className="h-4 w-4" />
-                </span>
-                <span className="flex items-center justify-center w-9 h-9 bg-green-500 rounded-full shadow-lg hover:bg-green-600 text-white transition-all hover:scale-110">
-                  <MessageCircle className="h-4 w-4" />
                 </span>
               </div>
 
