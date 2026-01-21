@@ -43,6 +43,9 @@ interface Pagination {
   limit: number;
   total: number;
   pages: number;
+  totalPages?: number;
+  hasNext?: boolean;
+  hasPrev?: boolean;
 }
 
 const statusOptions = [
@@ -94,7 +97,12 @@ export default function InquiriesPage() {
 
       if (data.success) {
         setInquiries(data.inquiries);
-        setPagination(data.pagination);
+        // Handle both 'pages' and 'totalPages' from API response
+        const paginationData = data.pagination;
+        setPagination({
+          ...paginationData,
+          pages: paginationData.pages || paginationData.totalPages || 1,
+        });
       }
     } catch (error) {
       console.error("Failed to fetch inquiries:", error);

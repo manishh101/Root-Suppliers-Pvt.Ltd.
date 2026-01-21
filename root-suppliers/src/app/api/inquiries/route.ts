@@ -34,11 +34,22 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const source = searchParams.get("source");
     const status = searchParams.get("status");
+    const search = searchParams.get("search");
     const sort = searchParams.get("sort") || "-createdAt";
 
     const query: any = {};
     if (source) query.source = source;
     if (status) query.status = status;
+    
+    // Add search functionality
+    if (search) {
+      query.$or = [
+        { fullName: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { phone: { $regex: search, $options: "i" } },
+        { message: { $regex: search, $options: "i" } },
+      ];
+    }
 
     const skip = (page - 1) * limit;
 
@@ -60,6 +71,7 @@ export async function GET(req: NextRequest) {
         page,
         limit,
         total,
+        pages: totalPages,
         totalPages,
         hasNext: page < totalPages,
         hasPrev: page > 1,
