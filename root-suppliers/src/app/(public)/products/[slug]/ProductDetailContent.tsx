@@ -359,8 +359,8 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
               </div>
 
               {/* Name */}
-              <h1 className="font-primary font-bold text-xl md:text-3xl text-gray-900 mb-4">
-                {product.name}
+              <h1 className="font-secondary font-bold text-xl md:text-3xl text-gray-900 mb-4 capitalize">
+                {product.name.toLowerCase()}
               </h1>
 
               {/* SKU & Stock */}

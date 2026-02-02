@@ -115,8 +115,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
                 <span className="inline-block px-2 py-0.5 text-xs font-bold text-primary-600 bg-primary-50 rounded-full mb-1.5">
                   {product.category?.name || "Uncategorized"}
                 </span>
-                <h3 className="text-base font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight">
-                  {product.name}
+                <h3 className="font-secondary text-base font-bold text-gray-900 line-clamp-2 group-hover:text-primary-600 transition-colors duration-300 leading-tight capitalize">
+                  {product.name.toLowerCase()}
                 </h3>
 
                 {/* View Product Link */}
