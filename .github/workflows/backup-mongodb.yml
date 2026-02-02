@@ -48,9 +48,15 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
              sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
           
-          # Install MongoDB database tools and mongosh
+          # Install MongoDB database tools
           sudo apt-get update
-          sudo apt-get install -y mongodb-database-tools mongodb-mongosh
+          sudo apt-get install -y mongodb-database-tools
+          
+          # Install mongosh explicitly (Direct Download)
+          wget -q https://downloads.mongodb.com/compass/mongosh-2.1.5-linux-x64.tgz
+          tar -xzf mongosh-2.1.5-linux-x64.tgz
+          sudo cp mongosh-2.1.5-linux-x64/bin/mongosh /usr/local/bin/
+          rm -rf mongosh-2.1.5-linux-x64.tgz mongosh-2.1.5-linux-x64
           
           # Verify installation
           mongodump --version
