@@ -152,7 +152,7 @@ export default async function Home() {
       <TestimonialsSectionStatic />
 
       {/* Visit Us / Map Section */}
-      <VisitUsSection settings={settings} />
+      <VisitUsSection />
     </>
   );
 }

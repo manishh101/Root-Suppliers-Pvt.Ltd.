@@ -3,19 +3,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, Phone, MapPin, X, MessageSquareText } from "lucide-react";
+import { useSettings } from "@/contexts/SettingsContext";
 
-interface ContactFloatProps {
-  settings?: {
-    contact?: {
-      primaryPhone?: string;
-      secondaryPhone?: string;
-      googleMapsLink?: string;
-    };
-  } | null;
-}
-
-export default function ContactFloat({ settings }: ContactFloatProps) {
+export default function ContactFloat() {
   const [isOpen, setIsOpen] = useState(false);
+  const { settings } = useSettings();
 
   // Dynamic values from backend settings
   const phoneNumber = settings?.contact?.primaryPhone || "9851235637";

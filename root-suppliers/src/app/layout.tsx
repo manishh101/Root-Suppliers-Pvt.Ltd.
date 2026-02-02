@@ -4,6 +4,7 @@ import "./globals.css";
 
 import connectDB from "@/lib/db/connect";
 import Settings from "@/lib/db/models/Settings";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 
 const bankGothic = localFont({
   src: [
@@ -22,9 +23,19 @@ const bankGothic = localFont({
   display: 'swap',
 });
 
-export async function generateMetadata(): Promise<Metadata> {
+async function getSettings() {
   await connectDB();
-  const settings: any = await Settings.findOne().lean();
+  const settings = await Settings.findOne().lean();
+  if (settings) {
+    // Convert _id to string to avoid serialization issues
+    // and cast to any to match SafeSettings expectation (ignoring Mongoose Document methods)
+    return { ...settings, _id: settings._id.toString() } as any;
+  }
+  return null;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
 
   const siteTitle = settings?.site?.name || "Root Suppliers";
   const siteTagline = settings?.site?.tagline || "All Construction Solutions Under One Roof";
@@ -98,18 +109,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Structured data for organization (JSON-LD)
-function OrganizationSchema() {
+function OrganizationSchema({ settings }: { settings: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Root Suppliers Pvt. Ltd.",
-    alternateName: "Root Suppliers",
+    name: settings?.site?.name || "Root Suppliers Pvt. Ltd.",
+    alternateName: settings?.site?.tagline || "Root Suppliers",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np",
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
-    description: "Your trusted hardware and construction materials partner in Biratnagar, Nepal. We offer a wide range of construction materials, tools, and equipment.",
+    logo: settings?.site?.logo?.url || `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
+    description: settings?.seo?.defaultDescription || "Your trusted hardware and construction materials partner in Biratnagar, Nepal. We offer a wide range of construction materials, tools, and equipment.",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Main Road, Biratnagar",
+      streetAddress: settings?.contact?.address || "Main Road, Biratnagar",
       addressLocality: "Biratnagar",
       addressRegion: "Province 1",
       postalCode: "56600",
@@ -117,13 +128,13 @@ function OrganizationSchema() {
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+977-9851235637",
+      telephone: settings?.contact?.primaryPhone || "+977-9851235637",
       contactType: "customer service",
       availableLanguage: ["en", "ne"],
     },
     sameAs: [
-      "https://www.facebook.com/rootsuppliers",
-    ],
+      settings?.social?.facebook || "https://www.facebook.com/rootsuppliers",
+    ].filter(Boolean),
   };
 
   return (
@@ -135,18 +146,18 @@ function OrganizationSchema() {
 }
 
 // Local Business Schema for better local SEO
-function LocalBusinessSchema() {
+function LocalBusinessSchema({ settings }: { settings: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "HardwareStore",
-    name: "Root Suppliers Pvt. Ltd.",
-    image: `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
+    name: settings?.site?.name || "Root Suppliers Pvt. Ltd.",
+    image: settings?.site?.logo?.url || `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np",
-    telephone: "+977-9851235637",
+    telephone: settings?.contact?.primaryPhone || "+977-9851235637",
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Main Road, Biratnagar",
+      streetAddress: settings?.contact?.address || "Main Road, Biratnagar",
       addressLocality: "Biratnagar",
       addressRegion: "Province 1",
       postalCode: "56600",
@@ -175,18 +186,24 @@ function LocalBusinessSchema() {
   );
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+
   return (
     <html lang="en">
       <head>
-        <OrganizationSchema />
-        <LocalBusinessSchema />
+        <OrganizationSchema settings={settings} />
+        <LocalBusinessSchema settings={settings} />
       </head>
-      <body className={`antialiased ${bankGothic.variable}`}>{children}</body>
+      <body className={`antialiased ${bankGothic.variable}`}>
+        <SettingsProvider initialSettings={settings}>
+          {children}
+        </SettingsProvider>
+      </body>
     </html>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { X, Phone, Mail, MessageCircle, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface ProductInquiryModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export default function ProductInquiryModal({
   product,
   quantity = 1,
 }: ProductInquiryModalProps) {
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,23 +35,6 @@ export default function ProductInquiryModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<any>(null);
-
-  // Fetch settings for contact information
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const response = await fetch('/api/settings');
-        const data = await response.json();
-        if (data.success) {
-          setSettings(data.settings);
-        }
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-      }
-    };
-    fetchSettings();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -287,7 +272,7 @@ export default function ProductInquiryModal({
                 </a>
                 <a
                   href={`https://wa.me/${(() => {
-                    const whatsappNumber = settings?.contact?.whatsapp || settings?.contact?.primaryPhone || '9779851235637';
+                    const whatsappNumber = settings?.contact?.secondaryPhone || settings?.contact?.primaryPhone || '9779851235637';
                     const cleanNumber = whatsappNumber.replace(/\D/g, '');
                     return cleanNumber.startsWith('977') ? cleanNumber : `977${cleanNumber}`;
                   })()}`}

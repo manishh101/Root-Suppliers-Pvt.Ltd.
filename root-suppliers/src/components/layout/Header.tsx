@@ -7,13 +7,7 @@ import { Phone, MapPin, Menu, X, Search, Loader2, Package } from "lucide-react";
 import MobileCategoryMenu from "@/components/layout/MobileCategoryMenu";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
-
-interface HeaderProps {
-  settings?: {
-    site?: { name?: string; tagline?: string; logo?: { url?: string } };
-    contact?: { primaryPhone?: string; address?: string; googleMapsLink?: string };
-  } | null;
-}
+import { useSettings } from "@/contexts/SettingsContext";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -24,7 +18,8 @@ const navLinks = [
   { href: "/about", label: "About Us" },
 ];
 
-export default function Header({ settings }: HeaderProps) {
+export default function Header() {
+  const { settings } = useSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

@@ -3,8 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Phone, ArrowRight, ShoppingBag, Hammer, Wrench, PaintBucket } from "lucide-react";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export const CTASection: React.FC = () => {
+  const { settings } = useSettings();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -85,11 +87,11 @@ export const CTASection: React.FC = () => {
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" />
             </Link>
             <a
-              href="tel:+9779851235637"
+              href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
               className="inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-white/50 text-white font-bold rounded-xl hover:bg-white hover:text-primary-700 transition-all duration-300 backdrop-blur-sm group"
             >
               {/* <Phone className="h-5 w-5" /> */}
-              Call: 9851235637
+              Call: {settings?.contact?.primaryPhone || "9851235637"}
             </a>
           </div>
         </div>

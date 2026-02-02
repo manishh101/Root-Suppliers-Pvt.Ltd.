@@ -2,18 +2,12 @@
 
 import React from "react";
 import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
-
-interface VisitUsSectionProps {
-  settings?: {
-    contact?: { primaryPhone?: string; primaryEmail?: string; address?: string; googleMapsLink?: string; googleMapsEmbed?: string };
-    businessHours?: { day: string; hours: string }[];
-  } | null;
-}
-
+import { useSettings } from "@/contexts/SettingsContext";
 import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
-export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings }) => {
-  // Format business hours for display
+export const VisitUsSection: React.FC = () => {
+  const { settings } = useSettings();
+
   // Format business hours for display
   const hours = formatBusinessHours(settings?.businessHours);
 

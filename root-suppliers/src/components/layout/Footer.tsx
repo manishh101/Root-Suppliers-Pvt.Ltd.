@@ -15,15 +15,7 @@ import {
 } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
-
-interface FooterProps {
-  settings?: {
-    site?: { name?: string; tagline?: string; logo?: { url?: string } };
-    contact?: { primaryPhone?: string; primaryEmail?: string; address?: string; googleMapsLink?: string };
-    social?: { facebook?: string; instagram?: string; youtube?: string; linkedin?: string; twitter?: string };
-    businessHours?: { day: string; hours: string }[];
-  } | null;
-}
+import { useSettings } from "@/contexts/SettingsContext";
 
 const quickLinks = [
 
@@ -44,7 +36,8 @@ const productCategories = [
 
 import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
-export const Footer: React.FC<FooterProps> = ({ settings }) => {
+export const Footer = () => {
+  const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
 
   // Get social links from settings
