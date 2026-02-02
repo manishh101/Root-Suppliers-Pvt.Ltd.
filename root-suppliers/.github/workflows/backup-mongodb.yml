@@ -1,0 +1,195 @@
+name: MongoDB Backup
+
+on:
+  schedule:
+    # Run every 6 hours at minute 0
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  BACKUP_RETENTION_DAYS: 30
+
+# Required permissions for creating releases
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Prevent hung workflows
+    
+    steps:
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.MONGODB_URI }}" ]; then
+            echo "❌ ERROR: MONGODB_URI secret is not configured!"
+            echo ""
+            echo "To fix this:"
+            echo "1. Go to your repository Settings"
+            echo "2. Navigate to Secrets and variables → Actions"
+            echo "3. Add a new secret named 'MONGODB_URI'"
+            echo "4. Set the value to your MongoDB connection string"
+            exit 1
+          fi
+          echo "✅ Required secrets are configured"
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install MongoDB Database Tools
+        run: |
+          # Import MongoDB public GPG key
+          curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+             sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+          
+          # Add MongoDB repository
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
+             sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+          
+          # Install MongoDB database tools
+          sudo apt-get update
+          sudo apt-get install -y mongodb-database-tools
+          
+          # Verify installation
+          mongodump --version
+      
+      - name: Create backup directory
+        run: mkdir -p backups
+      
+      - name: Create MongoDB Backup
+        id: backup
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          DATE=$(date +%Y%m%d_%H%M%S)
+          echo "BACKUP_DATE=$DATE" >> $GITHUB_ENV
+          echo "📦 Starting MongoDB backup at $DATE..."
+          
+          # Test connection first (with timeout)
+          echo "Testing MongoDB connection..."
+          timeout 30 mongosh "$MONGODB_URI" --eval "db.stats()" --quiet || {
+            echo ""
+            echo "❌ ERROR: Cannot connect to MongoDB!"
+            echo ""
+            echo "Possible causes:"
+            echo "1. MongoDB Atlas IP Access List - GitHub Actions uses dynamic IPs"
+            echo "   → Go to Atlas → Network Access → Add 0.0.0.0/0 (allow from anywhere)"
+            echo "   → Or use MongoDB Atlas API to temporarily whitelist IPs"
+            echo "2. Connection string is incorrect"
+            echo "3. Database is down or unreachable"
+            echo ""
+            exit 1
+          }
+          echo "✅ Connection successful"
+          
+          # Create backup with gzip compression
+          echo "Creating backup..."
+          mongodump --uri="$MONGODB_URI" --archive="backups/mongodb-backup-$DATE.gz" --gzip
+          
+          # Verify backup was created
+          if [ ! -f "backups/mongodb-backup-$DATE.gz" ]; then
+            echo "❌ ERROR: Backup file was not created!"
+            exit 1
+          fi
+          
+          # Get backup size
+          BACKUP_SIZE=$(ls -lh backups/mongodb-backup-$DATE.gz | awk '{print $5}')
+          echo "✅ Backup created: mongodb-backup-$DATE.gz (Size: $BACKUP_SIZE)"
+          echo "BACKUP_SIZE=$BACKUP_SIZE" >> $GITHUB_ENV
+          
+          # Verify backup is not empty (minimum 1KB)
+          BACKUP_BYTES=$(stat -c%s "backups/mongodb-backup-$DATE.gz")
+          if [ "$BACKUP_BYTES" -lt 1024 ]; then
+            echo "⚠️ WARNING: Backup file is suspiciously small ($BACKUP_BYTES bytes)"
+            echo "This might indicate an empty database or connection issue"
+          fi
+      
+      - name: Create backup metadata
+        run: |
+          echo '{
+            "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+            "backup_file": "mongodb-backup-${{ env.BACKUP_DATE }}.gz",
+            "size": "${{ env.BACKUP_SIZE }}",
+            "trigger": "${{ github.event_name }}",
+            "workflow_run": "${{ github.run_id }}",
+            "runner": "'$(hostname)'"
+          }' > backups/backup-manifest.json
+      
+      - name: Upload backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mongodb-backup-${{ env.BACKUP_DATE }}
+          path: backups/
+          retention-days: ${{ env.BACKUP_RETENTION_DAYS }}
+      
+      - name: Create GitHub Release for backup
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: backup-${{ env.BACKUP_DATE }}
+          name: MongoDB Backup - ${{ env.BACKUP_DATE }}
+          body: |
+            ## Automated MongoDB Backup
+            
+            - **Date**: ${{ env.BACKUP_DATE }}
+            - **Size**: ${{ env.BACKUP_SIZE }}
+            - **Trigger**: ${{ github.event_name }}
+            
+            ### How to Restore
+            
+            ```bash
+            # Download the backup file from this release
+            # Then restore using:
+            mongorestore --uri="$MONGODB_URI" --archive=mongodb-backup-${{ env.BACKUP_DATE }}.gz --gzip --drop
+            ```
+          files: backups/mongodb-backup-${{ env.BACKUP_DATE }}.gz
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Cleanup old releases (keep last 10)
+        if: github.event_name == 'schedule'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🧹 Cleaning up old backup releases..."
+          
+          # Get all backup releases using JSON format for reliable parsing
+          RELEASES=$(gh release list --limit 100 --json tagName --jq '.[].tagName | select(startswith("backup-"))' | tail -n +11)
+          
+          if [ -z "$RELEASES" ]; then
+            echo "No old releases to cleanup"
+          else
+            for release in $RELEASES; do
+              echo "Deleting old release: $release"
+              gh release delete "$release" --yes --cleanup-tag || true
+            done
+          fi
+          
+          echo "✅ Cleanup complete"
+
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    needs: backup
+    if: failure()
+    
+    steps:
+      - name: Checkout for gh CLI
+        uses: actions/checkout@v4
+        
+      - name: Send failure notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          echo "❌ MongoDB backup failed!"
+          echo "Check the workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Send to Discord webhook if configured
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            curl -H "Content-Type: application/json" \
+              -d "{\"content\": \"❌ **MongoDB Backup Failed!**\nTime: $(date -u +%Y-%m-%dT%H:%M:%SZ)\nCheck: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+              "$DISCORD_WEBHOOK_URL" || echo "Failed to send Discord notification"
+          fi

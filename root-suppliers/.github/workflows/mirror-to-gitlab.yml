@@ -1,0 +1,40 @@
+name: Mirror to GitLab
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Mirror to GitLab
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          GITLAB_REPO: ${{ secrets.GITLAB_REPO }}
+        run: |
+          if [ -z "$GITLAB_TOKEN" ] || [ -z "$GITLAB_USERNAME" ] || [ -z "$GITLAB_REPO" ]; then
+            echo "⚠️ GitLab secrets not configured. Skipping mirror."
+            echo "To enable mirroring, add these secrets:"
+            echo "  - GITLAB_TOKEN: Your GitLab personal access token"
+            echo "  - GITLAB_USERNAME: Your GitLab username"
+            echo "  - GITLAB_REPO: Repository name on GitLab"
+            exit 0
+          fi
+          
+          echo "🔄 Mirroring to GitLab..."
+          
+          git remote add gitlab "https://oauth2:$GITLAB_TOKEN@gitlab.com/$GITLAB_USERNAME/$GITLAB_REPO.git" || true
+          git push gitlab --all --force
+          git push gitlab --tags --force
+          
+          echo "✅ Mirror complete!"

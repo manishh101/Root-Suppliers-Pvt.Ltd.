@@ -1,0 +1,335 @@
+name: Cloudinary Media Backup
+
+on:
+  schedule:
+    # Run weekly on Sunday at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+# Required permissions for creating releases
+permissions:
+  contents: write
+
+jobs:
+  backup-media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120  # Allow up to 2 hours for large media libraries
+    
+    steps:
+      - name: Validate required secrets
+        run: |
+          MISSING=""
+          if [ -z "${{ secrets.CLOUDINARY_CLOUD_NAME }}" ]; then
+            MISSING="$MISSING CLOUDINARY_CLOUD_NAME"
+          fi
+          if [ -z "${{ secrets.CLOUDINARY_API_KEY }}" ]; then
+            MISSING="$MISSING CLOUDINARY_API_KEY"
+          fi
+          if [ -z "${{ secrets.CLOUDINARY_API_SECRET }}" ]; then
+            MISSING="$MISSING CLOUDINARY_API_SECRET"
+          fi
+          
+          if [ -n "$MISSING" ]; then
+            echo "❌ ERROR: Missing required secrets:$MISSING"
+            echo ""
+            echo "To fix this:"
+            echo "1. Go to your repository Settings"
+            echo "2. Navigate to Secrets and variables → Actions"
+            echo "3. Add the missing secrets from your Cloudinary dashboard"
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install cloudinary
+      
+      - name: Create backup script
+        run: |
+          cat << 'EOF' > backup-cloudinary.js
+          const cloudinary = require('cloudinary').v2;
+          const fs = require('fs');
+          const path = require('path');
+          const https = require('https');
+
+          // Configuration
+          cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET
+          });
+
+          const BACKUP_DIR = './media-backup';
+          const MAX_RETRIES = 3;
+          const CONCURRENT_DOWNLOADS = 5;
+
+          // Download with automatic retry
+          function downloadFile(url, filepath) {
+            return new Promise((resolve, reject) => {
+              const file = fs.createWriteStream(filepath);
+              
+              const request = https.get(url, { timeout: 30000 }, response => {
+                // Handle redirects
+                if (response.statusCode === 301 || response.statusCode === 302) {
+                  file.close();
+                  fs.unlinkSync(filepath);
+                  https.get(response.headers.location, { timeout: 30000 }, redirectResponse => {
+                    redirectResponse.pipe(file);
+                    file.on('finish', () => {
+                      file.close();
+                      resolve();
+                    });
+                  }).on('error', reject);
+                } else if (response.statusCode !== 200) {
+                  file.close();
+                  fs.unlinkSync(filepath);
+                  reject(new Error(`HTTP ${response.statusCode}`));
+                } else {
+                  response.pipe(file);
+                  file.on('finish', () => {
+                    file.close();
+                    resolve();
+                  });
+                }
+              });
+              
+              request.on('error', err => {
+                file.close();
+                fs.unlink(filepath, () => {});
+                reject(err);
+              });
+              
+              request.on('timeout', () => {
+                request.destroy();
+                file.close();
+                fs.unlink(filepath, () => {});
+                reject(new Error('Request timeout'));
+              });
+            });
+          }
+
+          async function downloadWithRetry(url, filepath, retries = MAX_RETRIES) {
+            for (let attempt = 1; attempt <= retries; attempt++) {
+              try {
+                await downloadFile(url, filepath);
+                return true;
+              } catch (error) {
+                console.log(`  Attempt ${attempt}/${retries} failed: ${error.message}`);
+                if (attempt === retries) {
+                  console.error(`  ❌ Failed to download after ${retries} attempts`);
+                  return false;
+                }
+                // Exponential backoff
+                await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
+              }
+            }
+            return false;
+          }
+
+          // Process downloads in batches for better performance
+          async function processBatch(resources, manifest, stats) {
+            const promises = resources.map(async (resource) => {
+              const safeName = resource.public_id.replace(/\//g, '_');
+              const filename = `${safeName}.${resource.format || 'bin'}`;
+              const filepath = path.join(BACKUP_DIR, filename);
+              
+              const success = await downloadWithRetry(resource.secure_url, filepath);
+              
+              if (success) {
+                stats.downloaded++;
+                manifest.push({
+                  public_id: resource.public_id,
+                  filename: filename,
+                  format: resource.format,
+                  url: resource.secure_url,
+                  created_at: resource.created_at,
+                  bytes: resource.bytes
+                });
+                process.stdout.write('.');
+              } else {
+                stats.failed++;
+                process.stdout.write('x');
+              }
+            });
+            
+            await Promise.all(promises);
+          }
+
+          async function backupAllAssets() {
+            let nextCursor = null;
+            const manifest = [];
+            const stats = { downloaded: 0, failed: 0 };
+            
+            // Create backup directory
+            if (!fs.existsSync(BACKUP_DIR)) {
+              fs.mkdirSync(BACKUP_DIR, { recursive: true });
+            }
+            
+            console.log('📦 Starting Cloudinary backup...\n');
+            
+            // Test API connection first
+            try {
+              const usage = await cloudinary.api.usage();
+              console.log(`Cloudinary account: ${process.env.CLOUDINARY_CLOUD_NAME}`);
+              console.log(`Storage used: ${(usage.storage.usage / 1024 / 1024).toFixed(2)} MB`);
+              console.log(`Credits used: ${usage.credits.used_percent.toFixed(1)}%\n`);
+            } catch (error) {
+              console.error('❌ Failed to connect to Cloudinary API!');
+              console.error('Error:', error.message);
+              console.error('\nPlease verify your API credentials are correct.');
+              process.exit(1);
+            }
+            
+            console.log('Downloading assets (. = success, x = failed):\n');
+            
+            let batchNumber = 0;
+            do {
+              // List resources
+              const result = await cloudinary.api.resources({
+                type: 'upload',
+                max_results: 100,
+                next_cursor: nextCursor
+              });
+              
+              batchNumber++;
+              
+              // Process in smaller concurrent batches
+              for (let i = 0; i < result.resources.length; i += CONCURRENT_DOWNLOADS) {
+                const batch = result.resources.slice(i, i + CONCURRENT_DOWNLOADS);
+                await processBatch(batch, manifest, stats);
+              }
+              
+              nextCursor = result.next_cursor;
+            } while (nextCursor);
+            
+            console.log('\n');
+            console.log(`✅ Backup complete!`);
+            console.log(`   Downloaded: ${stats.downloaded} assets`);
+            console.log(`   Failed: ${stats.failed} assets`);
+            
+            // Save manifest
+            const manifestData = {
+              timestamp: new Date().toISOString(),
+              cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+              total_assets: stats.downloaded,
+              failed_assets: stats.failed,
+              assets: manifest
+            };
+            
+            fs.writeFileSync(
+              path.join(BACKUP_DIR, 'manifest.json'),
+              JSON.stringify(manifestData, null, 2)
+            );
+            
+            console.log(`   Manifest saved to ${BACKUP_DIR}/manifest.json`);
+            
+            // Exit with error if too many failures (> 10%)
+            if (stats.failed > 0 && stats.failed > stats.downloaded * 0.1) {
+              console.error('\n⚠️ Warning: More than 10% of assets failed to download!');
+              process.exit(1);
+            }
+            
+            // Exit with error if no assets downloaded
+            if (stats.downloaded === 0) {
+              console.error('\n❌ No assets were downloaded!');
+              process.exit(1);
+            }
+          }
+
+          // Global error handler
+          process.on('unhandledRejection', (error) => {
+            console.error('❌ Unhandled error:', error.message);
+            process.exit(1);
+          });
+
+          backupAllAssets().catch(err => {
+            console.error('❌ Backup failed:', err.message);
+            process.exit(1);
+          });
+          EOF
+      
+      - name: Run Cloudinary backup
+        env:
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        run: node backup-cloudinary.js
+      
+      - name: Get backup date
+        run: echo "BACKUP_DATE=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_ENV
+      
+      - name: Compress backup
+        run: |
+          if [ ! -d "media-backup" ] || [ -z "$(ls -A media-backup)" ]; then
+            echo "❌ ERROR: No files to backup!"
+            exit 1
+          fi
+          
+          cd media-backup
+          tar -czf ../cloudinary-backup-${{ env.BACKUP_DATE }}.tar.gz .
+          cd ..
+          BACKUP_SIZE=$(ls -lh cloudinary-backup-${{ env.BACKUP_DATE }}.tar.gz | awk '{print $5}')
+          echo "BACKUP_SIZE=$BACKUP_SIZE" >> $GITHUB_ENV
+          echo "📦 Backup compressed: cloudinary-backup-${{ env.BACKUP_DATE }}.tar.gz (Size: $BACKUP_SIZE)"
+      
+      - name: Upload backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudinary-backup-${{ env.BACKUP_DATE }}
+          path: cloudinary-backup-${{ env.BACKUP_DATE }}.tar.gz
+          retention-days: 90
+      
+      - name: Create GitHub Release for backup
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: media-backup-${{ env.BACKUP_DATE }}
+          name: Cloudinary Media Backup - ${{ env.BACKUP_DATE }}
+          body: |
+            ## Automated Cloudinary Media Backup
+            
+            - **Date**: ${{ env.BACKUP_DATE }}
+            - **Size**: ${{ env.BACKUP_SIZE }}
+            - **Trigger**: ${{ github.event_name }}
+            
+            ### Contents
+            
+            This backup contains all original media assets from Cloudinary. 
+            See `manifest.json` inside the archive for full asset listing.
+            
+            ### How to Restore
+            
+            1. Extract the archive: `tar -xzf cloudinary-backup-*.tar.gz`
+            2. Use Cloudinary's upload API to restore individual assets
+            3. Reference `manifest.json` for original public_ids
+          files: cloudinary-backup-${{ env.BACKUP_DATE }}.tar.gz
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    needs: backup-media
+    if: failure()
+    
+    steps:
+      - name: Send failure notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          echo "❌ Cloudinary backup failed!"
+          echo "Check the workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Send to Discord webhook if configured
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            curl -H "Content-Type: application/json" \
+              -d "{\"content\": \"❌ **Cloudinary Media Backup Failed!**\nTime: $(date -u +%Y-%m-%dT%H:%M:%SZ)\nCheck: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+              "$DISCORD_WEBHOOK_URL" || echo "Failed to send Discord notification"
+          fi
