@@ -49,3 +49,9 @@ next-env.d.ts
 
 # Turbo
 .turbo
+
+# Backups (local only - encrypted files are safe to commit)
+backups/
+media-backup/
+*.gz
+!env-backups/*.gpg
