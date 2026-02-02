@@ -74,7 +74,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
               >
                 {product.category?.name}
               </Link>
-              <h3 className="font-bold text-base text-gray-900 group-hover:text-primary-600 transition-colors capitalize">
+              <h3 className="font-bold text-sm md:text-base text-gray-900 group-hover:text-primary-600 transition-colors capitalize">
                 <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
               </h3>
             </div>
@@ -135,7 +135,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
         >
           {product.category?.name}
         </Link>
-        <h3 className="font-bold text-sm md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors capitalize">
+        <h3 className="font-bold text-xs md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors capitalize">
           <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
         </h3>
         <div className="mt-auto flex items-end justify-between">
