@@ -5,8 +5,13 @@ import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
-export const VisitUsSection: React.FC = () => {
-  const { settings } = useSettings();
+interface VisitUsSectionProps {
+  settings?: any;
+}
+
+export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSettings }) => {
+  const { settings: contextSettings } = useSettings();
+  const settings = propSettings || contextSettings;
 
   // Format business hours for display
   const hours = formatBusinessHours(settings?.businessHours);

@@ -5,6 +5,7 @@ export interface ISettings extends Document {
   site: {
     name: string;
     tagline: string;
+    establishedYear?: string;
     logo?: { url: string; publicId: string };
     favicon?: { url: string; publicId: string };
   };
@@ -91,6 +92,10 @@ const SettingsSchema = new Schema<ISettings>(
       tagline: {
         type: String,
         default: "All Construction Solutions Under One Roof",
+      },
+      establishedYear: {
+        type: String,
+        default: "2010",
       },
       logo: {
         url: String,

@@ -111,6 +111,7 @@ export const PUT = withValidate(
       if (body.site) {
         if (body.site.name !== undefined) updateData["site.name"] = body.site.name;
         if (body.site.tagline !== undefined) updateData["site.tagline"] = body.site.tagline;
+        if (body.site.establishedYear !== undefined) updateData["site.establishedYear"] = body.site.establishedYear;
         if (body.site.logo) {
           if (body.site.logo.url !== undefined) updateData["site.logo.url"] = body.site.logo.url;
           if (body.site.logo.publicId !== undefined) updateData["site.logo.publicId"] = body.site.logo.publicId;

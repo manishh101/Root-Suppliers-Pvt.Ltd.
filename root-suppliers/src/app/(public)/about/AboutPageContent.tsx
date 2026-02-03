@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 import { StatsSection } from "@/components/sections/StatsSection";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
-import { 
-  Loader2, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
+import {
+  Loader2,
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
   CheckCircle2,
   ArrowRight,
   Building2,
@@ -71,6 +71,7 @@ interface SettingsData {
   site: {
     name: string;
     description: string;
+    establishedYear?: string;
   };
   homepage: {
     stats: {
@@ -218,15 +219,15 @@ export default function AboutPageContent() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-primary-100 shadow-sm mb-6">
                 <Sparkles className="w-4 h-4 text-primary-500" />
-                <span className="text-sm font-semibold text-gray-700 font-secondary">Since 2010</span>
+                <span className="text-sm font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
               </div>
-              
+
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">Root Suppliers</span>
               </h1>
               <div className="h-1.5 w-24 md:w-32 bg-gradient-to-r from-primary-600 to-primary-400 mx-auto rounded-full" />
               <p className="text-gray-500 mt-6 md:mt-8 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
-                Building the future of Eastern Nepal, one project at a time. 
+                Building the future of Eastern Nepal, one project at a time.
                 <span className="text-primary-600 font-semibold"> All your construction solutions under one roof.</span>
               </p>
             </motion.div>
@@ -256,7 +257,7 @@ export default function AboutPageContent() {
                 </div>
 
                 {/* Floating Badge - Enhanced */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -269,7 +270,7 @@ export default function AboutPageContent() {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-gray-400 uppercase tracking-wider font-secondary">Established</p>
-                      <p className="text-3xl font-extrabold text-gray-900">2010</p>
+                      <p className="text-3xl font-extrabold text-gray-900">{settings?.site?.establishedYear || "2010"}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -296,7 +297,7 @@ export default function AboutPageContent() {
                 {storyTitle}
               </h2>
               <div className="space-y-5 text-gray-600 text-base md:text-lg leading-relaxed font-secondary" dangerouslySetInnerHTML={{ __html: storyContent }} />
-              
+
               {/* Key Points */}
               <div className="mt-8 grid grid-cols-2 gap-4">
                 {[
@@ -322,9 +323,9 @@ export default function AboutPageContent() {
       <section className="py-20 md:py-32 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
         {/* Decorative Background */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmMWY1ZjkiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-        
+
         <div className="container-main relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -354,7 +355,7 @@ export default function AboutPageContent() {
               <div className="relative bg-white p-8 md:p-10 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                 {/* Decorative corner */}
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-primary-50 to-transparent rounded-bl-full -mr-10 -mt-10" />
-                
+
                 <div className="relative z-10">
                   <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform">
                     <Target className="w-8 h-8 text-white" />
@@ -380,7 +381,7 @@ export default function AboutPageContent() {
               <div className="relative bg-white p-8 md:p-10 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                 {/* Decorative corner */}
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-50 to-transparent rounded-bl-full -mr-10 -mt-10" />
-                
+
                 <div className="relative z-10">
                   <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform">
                     <Eye className="w-8 h-8 text-white" />
@@ -402,9 +403,9 @@ export default function AboutPageContent() {
           {/* Decorative Elements */}
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary-50/50 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-gray-50 rounded-full blur-3xl" />
-          
+
           <div className="container-main relative z-10">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -424,8 +425,8 @@ export default function AboutPageContent() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-auto">
               {/* Display gallery images dynamically */}
               {galleryImages.map((img, idx) => (
-                <motion.div 
-                  key={idx} 
+                <motion.div
+                  key={idx}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -450,10 +451,10 @@ export default function AboutPageContent() {
           {/* Decorative Elements */}
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary-50/50 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-gray-50 rounded-full blur-3xl" />
-          
+
           <div className="container-main relative z-10">
             {/* Static Fallback Gallery */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -472,7 +473,7 @@ export default function AboutPageContent() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-auto md:h-[600px]">
               {/* Left Column - Large feature */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -493,7 +494,7 @@ export default function AboutPageContent() {
 
               {/* Right Column - Stacked */}
               <div className="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -508,7 +509,7 @@ export default function AboutPageContent() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                 </motion.div>
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -539,7 +540,7 @@ export default function AboutPageContent() {
         <TestimonialsSection testimonials={displayTestimonials} />
 
         {/* Call to Action Buttons - Enhanced */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -567,9 +568,9 @@ export default function AboutPageContent() {
         <section className="py-20 md:py-28 bg-gray-50 relative overflow-hidden">
           {/* Decorative */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary-50/30 rounded-full blur-3xl" />
-          
+
           <div className="container-main relative z-10">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -606,7 +607,7 @@ export default function AboutPageContent() {
               ))}
             </div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

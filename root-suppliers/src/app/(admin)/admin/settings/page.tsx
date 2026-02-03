@@ -24,6 +24,7 @@ const settingsSchema = z.object({
   site: z.object({
     name: z.string().min(1, "Site name is required"),
     tagline: z.string().optional(),
+    establishedYear: z.string().optional(),
     logo: z.object({ url: z.string().optional(), publicId: z.string().optional() }).optional(),
     favicon: z.object({ url: z.string().optional(), publicId: z.string().optional() }).optional(),
   }),
@@ -246,6 +247,7 @@ export default function SettingsPage() {
             site: {
               name: s.site?.name || "",
               tagline: s.site?.tagline || "",
+              establishedYear: s.site?.establishedYear || "2010",
               logo: s.site?.logo || { url: "" },
               favicon: s.site?.favicon || { url: "" },
             },
@@ -411,6 +413,7 @@ export default function SettingsPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div><label className="block text-sm font-medium mb-1">Site Name</label><input {...register("site.name")} className="w-full px-4 py-2 border rounded focus:ring-2 ring-primary/20 outline-none" /></div>
                   <div><label className="block text-sm font-medium mb-1">Tagline</label><input {...register("site.tagline")} className="w-full px-4 py-2 border rounded focus:ring-2 ring-primary/20 outline-none" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Established Year</label><input {...register("site.establishedYear")} placeholder="e.g. 2010" className="w-full px-4 py-2 border rounded focus:ring-2 ring-primary/20 outline-none" /></div>
                 </div>
                 <hr className="border-gray-100" />
                 <h3 className="text-lg font-semibold flex items-center gap-2"><Mail className="w-5 h-5" /> Contact</h3>
