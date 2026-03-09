@@ -5,6 +5,7 @@ import "./globals.css";
 import connectDB from "@/lib/db/connect";
 import Settings from "@/lib/db/models/Settings";
 import { SettingsProvider } from "@/contexts/SettingsContext";
+import { ToastProvider } from "@/components/ui/Toast";
 
 const bankGothic = localFont({
   src: [
@@ -201,7 +202,9 @@ export default async function RootLayout({
       </head>
       <body className={`antialiased ${bankGothic.variable}`}>
         <SettingsProvider initialSettings={settings}>
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </SettingsProvider>
       </body>
     </html>

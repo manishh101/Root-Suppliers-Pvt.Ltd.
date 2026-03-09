@@ -28,6 +28,7 @@ import ProductInquiryModal from "@/components/modals/ProductInquiryModal";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
+import { useToast } from "@/components/ui/Toast";
 
 interface Product {
   _id: string;
@@ -74,6 +75,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<any>(null);
+  const { showToast } = useToast();
 
   // Fetch settings for WhatsApp and phone number
   useEffect(() => {
@@ -221,7 +223,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
       }
     } else {
       navigator.clipboard.writeText(window.location.href);
-      // You could show a toast here
+      showToast("success", "Link copied to clipboard!");
     }
   };
 

@@ -341,25 +341,16 @@ function ProductsContent() {
     selectedBrands.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-white border-b border-gray-100/50 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(239,68,68,0.04),transparent_50%)]" />
-
-        <div className="container-main relative z-10 py-16 md:py-20 text-center md:text-left">
-          <div className="max-w-4xl">
-            {/* Breadcrumb */}
-            <nav className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-500 mb-6 font-medium">
-              <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-gray-900">Products</span>
-            </nav>
-
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Our Collection</h1>
-            <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto md:mx-0">
-              Explore over 1000+ quality construction materials, hardware, and electrical supplies from trusted brands.
-            </p>
-          </div>
+      <section className="bg-gray-50 border-b border-gray-100">
+        <div className="container-main py-12 md:py-16">
+          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+            <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-gray-900">Products</span>
+          </nav>
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">All Products</h1>
         </div>
       </section>
 

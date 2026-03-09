@@ -52,7 +52,7 @@ export const Footer = () => {
   const hours = formatBusinessHours(settings?.businessHours);
 
   return (
-    <footer className="bg-gradient-to-br from-secondary-700 via-secondary-800 to-secondary-900 text-white">
+    <footer className="bg-secondary-600 text-white">
       {/* Main Footer */}
       <div className="container-main py-10 md:py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
@@ -184,16 +184,16 @@ export const Footer = () => {
       {/* Bottom Bar */}
       <div className="border-t border-secondary-700/50">
         <div className="container-main py-5">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-secondary-300 text-xs">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-white text-sm font-primary font-medium tracking-wider">
             <p>
               © {currentYear} Root Suppliers Pvt. Ltd.
             </p>
             <div className="flex items-center gap-4">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
+              <Link href="/privacy-policy" className="hover:text-white/80 transition-colors">
                 Privacy
               </Link>
-              <span className="text-secondary-500">·</span>
-              <Link href="/terms" className="hover:text-white transition-colors">
+              <span className="text-white/60">·</span>
+              <Link href="/terms" className="hover:text-white/80 transition-colors">
                 Terms
               </Link>
             </div>

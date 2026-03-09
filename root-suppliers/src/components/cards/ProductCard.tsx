@@ -52,7 +52,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
         layout
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row group hover:shadow-lg hover:border-primary-100 transition-all duration-300"
+        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row group hover:shadow-lg hover:border-gray-200 transition-all duration-300"
       >
         <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-gray-50 overflow-hidden">
           <CloudinaryImage
@@ -70,11 +70,11 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
             <div>
               <Link
                 href={`/categories/${product.category?.slug}`}
-                className="text-[11px] md:text-xs font-bold text-primary-600/80 mb-1 hover:text-primary-700 transition-colors capitalize"
+                className="text-[11px] md:text-xs font-medium text-gray-500 mb-1 hover:text-gray-700 transition-colors uppercase tracking-wide"
               >
                 {product.category?.name}
               </Link>
-              <h3 className="font-bold text-sm md:text-base text-gray-900 group-hover:text-primary-600 transition-colors capitalize">
+              <h3 className="font-bold text-sm md:text-base text-gray-900 group-hover:text-gray-700 transition-colors capitalize">
                 <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
               </h3>
             </div>
@@ -92,7 +92,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
           <p className="text-gray-500 text-sm line-clamp-2 mb-4 flex-1">{product.description}</p>
           <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
             <span className="text-sm text-gray-500">Brand: <span className="text-gray-900 font-medium">{product.brand?.name || 'N/A'}</span></span>
-            <Link href={`/products/${product.slug}`} className="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center gap-1 group/link">
+            <Link href={`/products/${product.slug}`} className="text-sm font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1 group/link">
               View Details <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
             </Link>
           </div>
@@ -106,7 +106,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-white ${isCompact ? 'rounded-xl' : 'rounded-2xl'} shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:shadow-gray-200/50 hover:border-primary-100 transition-all duration-300 flex flex-col`}
+      className={`bg-white ${isCompact ? 'rounded-xl' : 'rounded-2xl'} shadow-sm border border-gray-100 overflow-hidden group hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col`}
     >
       <div className="relative aspect-square bg-gray-50 overflow-hidden">
         <CloudinaryImage
@@ -117,7 +117,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
           className="object-cover group-hover:scale-110 transition-transform duration-700"
         />
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {product.isNew && <Badge className={`absolute ${isCompact ? 'top-2 left-2 text-[10px] px-1.5 py-0.5' : 'top-3 left-3'} bg-primary-600 text-white shadow-sm`}>New</Badge>}
         {discount > 0 && <Badge className={`absolute ${isCompact ? 'top-2 right-2 text-[10px] px-1.5 py-0.5' : 'top-3 right-3'} bg-green-600 text-white shadow-sm`}>-{discount}%</Badge>}
 
@@ -131,11 +131,11 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       <div className={`${isCompact ? 'p-3' : 'p-4'} flex-1 flex flex-col`}>
         <Link
           href={`/categories/${product.category?.slug}`}
-          className="text-[11px] md:text-xs font-bold text-primary-600/80 mb-1.5 hover:text-primary-700 transition-colors inline-block capitalize"
+          className="text-[11px] md:text-xs font-medium text-gray-500 mb-1.5 hover:text-gray-700 transition-colors inline-block uppercase tracking-wide"
         >
           {product.category?.name}
         </Link>
-        <h3 className="font-bold text-xs md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors capitalize">
+        <h3 className="font-bold text-xs md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-gray-700 transition-colors capitalize">
           <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
         </h3>
         <div className="mt-auto flex items-end justify-between">

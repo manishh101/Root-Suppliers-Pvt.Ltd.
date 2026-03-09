@@ -85,20 +85,20 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
   }, [emblaApi, isHovered])
 
   return (
-    <section className="bg-gradient-to-b from-gray-50 to-white pt-20 pb-10 min-h-[calc(100vh-160px)]">
-      <div className="container mx-auto px-4 h-full">
-        <div className="flex flex-col lg:flex-row gap-5 h-full">
-          {/* Left Side - Main Carousel (larger size) */}
+    <section className="bg-white py-10 lg:py-12">
+      <div className="container-main h-full">
+        <div className="flex flex-col lg:flex-row gap-8 h-full">
+          {/* Left Side - Main Carousel */}
           <div
-            className="lg:w-3/5 relative group"
+            className="lg:w-2/3 relative group overflow-hidden rounded-2xl"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <div className="overflow-hidden rounded-2xl h-full shadow-2xl" ref={emblaRef}>
+            <div className="h-full bg-gray-100" ref={emblaRef}>
               <div className="flex h-full">
                 {slides.map((slide, index) => (
-                  <div key={index} className="flex-[0_0_100%] min-w-0 relative">
-                    <div className="relative w-full h-[300px] md:h-[450px] lg:h-[600px]">
+                  <div key={index} className="flex-[0_0_100%] min-w-0 relative h-full">
+                    <div className="relative w-full h-[400px] md:h-[500px] lg:h-full lg:min-h-[600px]">
                       <CloudinaryImage
                         src={slide.image.url}
                         publicId={slide.image.publicId}
@@ -107,30 +107,29 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                         className="object-cover"
                         priority={index === 0}
                       />
-                      {/* Gradient Overlay for Text Contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+                      {/* Clean Overlay */}
+                      <div className="absolute inset-0 bg-black/20" />
 
-                      {/* Text Overlay Content */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
-                        <div className="max-w-xl">
+                      {/* Content */}
+                      <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16">
+                        <div className="max-w-2xl">
                           {slide.title && (
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg animate-fade-up">
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight tracking-tight">
                               {slide.title}
                             </h2>
                           )}
                           {slide.subtitle && (
-                            <p className="text-base md:text-lg lg:text-xl text-white/90 mb-5 md:mb-6 drop-shadow-md max-w-md font-primary">
+                            <p className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-lg">
                               {slide.subtitle}
                             </p>
                           )}
                           {slide.ctaText && slide.ctaLink && (
                             <Link
                               href={slide.ctaLink}
-                              className="inline-flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group/btn hover:scale-105 font-primary"
+                              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-gray-900 font-medium rounded-full hover:bg-gray-100 transition-colors duration-200"
                             >
                               <span>{slide.ctaText}</span>
-                              <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                              <ArrowRight className="w-4 h-4" />
                             </Link>
                           )}
                         </div>
@@ -141,102 +140,59 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
               </div>
             </div>
 
-            {/* Enhanced Navigation Arrows with Glassmorphism */}
-            <button
-              onClick={scrollPrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full flex items-center justify-center shadow-xl border border-white/30 transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow-md" />
-            </button>
-            <button
-              onClick={scrollNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full flex items-center justify-center shadow-xl border border-white/30 transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow-md" />
-            </button>
-
-            {/* Enhanced Pill-shaped Dots Indicator */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => emblaApi?.scrollTo(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${index === selectedIndex
-                    ? 'w-8 bg-white'
-                    : 'w-2 bg-white/50 hover:bg-white/70'
-                    }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
+            {/* Minimal Navigation */}
+            <div className="absolute bottom-8 right-8 hidden md:flex gap-2">
+              <button
+                onClick={scrollPrev}
+                className="w-10 h-10 bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 text-white border border-white/20"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={scrollNext}
+                className="w-10 h-10 bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 text-white border border-white/20"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
           </div>
 
-          {/* Right Side - Enhanced Top Selling Products Panel */}
-          <div className="lg:w-2/5">
-            <div className="bg-gradient-to-br from-white via-red-50/50 to-white rounded-2xl p-5 md:p-6 h-full flex flex-col shadow-xl border border-gray-100 relative overflow-hidden">
-              {/* Decorative Background Element */}
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary-100/50 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-red-100/50 rounded-full blur-2xl" />
-
-              {/* Header with Icon */}
-              <div className="relative z-10 flex items-center justify-between mb-5 pb-4 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg">
-                    <TrendingUp className="w-5 h-5 text-white" />
-                  </div>
-                  <h2 className="text-base md:text-xl font-bold text-gray-800 capitalize">
-                    Top Selling
-                  </h2>
-                </div>
-                <span className="text-xs font-bold text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
-                  {topProducts.length}+ Items
-                </span>
+          {/* Right Side - Top Selling Products (Simplified) */}
+          <div className="lg:w-1/3 flex flex-col">
+            <div className="bg-gray-50 rounded-2xl p-6 h-full flex flex-col border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Top Selling
+                </h3>
+                <Link href="/products?filter=topSelling" className="text-sm font-medium text-secondary-600 hover:text-secondary-700">
+                  View All
+                </Link>
               </div>
 
-              {/* Products Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 flex-1 relative z-10">
-                {topProducts.slice(0, 6).map((product, index) => (
+              <div className="grid grid-cols-2 gap-4 flex-1">
+                {topProducts.slice(0, 4).map((product) => (
                   <Link
                     key={product._id}
                     href={`/products/${product.slug}`}
-                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col border border-gray-100 hover:border-primary-300 hover:-translate-y-2 hover:scale-[1.02]"
-                    style={{ animationDelay: `${index * 50}ms` }}
+                    className="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-200 hover:border-gray-200 hover:shadow-md"
                   >
-                    <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
+                    <div className="relative aspect-square w-full bg-gray-100">
                       <CloudinaryImage
                         src={product.images?.[0]?.url || PLACEHOLDER_IMAGES.PRODUCT}
                         alt={product.name}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 15vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      {/* Quick View Badge */}
-                      <div className="absolute top-2 right-2 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-primary-600 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
-                        View
-                      </div>
                     </div>
-                    <div className="p-2.5 text-center mt-auto bg-gradient-to-t from-gray-50 to-white">
-                      <span className="text-xs md:text-sm font-bold text-gray-700 group-hover:text-primary-600 transition-colors line-clamp-2 leading-tight">
+                    <div className="p-3">
+                      <h4 className="text-sm font-medium text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-1">
                         {product.name}
-                      </span>
+                      </h4>
                     </div>
                   </Link>
                 ))}
-              </div>
-
-              {/* View All CTA */}
-              <div className="mt-4 pt-4 border-t border-gray-100 relative z-10">
-                <Link
-                  href="/products?filter=topSelling"
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group"
-                >
-                  <span>View All Products</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
               </div>
             </div>
           </div>

@@ -17,67 +17,58 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
   const hours = formatBusinessHours(settings?.businessHours);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary-100/30 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-100/30 to-transparent rounded-full blur-3xl" />
-
-      <div className="container-main relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary-600"></div>
-            <MapPin className="w-6 h-6 text-primary-600" />
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary-600"></div>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+    <section className="py-20 md:py-28 bg-white">
+      <div className="container-main">
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
             Visit Our Store
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Come discover our comprehensive collection of construction materials and hardware supplies in person
+          <p className="text-gray-500 max-w-lg mx-auto text-lg">
+            Find quality construction materials and hardware supplies in person.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-10">
-          {/* Left Side - Contact Info */}
-          <div className="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Contact Info */}
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">
               Contact Information
             </h3>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* Address */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <MapPin className="h-6 w-6 text-red-600" />
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
+                  <MapPin className="h-5 w-5 text-gray-600" />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
-                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Our Location:</h4>
-                  <p className="text-gray-600 text-base flex-1">
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm mb-1">Address</h4>
+                  <p className="text-gray-600 text-sm">
                     {settings?.contact?.address || "Main Road, Biratnagar-4, Morang, Nepal"}
                   </p>
                   <a
                     href={settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm group/link whitespace-nowrap"
+                    className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm mt-1"
                   >
                     Get Directions
-                    <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-3 w-3" />
                   </a>
                 </div>
               </div>
 
               {/* Phone */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="h-6 w-6 text-blue-600" />
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
+                  <Phone className="h-5 w-5 text-gray-600" />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
-                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Call Us:</h4>
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm mb-1">Phone</h4>
                   <a
                     href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
-                    className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium"
+                    className="text-gray-600 text-sm hover:text-primary-600 transition-colors"
                   >
                     {settings?.contact?.primaryPhone || "9851235637"}
                   </a>
@@ -85,15 +76,15 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
               </div>
 
               {/* Email */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <Mail className="h-6 w-6 text-green-600" />
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
+                  <Mail className="h-5 w-5 text-gray-600" />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
-                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Email Us:</h4>
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm mb-1">Email</h4>
                   <a
                     href={`mailto:${settings?.contact?.primaryEmail || "info@rootsuppliers.com"}`}
-                    className="text-gray-600 text-base hover:text-primary-600 transition-colors font-medium break-all"
+                    className="text-gray-600 text-sm hover:text-primary-600 transition-colors break-all"
                   >
                     {settings?.contact?.primaryEmail || "info@rootsuppliers.com"}
                   </a>
@@ -101,13 +92,13 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
               </div>
 
               {/* Hours */}
-              <div className="flex items-center gap-5 group">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <Clock className="h-6 w-6 text-amber-600" />
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
+                  <Clock className="h-5 w-5 text-gray-600" />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-1">
-                  <h4 className="font-semibold text-gray-900 text-base md:min-w-[120px]">Business Hours:</h4>
-                  <p className="text-gray-600 text-base">
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm mb-1">Hours</h4>
+                  <p className="text-gray-600 text-sm">
                     {hours.map((line, i) => (
                       <span key={i} className="block">{line}</span>
                     ))}
@@ -117,24 +108,22 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
             </div>
           </div>
 
-          {/* Right Side - Map */}
-          <div className="rounded-2xl overflow-hidden shadow-xl border-2 border-gray-200/50 h-[400px] lg:h-auto relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
+          {/* Map */}
+          <div className="rounded-2xl overflow-hidden h-[350px] lg:h-auto border border-gray-100">
             <iframe
               src={settings?.contact?.googleMapsEmbed || "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Root+Suppliers+Pvt+Ltd,Biratnagar,Nepal&zoom=17"}
               width="100%"
               height="100%"
-              style={{ border: 0, minHeight: '400px' }}
+              style={{ border: 0, minHeight: '350px' }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Root Suppliers Location"
-              className="grayscale-[20%] hover:grayscale-0 transition-all duration-500"
             />
           </div>
         </div>
       </div>
-    </section >
+    </section>
   );
 };
 

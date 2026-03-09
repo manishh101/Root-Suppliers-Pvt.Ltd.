@@ -135,14 +135,14 @@ export default function Header() {
   return (
     <>
       <header
-        className={`bg-white sticky top-0 z-50 shadow-md transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        className={`bg-white sticky top-0 z-50 transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}
       >
         {/* Top Bar */}
-        <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+        <div className="bg-white">
           <div className="container-main py-2 md:py-3">
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
-              <Link href="/" className="flex-shrink-0 group relative w-12 h-12 md:w-20 md:h-20">
+              <Link href="/" className="flex-shrink-0 group relative w-14 h-14 md:w-24 md:h-24 top-1 md:top-5">
                 <CloudinaryImage
                   src={settings?.site?.logo?.url || "/images/logo.png"}
                   alt={settings?.site?.name || "Root Suppliers Pvt. Ltd."}
@@ -153,7 +153,7 @@ export default function Header() {
               </Link>
 
               {/* Tagline - Center */}
-              <div className="hidden lg:block text-center flex-1">
+              <div className="hidden lg:block text-center flex-1 ml-8 lg:ml-12">
                 <h2 className="text-base lg:text-lg font-bold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
                   All Construction
                 </h2>
@@ -217,16 +217,16 @@ export default function Header() {
         </div>
 
         {/* Navigation Bar */}
-        <div className="hidden md:block bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800">
+        <div className="hidden md:block bg-white">
           <div className="container-main">
             <div className="flex items-center justify-between py-2">
               {/* Nav Links */}
-              <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+              <nav className="hidden md:flex items-center gap-1 lg:gap-2 ml-28 lg:ml-40">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-4 lg:px-6 py-2.5 text-base font-bold text-white hover:text-white hover:bg-secondary-700/50 rounded-lg transition-all duration-300 hover:scale-105"
+                    className="px-4 lg:px-6 py-2.5 text-base font-bold text-gray-700 hover:text-primary-600 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -243,7 +243,7 @@ export default function Header() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
                     onFocus={() => searchQuery.trim().length >= 2 && setShowSuggestions(true)}
-                    className="w-full px-4 py-2.5 pr-10 bg-white/95 backdrop-blur-sm border-2 border-white/50 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white shadow-sm"
+                    className="w-full px-4 py-2.5 pr-10 bg-gray-50 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
                   />
                   <button
                     onClick={() => handleSearch()}
@@ -329,7 +329,7 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onFocus={() => searchQuery.trim().length >= 2 && setShowSuggestions(true)}
-                  className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                  className="w-full px-4 py-3 pr-10 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300 shadow-sm"
                 />
                 <button
                   onClick={() => handleSearch()}

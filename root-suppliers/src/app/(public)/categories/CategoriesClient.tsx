@@ -64,32 +64,19 @@ export default function CategoriesClient() {
   const displayCategories = categoryTree;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Refined Header */}
-      <section className="relative py-12 md:py-24 overflow-hidden border-b border-gray-100/50">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(239,68,68,0.04),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.03),transparent_50%)]" />
-
-        <div className="container-main relative z-10">
-          <div className="max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-50/50 text-primary-700 rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-primary-100/50">
-                {/* <Package className="w-3.5 h-3.5" /> */}
-                <span>Product Catalog</span>
-              </div>
-
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
-                Browse Categories
-              </h1>
-
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Explore our comprehensive catalog of construction materials and supplies, organized for your convenience.
-              </p>
-            </motion.div>
-          </div>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <section className="bg-gray-50 border-b border-gray-100">
+        <div className="container-main py-12 md:py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">
+              Browse Categories
+            </h1>
+          </motion.div>
         </div>
       </section>
 
@@ -128,7 +115,7 @@ export default function CategoriesClient() {
                   <p className="text-gray-500 text-sm">Check back later for updates</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   <AnimatePresence mode="popLayout">
                     {displayCategories.map((item, index) => (
                       <motion.div
@@ -137,14 +124,12 @@ export default function CategoriesClient() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: index * 0.04 }}
-                        className="group"
                       >
                         <Link
                           href={`/categories/${item.slug}`}
-                          className="block h-full bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 overflow-hidden hover:shadow-lg hover:shadow-gray-200/50 hover:border-gray-200/50 transition-all duration-300 flex flex-col relative"
+                          className="group block rounded-2xl border border-gray-100 overflow-hidden bg-white hover:border-gray-200 transition-all duration-200 hover:shadow-md"
                         >
-                          {/* Image */}
-                          <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
+                          <div className="relative aspect-[4/3] bg-gray-100">
                             <CloudinaryImage
                               src={item.image?.url || PLACEHOLDER_IMAGES.PRODUCT}
                               publicId={item.image?.publicId}
@@ -152,22 +137,11 @@ export default function CategoriesClient() {
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-500"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          </div>
-
-                          {/* Content */}
-                          <div className="p-4 flex-1 flex flex-col relative bg-gradient-to-b from-white to-gray-50/30">
-                            <h3 className="font-semibold text-base text-gray-900 mb-1.5 leading-snug group-hover:text-primary-600 transition-colors">
-                              {item.name}
-                            </h3>
-
-                            <div className="flex items-center justify-between mt-auto pt-2">
-                              <p className="text-xs text-gray-500 font-medium">
-                                {item.children?.length
-                                  ? `${item.children.length} subcategories`
-                                  : `${item.productCount || 0} products`}
-                              </p>
-                              <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                            <div className="absolute bottom-0 left-0 w-full p-4">
+                              <h3 className="font-semibold text-white text-base md:text-lg">
+                                {item.name}
+                              </h3>
                             </div>
                           </div>
                         </Link>
