@@ -280,7 +280,7 @@ h6 {
   }
 
   .section-title {
-    @apply text-3xl md:text-5xl font-secondary font-bold text-gray-900 text-center mb-6 tracking-tight;
+    @apply text-3xl md:text-5xl font-primary font-bold text-gray-900 text-center mb-6 tracking-tight;
   }
 
   .section-subtitle {
