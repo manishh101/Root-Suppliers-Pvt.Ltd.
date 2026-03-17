@@ -85,11 +85,11 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) 
               </div>
 
               <div className="flex flex-col flex-grow">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-[11px] md:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
                   {product.category?.name}
                 </p>
-                <h3 className="text-lg font-bold text-gray-900 leading-tight mb-2 group-hover:text-primary-600 transition-colors">
-                  {product.name}
+                <h3 className="text-xs md:text-base font-bold text-gray-900 leading-tight mb-2 group-hover:text-primary-600 transition-colors font-secondary capitalize">
+                  {product.name.toLowerCase()}
                 </h3>
                 <div className="mt-auto pt-2 flex items-center text-sm font-medium text-primary-600 opacity-0 transform -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                   View Details <ArrowRight className="w-4 h-4 ml-1" />
