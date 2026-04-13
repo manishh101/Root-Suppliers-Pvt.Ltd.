@@ -345,12 +345,12 @@ function ProductsContent() {
       {/* Hero Section */}
       <section className="bg-gray-50 border-b border-gray-100">
         <div className="container-main py-12 md:py-16">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-gray-900">Products</span>
+          <nav className="flex items-center gap-2 text-gray-500 mb-4">
+            <Link href="/" className="hover:text-primary-600 transition-colors text-[10px] md:text-xs font-bold tracking-wider uppercase">Home</Link>
+            <ChevronRight className="w-3 h-3 text-gray-400" />
+            <span className="text-gray-900 text-[10px] md:text-xs font-bold tracking-wider uppercase">Products</span>
           </nav>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight uppercase">All Products</h1>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight uppercase">All Products</h1>
         </div>
       </section>
 
@@ -394,7 +394,7 @@ function ProductsContent() {
                       placeholder="Search products..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors h-11"
+                      className="pl-10 bg-gray-50 border-gray-200 focus:bg-white focus:border-gray-300 focus:ring-transparent transition-colors h-11"
                     />
                   </div>
 
@@ -407,7 +407,7 @@ function ProductsContent() {
                       <SheetTrigger asChild>
                         <Button
                           variant="outline"
-                          className={`lg:hidden flex-1 relative h-11 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900 ${activeFilterCount > 0 ? "border-primary-200 bg-primary-50/50 text-primary-700" : ""
+                          className={`lg:hidden flex-1 relative h-11 border-gray-200 text-gray-700 text-[10px] font-bold tracking-wider uppercase hover:bg-gray-50 hover:text-gray-900 ${activeFilterCount > 0 ? "border-primary-200 bg-primary-50/50 text-primary-700" : ""
                             }`}
                         >
                           <Filter className={`h-4 w-4 mr-2 ${activeFilterCount > 0 ? "text-primary-600" : "text-gray-500"}`} />
@@ -442,7 +442,7 @@ function ProductsContent() {
 
                     {/* Sort */}
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="flex-1 md:w-48 h-11 border-gray-200 bg-white text-gray-700">
+                      <SelectTrigger className="flex-1 md:w-48 h-11 border-gray-200 bg-white text-gray-700 text-[10px] font-bold uppercase tracking-wider">
                         <SelectValue placeholder="Sort by" />
                       </SelectTrigger>
                       <SelectContent>

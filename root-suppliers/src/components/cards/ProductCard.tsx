@@ -70,7 +70,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
             <div>
               <Link
                 href={`/categories/${product.category?.slug}`}
-                className="text-[11px] md:text-xs font-medium text-gray-500 mb-1 hover:text-gray-700 transition-colors uppercase tracking-wide"
+                className="text-[9px] md:text-[10px] font-bold text-gray-500 mb-1 hover:text-gray-700 transition-colors uppercase tracking-widest"
               >
                 {product.category?.name}
               </Link>
@@ -131,7 +131,7 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
       <div className={`${isCompact ? 'p-3' : 'p-4'} flex-1 flex flex-col`}>
         <Link
           href={`/categories/${product.category?.slug}`}
-          className="text-[11px] md:text-xs font-medium text-gray-500 mb-1.5 hover:text-gray-700 transition-colors inline-block uppercase tracking-wide"
+          className="text-[9px] md:text-[10px] font-bold text-gray-500 mb-1.5 hover:text-gray-700 transition-colors inline-block uppercase tracking-widest"
         >
           {product.category?.name}
         </Link>
