@@ -75,7 +75,7 @@ export default function MobileCategoryMenu({ isOpen, onClose }: MobileCategoryMe
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/50">
               <div className="flex items-center gap-2 text-primary-700">
                 <Package className="w-5 h-5" />
-                <h3 className="font-bold text-lg">Categories</h3>
+                <h3 className="font-bold text-base">Categories</h3>
               </div>
               <button
                 onClick={onClose}

@@ -21,10 +21,10 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
       <div className="container-main">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-3">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-3">
             Visit Our Store
           </h2>
-          <p className="text-gray-500 max-w-lg mx-auto text-sm md:text-base">
+          <p className="text-gray-500 max-w-lg mx-auto text-xs md:text-sm">
             Find quality construction materials and hardware supplies in person.
           </p>
         </div>
@@ -32,7 +32,7 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Info */}
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-6">
               Contact Information
             </h3>
 
@@ -43,15 +43,15 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
                   <MapPin className="h-5 w-5 text-gray-600" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 text-sm mb-1">Address</h4>
-                  <p className="text-gray-600 text-sm">
+                  <h4 className="font-medium text-gray-900 text-xs mb-1">Address</h4>
+                  <p className="text-gray-600 text-xs">
                     {settings?.contact?.address || "Main Road, Biratnagar-4, Morang, Nepal"}
                   </p>
                   <a
                     href={settings?.contact?.googleMapsLink || "https://maps.app.goo.gl/jRWqSiE9fjLfv45r8"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm mt-1"
+                    className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-xs mt-1"
                   >
                     Get Directions
                     <ArrowRight className="h-3 w-3" />
@@ -65,10 +65,10 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
                   <Phone className="h-5 w-5 text-gray-600" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 text-sm mb-1">Phone</h4>
+                  <h4 className="font-medium text-gray-900 text-xs mb-1">Phone</h4>
                   <a
                     href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
-                    className="text-gray-600 text-sm hover:text-primary-600 transition-colors"
+                    className="text-gray-600 text-xs hover:text-primary-600 transition-colors"
                   >
                     {settings?.contact?.primaryPhone || "9851235637"}
                   </a>
@@ -81,10 +81,10 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
                   <Mail className="h-5 w-5 text-gray-600" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 text-sm mb-1">Email</h4>
+                  <h4 className="font-medium text-gray-900 text-xs mb-1">Email</h4>
                   <a
                     href={`mailto:${settings?.contact?.primaryEmail || "info@rootsuppliers.com"}`}
-                    className="text-gray-600 text-sm hover:text-primary-600 transition-colors break-all"
+                    className="text-gray-600 text-xs hover:text-primary-600 transition-colors break-all"
                   >
                     {settings?.contact?.primaryEmail || "info@rootsuppliers.com"}
                   </a>
@@ -97,8 +97,8 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
                   <Clock className="h-5 w-5 text-gray-600" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 text-sm mb-1">Hours</h4>
-                  <p className="text-gray-600 text-sm">
+                  <h4 className="font-medium text-gray-900 text-xs mb-1">Hours</h4>
+                  <p className="text-gray-600 text-xs">
                     {hours.map((line, i) => (
                       <span key={i} className="block">{line}</span>
                     ))}

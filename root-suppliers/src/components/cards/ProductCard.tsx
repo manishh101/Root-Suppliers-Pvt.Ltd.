@@ -74,25 +74,25 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
               >
                 {product.category?.name}
               </Link>
-              <h3 className="font-bold text-sm md:text-base text-gray-900 group-hover:text-gray-700 transition-colors capitalize">
+              <h3 className="font-bold text-xs md:text-sm text-gray-900 group-hover:text-gray-700 transition-colors capitalize">
                 <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
               </h3>
             </div>
             <div className="text-right">
               {product.discountPrice ? (
                 <>
-                  <span className="block text-lg font-bold text-gray-900">NPR {(product.discountPrice || 0).toLocaleString()}</span>
-                  <span className="text-sm text-gray-400 line-through">NPR {(product.price || 0).toLocaleString()}</span>
+                  <span className="block text-base font-bold text-gray-900">NPR {(product.discountPrice || 0).toLocaleString()}</span>
+                  <span className="text-xs text-gray-400 line-through">NPR {(product.price || 0).toLocaleString()}</span>
                 </>
               ) : (
-                <span className="block text-lg font-bold text-gray-900">NPR {(product.price || 0).toLocaleString()}</span>
+                <span className="block text-base font-bold text-gray-900">NPR {(product.price || 0).toLocaleString()}</span>
               )}
             </div>
           </div>
-          <p className="text-gray-500 text-sm line-clamp-2 mb-4 flex-1">{product.description}</p>
+          <p className="text-gray-500 text-xs line-clamp-2 mb-4 flex-1">{product.description}</p>
           <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
-            <span className="text-sm text-gray-500">Brand: <span className="text-gray-900 font-medium">{product.brand?.name || 'N/A'}</span></span>
-            <Link href={`/products/${product.slug}`} className="text-sm font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1 group/link">
+            <span className="text-xs text-gray-500">Brand: <span className="text-gray-900 font-medium">{product.brand?.name || 'N/A'}</span></span>
+            <Link href={`/products/${product.slug}`} className="text-xs font-semibold text-gray-600 hover:text-gray-900 flex items-center gap-1 group/link">
               View Details <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
             </Link>
           </div>
@@ -135,18 +135,18 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
         >
           {product.category?.name}
         </Link>
-        <h3 className="font-bold text-xs md:text-base text-gray-900 line-clamp-2 mb-2 group-hover:text-gray-700 transition-colors capitalize">
+        <h3 className="font-bold text-[10px] md:text-sm text-gray-900 line-clamp-2 mb-2 group-hover:text-gray-700 transition-colors capitalize">
           <Link href={`/products/${product.slug}`} className="!font-secondary">{product.name.toLowerCase()}</Link>
         </h3>
         <div className="mt-auto flex items-end justify-between">
           <div>
             {product.discountPrice ? (
               <>
-                <span className={`${isCompact ? 'text-xs' : 'text-sm'} text-gray-400 line-through mr-2`}>NPR {(product.price || 0).toLocaleString()}</span>
-                <span className={`block ${isCompact ? 'text-base' : 'text-lg'} font-bold text-gray-900`}>NPR {(product.discountPrice || 0).toLocaleString()}</span>
+                <span className={`${isCompact ? 'text-[10px]' : 'text-xs'} text-gray-400 line-through mr-2`}>NPR {(product.price || 0).toLocaleString()}</span>
+                <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>NPR {(product.discountPrice || 0).toLocaleString()}</span>
               </>
             ) : (
-              <span className={`block ${isCompact ? 'text-base' : 'text-lg'} font-bold text-gray-900`}>NPR {(product.price || 0).toLocaleString()}</span>
+              <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>NPR {(product.price || 0).toLocaleString()}</span>
             )}
           </div>
           {product.brand && <span className={`${isCompact ? 'text-[10px]' : 'text-xs'} text-gray-500 font-medium`}>{product.brand.name}</span>}

@@ -52,11 +52,11 @@ const StatCard: React.FC<{ stat: StatItem; isVisible: boolean; isLast?: boolean 
       <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
         <IconComponent className="w-5 h-5 text-gray-600" />
       </div>
-      <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+      <div className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
         {count}
         <span className="text-primary-600">{stat.suffix}</span>
       </div>
-      <div className="text-gray-500 text-sm font-medium">{stat.label}</div>
+      <div className="text-gray-500 text-xs font-medium">{stat.label}</div>
     </div>
   );
 };

@@ -350,7 +350,7 @@ function ProductsContent() {
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-900">Products</span>
           </nav>
-          <h1 className="text-2xl md:text-5xl font-bold text-gray-900 tracking-tight">All Products</h1>
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">All Products</h1>
         </div>
       </section>
 
@@ -421,12 +421,11 @@ function ProductsContent() {
                       </SheetTrigger>
                       <SheetContent side="left" className="w-[300px] p-0 overflow-y-auto">
                         <div className="p-4 border-b">
-                          <h3 className="font-bold text-lg">Categories & Filters</h3>
+                          <h3 className="font-bold text-base">Categories & Filters</h3>
                         </div>
                         <div className="p-4 space-y-8">
                           <CategorySidebar categories={categoryTree} activeSlug={undefined} className="border-none shadow-none" />
                           <div className="space-y-6 px-2">
-                            <h3 className="font-bold text-gray-900 border-b border-gray-50 pb-2">Other Filters</h3>
                             <FilterSidebar
                               categories={categories}
                               brands={brands}

@@ -65,10 +65,10 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           transition={{ duration: 0.5 }}
           className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-3">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-3">
             What Our Customers Say
           </h2>
-          <p className="max-w-xl mx-auto text-gray-500 text-sm md:text-base">
+          <p className="max-w-xl mx-auto text-gray-500 text-xs md:text-sm">
             Trusted by contractors and homeowners across Nepal.
           </p>
         </motion.div>
@@ -116,7 +116,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                     </div>
 
                     {/* Content */}
-                    <p className="text-gray-600 leading-relaxed text-sm md:text-base flex-grow mb-6">
+                    <p className="text-gray-600 leading-relaxed text-xs md:text-sm flex-grow mb-6">
                       "{testimonial.reviewText}"
                     </p>
 
@@ -137,11 +137,11 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                         )}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900 text-sm">
+                        <h4 className="font-semibold text-gray-900 text-xs">
                           {testimonial.customerName}
                         </h4>
                         {testimonial.customerDesignation && (
-                          <p className="text-xs text-gray-400">
+                          <p className="text-[10px] text-gray-400">
                             {testimonial.customerDesignation}
                           </p>
                         )}
