@@ -27,6 +27,7 @@ export const productSchema = z.object({
       value: z.string(),
     })
   ).default([]),
+  shipping: z.array(z.string()).default([]),
   features: z.array(z.string()).default([]),
   tags: z.array(z.string()).default([]),
   isTopSelling: z.boolean().default(false),

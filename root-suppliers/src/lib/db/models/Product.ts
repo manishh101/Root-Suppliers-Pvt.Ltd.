@@ -25,6 +25,7 @@ export interface IProduct extends Document {
   sku?: string;
   unit?: string;
   features: string[];
+  shipping: string[];
   tags: string[];
   isFeatured: boolean;
   isTopSelling: boolean;
@@ -99,6 +100,7 @@ const ProductSchema = new Schema<IProduct>(
     },
     unit: String,
     features: [String],
+    shipping: [String],
     tags: [String],
     modelName: String,
     sku: {

@@ -69,6 +69,7 @@ export default function EditProductPage({
       discountPrice: 0,
       stock: 0,
       specifications: [],
+      shipping: [],
       features: [],
       tags: [],
       isActive: true,
@@ -91,11 +92,13 @@ export default function EditProductPage({
 
   const watchedName = watch("name");
   const watchedSlug = watch("slug");
-  const watchedFeatures = watch("features");
-  const watchedTags = watch("tags");
+  const watchedFeatures = watch("features") || [];
+  const watchedShipping = watch("shipping") || [];
+  const watchedTags = watch("tags") || [];
   const watchedImages = watch("images") || [];
 
   const [featureInput, setFeatureInput] = useState("");
+  const [shippingInput, setShippingInput] = useState("");
   const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
@@ -139,6 +142,7 @@ export default function EditProductPage({
           sku: product.sku || "",
           stock: product.stock || 0,
           specifications: specs,
+          shipping: product.shipping || [],
           features: product.features || [],
           tags: product.tags || [],
           isFeatured: product.isFeatured || false,
@@ -247,6 +251,17 @@ export default function EditProductPage({
 
   const removeFeature = (index: number) => {
     setValue("features", watchedFeatures.filter((_, i) => i !== index));
+  };
+
+  const addShipping = () => {
+    if (shippingInput.trim()) {
+      setValue("shipping", [...watchedShipping, shippingInput.trim()]);
+      setShippingInput("");
+    }
+  };
+
+  const removeShipping = (index: number) => {
+    setValue("shipping", watchedShipping.filter((_, i) => i !== index));
   };
 
   const addTag = () => {
@@ -437,6 +452,22 @@ export default function EditProductPage({
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">Shipping Information</h2>
+              <div className="flex items-center gap-2">
+                <input type="text" value={shippingInput} onChange={(e) => setShippingInput(e.target.value)} onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addShipping())} placeholder="Add a shipping detail" className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red" />
+                <button type="button" onClick={addShipping} className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"><Plus className="w-5 h-5" /></button>
+              </div>
+              <ul className="space-y-2 max-h-48 overflow-y-auto">
+                {watchedShipping.map((detail, index) => (
+                  <li key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg text-sm">
+                    <span className="text-gray-700">{detail}</span>
+                    <button type="button" onClick={() => removeShipping(index)} className="text-gray-400 hover:text-red-500"><X className="w-4 h-4" /></button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
 

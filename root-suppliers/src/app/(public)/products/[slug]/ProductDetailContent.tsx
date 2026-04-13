@@ -38,6 +38,7 @@ interface Product {
   description: string;
   specifications?: Array<{ key: string; value: string }>;
   features?: string[];
+  shipping?: string[];
   tags?: string[];
   price: number;
   discountPrice?: number;
@@ -642,35 +643,53 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                   Shipping Information
                 </h3>
                 <div className="space-y-4 text-gray-600">
-                  <p>
-                    We offer reliable shipping across Biratnagar and the
-                    surrounding region.
-                  </p>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>Free delivery within Biratnagar city limits</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>
-                        Delivery to nearby districts at nominal charges
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>
-                        Same-day dispatch for orders placed before 2 PM
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span>
-                        Bulk orders may qualify for special delivery
-                        arrangements
-                      </span>
-                    </li>
-                  </ul>
+                  {product.shipping && product.shipping.length > 0 ? (
+                    <>
+                      <p>
+                        Shipping and delivery information for this product:
+                      </p>
+                      <ul className="space-y-2">
+                        {product.shipping.map((detail, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span>{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        We offer reliable shipping across Biratnagar and the
+                        surrounding region.
+                      </p>
+                      <ul className="space-y-2">
+                        <li className="flex items-start gap-2">
+                          <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Free delivery within Biratnagar city limits</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>
+                            Delivery to nearby districts at nominal charges
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>
+                            Same-day dispatch for orders placed before 2 PM
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>
+                            Bulk orders may qualify for special delivery
+                            arrangements
+                          </span>
+                        </li>
+                      </ul>
+                    </>
+                  )}
                   <p className="text-sm text-gray-500 pt-2">
                     For specific delivery inquiries, please contact us directly.
                   </p>
