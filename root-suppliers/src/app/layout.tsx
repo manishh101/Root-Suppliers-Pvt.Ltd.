@@ -28,9 +28,7 @@ async function getSettings() {
   await connectDB();
   const settings = await Settings.findOne().lean();
   if (settings) {
-    // Convert _id to string to avoid serialization issues
-    // and cast to any to match SafeSettings expectation (ignoring Mongoose Document methods)
-    return { ...settings, _id: settings._id.toString() } as any;
+    return JSON.parse(JSON.stringify(settings));
   }
   return null;
 }

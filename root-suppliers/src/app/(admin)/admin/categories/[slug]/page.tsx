@@ -359,29 +359,6 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO Metadata</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                  <input
-                    type="text"
-                    {...register("metaTitle")}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red"
-                    placeholder="SEO title"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                  <textarea
-                    {...register("metaDescription")}
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none"
-                    placeholder="SEO description"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="space-y-6">
@@ -396,20 +373,6 @@ export default function EditCategoryPage({ params }: { params: { slug: string } 
                   <input type="checkbox" {...register("isFeatured")} className="w-4 h-4 text-cardinal-red rounded border-gray-300 focus:ring-cardinal-red" />
                   <span className="text-sm text-gray-700">Featured</span>
                 </label>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Display Order</h2>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Order</label>
-                <input
-                  type="number"
-                  {...register("order", { valueAsNumber: true })}
-                  min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                />
-                <p className="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
               </div>
             </div>
 

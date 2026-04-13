@@ -257,17 +257,6 @@ export default function NewCategoryPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">SEO Settings</h2>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                <input type="text" {...register("metaTitle")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SEO title" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                <textarea {...register("metaDescription")} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none" placeholder="SEO description" />
-              </div>
-            </div>
           </div>
 
           <div className="space-y-6">
@@ -282,10 +271,6 @@ export default function NewCategoryPage() {
                   <input type="checkbox" {...register("isFeatured")} className="w-5 h-5 rounded border-gray-300 text-cardinal-red focus:ring-cardinal-red" />
                   <span className="text-gray-700">Featured</span>
                 </label>
-              </div>
-              <div className="pt-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Order Index</label>
-                <input type="number" {...register("order", { valueAsNumber: true })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
               </div>
 
               {Object.keys(errors).length > 0 && (

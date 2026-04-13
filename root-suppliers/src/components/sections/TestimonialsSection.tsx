@@ -5,7 +5,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { FALLBACK_TESTIMONIALS } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Testimonial {
@@ -185,12 +184,9 @@ export const TestimonialsSectionStatic: React.FC = () => {
         const data = await res.json();
         if (data.success && data.testimonials.length > 0) {
           setTestimonials(data.testimonials);
-        } else {
-          setTestimonials(FALLBACK_TESTIMONIALS);
         }
       } catch (error) {
         console.error("Failed to fetch testimonials:", error);
-        setTestimonials(FALLBACK_TESTIMONIALS);
       } finally {
         setLoading(false);
       }
@@ -203,6 +199,8 @@ export const TestimonialsSectionStatic: React.FC = () => {
     // Show a skeleton or loading state to prevent layout shift
     return <div className="py-24 bg-gray-50 h-[600px] animate-pulse"></div>;
   }
+
+  if (testimonials.length === 0) return null;
 
   return <TestimonialsSection testimonials={testimonials} />;
 };

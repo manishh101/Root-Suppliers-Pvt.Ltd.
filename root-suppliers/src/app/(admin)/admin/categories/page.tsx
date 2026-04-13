@@ -15,6 +15,7 @@ import {
   ChevronRight,
   FolderOpen,
   Folder,
+  GripVertical,
 } from "lucide-react";
 
 interface Category {
@@ -40,6 +41,9 @@ function CategoryItem({
   onEdit,
   onDelete,
   onAddChild,
+  onDragStart,
+  onDrop,
+  parentId,
 }: {
   category: Category;
   level?: number;
@@ -48,6 +52,9 @@ function CategoryItem({
   onEdit: () => void;
   onDelete: () => void;
   onAddChild: () => void;
+  onDragStart: (e: React.DragEvent, id: string, parentId: string | null) => void;
+  onDrop: (e: React.DragEvent, id: string, parentId: string | null) => void;
+  parentId: string | null;
 }) {
   const hasChildren = category.children && category.children.length > 0;
 
@@ -55,11 +62,16 @@ function CategoryItem({
     <div className="select-none">
       {/* Category Row */}
       <div
-        className={`flex flex-col sm:flex-row sm:items-center gap-2 py-3 sm:py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors ${level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200'
+        draggable
+        onDragStart={(e) => onDragStart(e, category._id, parentId)}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => onDrop(e, category._id, parentId)}
+        className={`flex flex-col sm:flex-row sm:items-center gap-2 py-3 sm:py-2.5 px-3 hover:bg-gray-50 rounded-lg group transition-colors cursor-move ${level === 0 ? 'bg-white border shadow-sm mb-2' : 'border-l-2 border-gray-200'
           } ml-[calc(var(--level)*12px)] sm:ml-[calc(var(--level)*24px)]`}
         style={{ "--level": level } as React.CSSProperties}
       >
         <div className="flex items-center gap-2 w-full sm:w-auto">
+          <GripVertical className="w-4 h-4 text-gray-300 flex-shrink-0 cursor-move" />
           {/* Expand/Collapse Button */}
           <button
             onClick={onToggle}
@@ -151,6 +163,9 @@ function CategoryItem({
               key={child._id}
               category={child}
               level={level + 1}
+              onDragStart={onDragStart}
+              onDrop={onDrop}
+              parentId={category._id}
             />
           ))}
         </div>
@@ -162,13 +177,19 @@ function CategoryItem({
 // Wrapper to handle state for each category item
 function CategoryItemWrapper({
   category,
-  level = 0
+  level = 0,
+  onDragStart,
+  onDrop,
+  parentId = null,
 }: {
   category: Category;
   level?: number;
+  onDragStart: (e: React.DragEvent, id: string, parentId: string | null) => void;
+  onDrop: (e: React.DragEvent, id: string, parentId: string | null) => void;
+  parentId?: string | null;
 }) {
   const router = useRouter();
-  const [expanded, setExpanded] = useState(level === 0); // Auto-expand main categories
+  const [expanded, setExpanded] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -202,6 +223,9 @@ function CategoryItemWrapper({
         onEdit={() => router.push(`/admin/categories/${category.slug}`)}
         onDelete={() => setDeleteConfirm(true)}
         onAddChild={() => router.push(`/admin/categories/new?parent=${category._id}`)}
+        onDragStart={onDragStart}
+        onDrop={onDrop}
+        parentId={parentId}
       />
 
       {/* Delete Confirmation Modal */}
@@ -306,6 +330,80 @@ export default function CategoriesPage() {
     return cats.map(filterRecursive).filter(Boolean) as Category[];
   };
 
+  // DND Handlers
+  const handleDragStart = (e: React.DragEvent, id: string, parentId: string | null) => {
+    e.dataTransfer.setData("categoryId", id);
+    e.dataTransfer.setData("parentId", parentId || "root");
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetId: string, targetParentId: string | null) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("categoryId");
+    const sourceParentId = e.dataTransfer.getData("parentId");
+    const targetParent = targetParentId || "root";
+
+    if (!draggedId || draggedId === targetId || sourceParentId !== targetParent) return;
+
+    const findSiblings = (cats: Category[], parent: string): Category[] | null => {
+      if (parent === "root") return cats;
+      for (const cat of cats) {
+        if (cat._id === parent) return cat.children || [];
+        if (cat.children) {
+          const found = findSiblings(cat.children, parent);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const siblings = findSiblings(categories, targetParent);
+    if (!siblings) return;
+
+    const sourceCat = siblings.find(c => c._id === draggedId);
+    if (!sourceCat) return;
+
+    const newSiblings = [...siblings.filter(c => c._id !== draggedId)];
+    const targetIndex = newSiblings.findIndex(c => c._id === targetId);
+    
+    newSiblings.splice(targetIndex, 0, sourceCat);
+
+    newSiblings.forEach((child, index) => {
+      child.order = index;
+    });
+
+    const rebuildTree = (cats: Category[]): Category[] => {
+      if (targetParent === "root") {
+        return newSiblings.map(ns => {
+          const existing = cats.find(c => c._id === ns._id);
+          return { ...existing, order: ns.order } as Category;
+        });
+      }
+      return cats.map(cat => {
+        if (cat._id === targetParent) {
+          return { ...cat, children: newSiblings };
+        }
+        if (cat.children) {
+          return { ...cat, children: rebuildTree(cat.children) };
+        }
+        return cat;
+      });
+    };
+    
+    setCategories(rebuildTree(categories));
+
+    try {
+      await Promise.all(
+        newSiblings.map((c) => fetch(`/api/categories/${c.slug}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order: c.order })
+        }))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Fetch categories
   const fetchCategories = useCallback(async () => {
     setIsLoading(true);
@@ -404,6 +502,8 @@ export default function CategoriesPage() {
                 key={category._id}
                 category={category}
                 level={0}
+                onDragStart={handleDragStart}
+                onDrop={handleDrop}
               />
             ))}
           </div>
