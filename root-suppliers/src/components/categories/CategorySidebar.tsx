@@ -75,7 +75,7 @@ const CategoryItem = ({
           className="flex-1 flex items-center gap-2.5 min-w-0 py-0.5"
         >
           <span className={cn(
-            "text-base font-medium truncate transition-colors",
+            "text-sm font-medium truncate transition-colors",
             isActive ? "text-primary-700" : "text-gray-700 group-hover:text-gray-900"
           )}>
             {category.name}
@@ -148,7 +148,7 @@ export function CategorySidebar({ categories, activeSlug, className, onLinkClick
   return (
     <div className={cn("bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 shadow-sm overflow-hidden", className)}>
       <div className="p-4 border-b border-gray-100/50 bg-gradient-to-b from-gray-50/50 to-transparent">
-        <h3 className="font-bold text-gray-900 text-base capitalize">
+        <h3 className="font-bold text-gray-900 text-sm capitalize">
           Categories
         </h3>
       </div>
@@ -173,7 +173,7 @@ export function CategorySidebar({ categories, activeSlug, className, onLinkClick
               animate={{ opacity: 1, x: 0 }}
             />
           )}
-          <span className="text-base font-medium">All Categories</span>
+          <span className="text-sm font-medium">All Categories</span>
         </Link>
 
         <div className="space-y-0.5">

@@ -350,7 +350,7 @@ function ProductsContent() {
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-900">Products</span>
           </nav>
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">All Products</h1>
+          <h1 className="text-2xl md:text-5xl font-bold text-gray-900 tracking-tight">All Products</h1>
         </div>
       </section>
 
