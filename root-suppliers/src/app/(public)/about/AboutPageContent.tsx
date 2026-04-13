@@ -222,11 +222,11 @@ export default function AboutPageContent() {
                 <span className="text-sm font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
               </div>
 
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6">
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">Root Suppliers</span>
               </h1>
               <div className="h-1.5 w-24 md:w-32 bg-gradient-to-r from-primary-600 to-primary-400 mx-auto rounded-full" />
-              <p className="text-gray-500 mt-4 md:mt-6 text-sm md:text-base font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
+              <p className="text-gray-500 mt-4 md:mt-6 text-xs md:text-sm font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
                 Building the future of Eastern Nepal, one project at a time.
                 <span className="text-primary-600 font-semibold"> All your construction solutions under one roof.</span>
               </p>

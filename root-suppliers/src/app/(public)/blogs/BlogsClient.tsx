@@ -84,8 +84,8 @@ export default function BlogsClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-                LATEST <span className="text-primary-600 block sm:inline">INSIGHTS</span>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                LATEST <span className="text-primary-600 inline">INSIGHTS</span>
               </h1>
               <div className="h-1.5 w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />
               <p className="text-gray-500 mt-4 md:mt-6 text-sm md:text-base font-medium max-w-lg leading-relaxed">
@@ -150,13 +150,13 @@ export default function BlogsClient() {
                             </div>
                           )}
 
-                          <h2 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors leading-tight">
+                          <h2 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors leading-tight">
                             <Link href={`/blogs/${post.slug}`}>
                               {post.title}
                             </Link>
                           </h2>
 
-                          <p className="text-gray-600 mb-6 line-clamp-2 md:line-clamp-3 leading-relaxed">
+                          <p className="text-sm text-gray-600 mb-6 line-clamp-2 md:line-clamp-3 leading-relaxed">
                             {post.excerpt}
                           </p>
 

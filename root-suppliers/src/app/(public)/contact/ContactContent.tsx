@@ -76,11 +76,11 @@ export default function ContactContent({ settings }: { settings: any }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-                CONTACT <span className="text-primary-600 block sm:inline">ROOT SUPPLIERS</span>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                CONTACT <span className="text-primary-600 inline">ROOT SUPPLIERS</span>
               </h1>
               <div className="h-1.5 w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />
-              <p className="text-gray-500 mt-4 md:mt-6 text-sm md:text-base font-medium max-w-lg leading-relaxed">
+              <p className="text-gray-500 mt-4 md:mt-6 text-xs md:text-sm font-medium max-w-lg leading-relaxed">
                 Have questions? Need a quote? We're here to help you build your next project with confidence.
               </p>
             </motion.div>

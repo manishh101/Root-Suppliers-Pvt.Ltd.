@@ -72,13 +72,13 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
 
         {/* Title */}
         <Link href={`/blog/${blog.slug}`}>
-          <h3 className="font-bold text-xl text-gray-900 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-bold text-lg text-gray-900 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors">
             {blog.title}
           </h3>
         </Link>
 
         {/* Excerpt */}
-        <p className="text-gray-600 mb-4 line-clamp-3 flex-1">
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
           {blog.excerpt}
         </p>
 
