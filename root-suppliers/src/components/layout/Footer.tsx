@@ -16,6 +16,7 @@ import {
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { PLACEHOLDER_IMAGES } from "@/lib/cloudinary";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useEffect, useState } from "react";
 
 const quickLinks = [
 
@@ -26,19 +27,31 @@ const quickLinks = [
   { label: "About Us", href: "/about" },
 ];
 
-const productCategories = [
-  { label: "Paints & Coatings", href: "/categories/paints-and-coatings" },
-  { label: "Tools & Hardware", href: "/categories/tools-and-hardware" },
-  { label: "Plumbing Supplies", href: "/categories/plumbing-supplies" },
-  { label: "Electrical Items", href: "/categories/electrical-items" },
-  { label: "Construction Materials", href: "/categories/construction-materials" },
-];
+// Dynamic categories will be fetched instead of hardcoded
 
 import { formatBusinessHours } from "@/lib/formatBusinessHours";
 
 export const Footer = () => {
   const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
+  const [categories, setCategories] = useState<{name: string; slug: string}[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories?limit=5&isActive=true");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.categories) {
+            setCategories(data.categories.slice(0, 5));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch footer categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Get social links from settings
   const socialLinks = [
@@ -103,7 +116,7 @@ export const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors font-secondary capitalize tracking-wider"
+                    className="text-secondary-200 hover:text-white text-[11px] md:text-xs transition-colors !font-secondary uppercase tracking-widest"
                   >
                     {link.label}
                   </Link>
@@ -118,13 +131,13 @@ export const Footer = () => {
               Categories
             </h4>
             <ul className="space-y-2.5">
-              {productCategories.map((link) => (
-                <li key={link.href}>
+              {categories.map((cat) => (
+                <li key={cat.slug}>
                   <Link
-                    href={link.href}
-                    className="text-secondary-200 hover:text-white text-sm transition-colors font-secondary capitalize tracking-wider"
+                    href={`/categories/${cat.slug}`}
+                    className="text-secondary-200 hover:text-white text-[11px] md:text-xs transition-colors !font-secondary uppercase tracking-widest"
                   >
-                    {link.label}
+                    {cat.name}
                   </Link>
                 </li>
               ))}
