@@ -308,8 +308,12 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 bg-white z-[60] overflow-y-auto hide-scrollbar">
           <div className="container-main py-4 space-y-6">
-            {/* Close Button */}
-            <div className="flex justify-end">
+            {/* Company Name & Close Button */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-bold text-gray-900 leading-tight">{settings?.site?.name || 'Root Suppliers'}</h2>
+                <p className="text-xs text-primary-600 font-medium">Pvt. Ltd.</p>
+              </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-3 rounded-lg hover:bg-gray-100 transition-colors"
