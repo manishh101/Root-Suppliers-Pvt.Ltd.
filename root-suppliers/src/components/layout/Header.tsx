@@ -446,13 +446,13 @@ export default function Header() {
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium">Home</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider">Home</span>
           </Link>
           <Link href="/products" className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${pathname?.startsWith('/products') ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${pathname?.startsWith('/products') ? 'bg-primary-50' : ''}`}>
               <Package className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-medium">Products</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider">Products</span>
           </Link>
           <button onClick={() => setMobileCategoryOpen(true)} className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${mobileCategoryOpen ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${mobileCategoryOpen ? 'bg-primary-50' : ''}`}>
@@ -463,13 +463,13 @@ export default function Header() {
                 <rect width="7" height="7" x="3" y="14" rx="1" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium">Categories</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider">Categories</span>
           </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${mobileMenuOpen ? 'text-primary-600' : 'text-gray-500'}`}>
             <div className={`p-1 rounded-full ${mobileMenuOpen ? 'bg-primary-50' : ''}`}>
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </div>
-            <span className="text-[11px] font-medium">Menu</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider">Menu</span>
           </button>
         </div>
       </div>
