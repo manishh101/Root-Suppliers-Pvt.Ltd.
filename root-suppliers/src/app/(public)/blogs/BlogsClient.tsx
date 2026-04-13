@@ -84,11 +84,11 @@ export default function BlogsClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
                 LATEST <span className="text-primary-600 block sm:inline">INSIGHTS</span>
               </h1>
-              <div className="h-1.5 w-24 bg-primary-600 mt-6 rounded-full mx-auto md:mx-0" />
-              <p className="text-gray-500 mt-6 text-lg font-medium max-w-lg leading-relaxed">
+              <div className="h-1.5 w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />
+              <p className="text-gray-500 mt-4 md:mt-6 text-sm md:text-base font-medium max-w-lg leading-relaxed">
                 Expert advice, industry news, and tips to help you build better. All your construction knowledge under one roof.
               </p>
             </motion.div>

@@ -197,7 +197,7 @@ export default function AboutPageContent() {
 
   const galleryImages = settings?.homepage?.about?.gallery || [];
 
-  const displayTestimonials = testimonials.length > 0 ? testimonials : FALLBACK_TESTIMONIALS;
+
 
   return (
     <div className="bg-white">
@@ -218,15 +218,15 @@ export default function AboutPageContent() {
             >
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-primary-100 shadow-sm mb-6">
-                <Sparkles className="w-4 h-4 text-primary-500" />
+                {/* <Sparkles className="w-4 h-4 text-primary-500" /> */}
                 <span className="text-sm font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6">
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">Root Suppliers</span>
               </h1>
               <div className="h-1.5 w-24 md:w-32 bg-gradient-to-r from-primary-600 to-primary-400 mx-auto rounded-full" />
-              <p className="text-gray-500 mt-6 md:mt-8 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
+              <p className="text-gray-500 mt-4 md:mt-6 text-sm md:text-base font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
                 Building the future of Eastern Nepal, one project at a time.
                 <span className="text-primary-600 font-semibold"> All your construction solutions under one roof.</span>
               </p>
@@ -265,9 +265,9 @@ export default function AboutPageContent() {
                   className="absolute -bottom-6 -right-6 md:bottom-8 md:-right-8 bg-white p-5 md:p-6 rounded-2xl shadow-xl border border-gray-100"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                    {/* <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
                       <Building2 className="w-7 h-7 text-white" />
-                    </div>
+                    </div> */}
                     <div>
                       <p className="text-xs font-bold text-gray-400 uppercase tracking-wider font-secondary">Established</p>
                       <p className="text-3xl font-extrabold text-gray-900">{settings?.site?.establishedYear || "2010"}</p>
@@ -357,9 +357,9 @@ export default function AboutPageContent() {
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-primary-50 to-transparent rounded-bl-full -mr-10 -mt-10" />
 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform">
+                  {/* <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform">
                     <Target className="w-8 h-8 text-white" />
-                  </div>
+                  </div> */}
                   <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{missionTitle}</h3>
                   <p className="text-gray-600 leading-relaxed text-base md:text-lg font-secondary">
                     {missionContent}
@@ -383,9 +383,9 @@ export default function AboutPageContent() {
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-50 to-transparent rounded-bl-full -mr-10 -mt-10" />
 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform">
+                  {/* <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform">
                     <Eye className="w-8 h-8 text-white" />
-                  </div>
+                  </div> */}
                   <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{visionTitle}</h3>
                   <p className="text-gray-600 leading-relaxed text-base md:text-lg font-secondary">
                     {visionContent}
@@ -462,7 +462,7 @@ export default function AboutPageContent() {
             >
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-sm mb-4 font-secondary">
-                  📸 Our Gallery
+                  Our Gallery
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>
@@ -537,7 +537,7 @@ export default function AboutPageContent() {
 
       {/* Testimonials Section - Enhanced */}
       <div className="py-16 md:py-20 bg-gradient-to-b from-white to-gray-50">
-        <TestimonialsSection testimonials={displayTestimonials} />
+        {testimonials.length > 0 && <TestimonialsSection testimonials={testimonials} />}
 
         {/* Call to Action Buttons - Enhanced */}
         <motion.div

@@ -531,12 +531,12 @@ function ProductsContent() {
               {/* Results Count and View Controls */}
               <div className="flex items-center justify-between mb-6 px-1">
                 <p className="text-sm text-gray-500 font-medium">
-                  Showing <span className="text-gray-900">{(currentPage - 1) * productsPerPage + 1}-{Math.min(currentPage * productsPerPage, totalProducts)}</span> of <span className="text-gray-900">{totalProducts}</span> products
+                  Showing <span className="text-gray-900">{totalProducts > 0 ? 1 : 0}-{products.length}</span> of <span className="text-gray-900">{totalProducts}</span> products
                 </p>
               </div>
 
               {/* Products Grid/List */}
-              {loading ? (
+              {loading && products.length === 0 ? (
                 <div className="flex items-center justify-center py-20">
                   <Loader2 className="h-8 w-8 text-primary-600 animate-spin" />
                 </div>
@@ -577,9 +577,9 @@ function ProductsContent() {
               )}
 
               {/* Infinite Scroll Trigger */}
-              {hasMore && !loading && products.length > 0 && (
-                <div ref={loadMoreRef} className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 text-primary-600 animate-spin" />
+              {hasMore && products.length > 0 && (
+                <div ref={loadMoreRef} className="flex justify-center py-8 h-20">
+                  {loading && <Loader2 className="h-6 w-6 text-primary-600 animate-spin" />}
                 </div>
               )}
 

@@ -20,6 +20,7 @@ import {
   Plus,
   Loader2,
   Mail,
+  Maximize2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -73,9 +74,35 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isZooming, setIsZooming] = useState(false);
+  const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({
+    transform: "scale(1)",
+    transformOrigin: "center center"
+  });
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<any>(null);
   const { showToast } = useToast();
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+
+    setZoomStyle({
+      transformOrigin: `${x}% ${y}%`,
+      transform: "scale(2.5)",
+    });
+  };
+
+  const handleMouseEnter = () => setIsZooming(true);
+  const handleMouseLeave = () => {
+    setIsZooming(false);
+    setZoomStyle({
+      transformOrigin: "center center",
+      transform: "scale(1)",
+    });
+  };
 
   // Fetch settings for WhatsApp and phone number
   useEffect(() => {
@@ -265,15 +292,26 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
             {/* Image Gallery */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden">
-                <CloudinaryImage
-                  src={images[currentImageIndex].url || PLACEHOLDER_IMAGES.PRODUCT}
-                  publicId={images[currentImageIndex].publicId}
-                  alt={images[currentImageIndex].alt || product.name}
-                  fill
-                  className="object-contain p-4 mix-blend-multiply"
-                  priority
-                />
+              <div 
+                className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden group cursor-zoom-in"
+                onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => setIsFullScreen(true)}
+              >
+                <div
+                  className="absolute inset-0 transition-transform duration-100 ease-out z-10"
+                  style={isZooming ? zoomStyle : { transform: "scale(1)", transformOrigin: "center center" }}
+                >
+                  <CloudinaryImage
+                    src={images[currentImageIndex].url || PLACEHOLDER_IMAGES.PRODUCT}
+                    publicId={images[currentImageIndex].publicId}
+                    alt={images[currentImageIndex].alt || product.name}
+                    fill
+                    className={`object-contain p-4 mix-blend-multiply transition-opacity ${isZooming ? 'opacity-100' : 'opacity-100'}`}
+                    priority
+                  />
+                </div>
 
                 {/* Navigation Arrows */}
                 {images.length > 1 && (
@@ -294,7 +332,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                 )}
 
                 {/* Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                <div className="absolute top-4 left-4 flex flex-col gap-2 z-20 pointer-events-none">
                   {product.isNew && (
                     <Badge className="bg-primary-600 text-white">New</Badge>
                   )}
@@ -305,12 +343,27 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                   )}
                 </div>
 
+                {/* Expand Image Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsFullScreen(true);
+                  }}
+                  className="absolute top-4 right-16 z-20 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors opacity-0 group-hover:opacity-100"
+                  title="View Fullscreen"
+                >
+                  <Maximize2 className="h-5 w-5 text-gray-700" />
+                </button>
+
                 {/* Share Button */}
                 <button
-                  onClick={handleShare}
-                  className="absolute top-4 right-4 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare();
+                  }}
+                  className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors"
                 >
-                  <Share2 className="h-5 w-5 text-gray-600" />
+                  <Share2 className="h-5 w-5 text-gray-700" />
                 </button>
               </div>
 
@@ -668,6 +721,82 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
           images: images,
         }}
       />
+
+      {/* Fullscreen Image Modal */}
+      {isFullScreen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
+          {/* Close button */}
+          <button
+            onClick={() => setIsFullScreen(false)}
+            className="absolute top-6 right-6 z-[60] w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors border border-white/20"
+          >
+            <div className="w-5 h-5 relative">
+              <span className="absolute top-1/2 left-0 w-5 h-0.5 bg-white transform -translate-y-1/2 rotate-45" />
+              <span className="absolute top-1/2 left-0 w-5 h-0.5 bg-white transform -translate-y-1/2 -rotate-45" />
+            </div>
+          </button>
+
+          {/* Nav Buttons */}
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevImage();
+                }}
+                className="absolute left-6 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors border border-white/20 text-white"
+              >
+                <ChevronLeft className="h-8 w-8 ml-[-2px]" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextImage();
+                }}
+                className="absolute right-6 top-1/2 -translate-y-1/2 z-[60] w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors border border-white/20 text-white"
+              >
+                <ChevronRight className="h-8 w-8 mr-[-2px]" />
+              </button>
+            </>
+          )}
+
+          {/* Main Content */}
+          <div className="relative w-[90vw] h-[90vh] flex items-center justify-center" onClick={() => setIsFullScreen(false)}>
+            <div className="relative w-full h-full" onClick={(e) => e.stopPropagation()}>
+              <CloudinaryImage
+                src={images[currentImageIndex].url || PLACEHOLDER_IMAGES.PRODUCT}
+                publicId={images[currentImageIndex].publicId}
+                alt={images[currentImageIndex].alt || product.name}
+                fill
+                className="object-contain"
+                priority
+                sizes="100vw"
+              />
+            </div>
+            
+            {/* Slide Indicators for Fullscreen */}
+            {images.length > 1 && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3 bg-black/40 px-4 py-2 rounded-full backdrop-blur-md">
+                {images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentImageIndex(idx);
+                    }}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      idx === currentImageIndex 
+                        ? 'bg-white scale-125' 
+                        : 'bg-white/40 hover:bg-white/60'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

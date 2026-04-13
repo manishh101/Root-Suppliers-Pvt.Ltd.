@@ -100,17 +100,24 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
       throw new NotFoundError("Category not found");
     }
 
-    const productCount = await Product.countDocuments({ category: category._id });
-    if (productCount > 0) {
-      throw new ValidationError(`Cannot delete category. It has ${productCount} products.`);
+    // Iteratively find all subcategories to delete
+    const categoryIdsToDelete = [category._id];
+    let currentIds = [category._id];
+
+    while (currentIds.length > 0) {
+      const children = await Category.find({ parent: { $in: currentIds } }).select('_id');
+      const childIds = children.map(c => c._id);
+      if (childIds.length > 0) {
+        categoryIdsToDelete.push(...childIds);
+      }
+      currentIds = childIds;
     }
 
-    const childrenCount = await Category.countDocuments({ parent: category._id });
-    if (childrenCount > 0) {
-      throw new ValidationError(`Cannot delete category. It has ${childrenCount} subcategories.`);
-    }
+    // Delete all products associated with these categories
+    await Product.deleteMany({ category: { $in: categoryIdsToDelete } });
 
-    await Category.findByIdAndDelete(category._id);
+    // Delete all the collected categories
+    await Category.deleteMany({ _id: { $in: categoryIdsToDelete } });
 
     // Revalidate all pages that display categories
     revalidatePath("/", "layout");
