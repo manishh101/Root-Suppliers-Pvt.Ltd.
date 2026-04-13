@@ -76,7 +76,7 @@ export default function ContactContent({ settings }: { settings: any }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-tight uppercase">
                 CONTACT <span className="text-primary-600 inline">ROOT SUPPLIERS</span>
               </h1>
               <div className="h-1.5 w-24 bg-primary-600 mt-4 md:mt-6 rounded-full mx-auto md:mx-0" />

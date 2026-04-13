@@ -137,7 +137,7 @@ function FilterSidebar({
 
       {/* Brands */}
       <div>
-        <h4 className="font-bold text-gray-900 mb-4 flex items-center justify-between">
+        <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center justify-between uppercase tracking-wider">
           Brands
           <span className="text-[10px] text-gray-400 font-normal capitalize tracking-wider">{brands.length} Available</span>
         </h4>
@@ -350,7 +350,7 @@ function ProductsContent() {
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-900">Products</span>
           </nav>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">All Products</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight uppercase">All Products</h1>
         </div>
       </section>
 
@@ -363,7 +363,7 @@ function ProductsContent() {
               <div className="space-y-6">
                 <CategorySidebar categories={categoryTree} activeSlug={undefined} />
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
-                  <h3 className="font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-50">
+                  <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 pb-4 border-b border-gray-50 uppercase tracking-wider">
                     <SlidersHorizontal className="h-5 w-5 text-primary-600" />
                     Filters
                   </h3>

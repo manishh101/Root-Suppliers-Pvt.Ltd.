@@ -222,7 +222,7 @@ export default function AboutPageContent() {
                 <span className="text-xs font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
               </div>
 
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6 uppercase">
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">Root Suppliers</span>
               </h1>
               <div className="h-1.5 w-24 md:w-32 bg-gradient-to-r from-primary-600 to-primary-400 mx-auto rounded-full" />
