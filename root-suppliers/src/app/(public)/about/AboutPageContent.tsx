@@ -219,7 +219,7 @@ export default function AboutPageContent() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-primary-100 shadow-sm mb-6">
                 {/* <Sparkles className="w-4 h-4 text-primary-500" /> */}
-                <span className="text-sm font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
+                <span className="text-xs font-semibold text-gray-700 font-secondary">Since {settings?.site?.establishedYear || "2010"}</span>
               </div>
 
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6">
@@ -269,8 +269,8 @@ export default function AboutPageContent() {
                       <Building2 className="w-7 h-7 text-white" />
                     </div> */}
                     <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider font-secondary">Established</p>
-                      <p className="text-3xl font-extrabold text-gray-900">{settings?.site?.establishedYear || "2010"}</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider font-secondary">Established</p>
+                      <p className="text-2xl font-extrabold text-gray-900">{settings?.site?.establishedYear || "2010"}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -289,14 +289,14 @@ export default function AboutPageContent() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-7"
             >
-              <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 font-bold text-xs uppercase tracking-wider mb-6">
+              <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 font-bold text-[10px] uppercase tracking-wider mb-6">
                 {/* <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" /> */}
                 Our Story
               </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 leading-tight">
                 {storyTitle}
               </h2>
-              <div className="space-y-5 text-gray-600 text-base md:text-lg leading-relaxed font-secondary" dangerouslySetInnerHTML={{ __html: storyContent }} />
+              <div className="space-y-5 text-gray-600 text-sm md:text-base leading-relaxed font-secondary" dangerouslySetInnerHTML={{ __html: storyContent }} />
 
               {/* Key Points */}
               <div className="mt-8 grid grid-cols-2 gap-4">
@@ -310,7 +310,7 @@ export default function AboutPageContent() {
                     <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
                       <CheckCircle2 className="w-4 h-4 text-green-600" />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 font-secondary">{point}</span>
+                    <span className="text-xs font-medium text-gray-700 font-secondary">{point}</span>
                   </div>
                 ))}
               </div>
@@ -331,14 +331,14 @@ export default function AboutPageContent() {
             viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full text-primary-600 font-semibold text-sm mb-6 font-secondary">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full text-primary-600 font-semibold text-xs mb-6 font-secondary">
               {/* <Target className="w-4 h-4" /> */}
               Our Purpose
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
               Driven by <span className="text-primary-600">Purpose</span>
             </h2>
-            <p className="text-gray-500 text-lg font-secondary">Our guiding principles that define every interaction and decision we make.</p>
+            <p className="text-gray-500 text-base font-secondary">Our guiding principles that define every interaction and decision we make.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto">
@@ -360,8 +360,8 @@ export default function AboutPageContent() {
                   {/* <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/25 group-hover:scale-110 transition-transform">
                     <Target className="w-8 h-8 text-white" />
                   </div> */}
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{missionTitle}</h3>
-                  <p className="text-gray-600 leading-relaxed text-base md:text-lg font-secondary">
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{missionTitle}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm md:text-base font-secondary">
                     {missionContent}
                   </p>
                 </div>
@@ -386,8 +386,8 @@ export default function AboutPageContent() {
                   {/* <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform">
                     <Eye className="w-8 h-8 text-white" />
                   </div> */}
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{visionTitle}</h3>
-                  <p className="text-gray-600 leading-relaxed text-base md:text-lg font-secondary">
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">{visionTitle}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm md:text-base font-secondary">
                     {visionContent}
                   </p>
                 </div>
@@ -412,12 +412,12 @@ export default function AboutPageContent() {
               className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6"
             >
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-sm mb-4 font-secondary">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-xs mb-4 font-secondary">
                   Our Gallery
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Inside Root Suppliers</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>
-              <p className="text-gray-500 max-w-md md:text-right font-secondary">
+              <p className="text-gray-500 max-w-md md:text-right text-sm md:text-base font-secondary">
                 A glimpse into our daily operations, vast inventory, and dedicated team working hard to serve you.
               </p>
             </motion.div>
@@ -461,12 +461,12 @@ export default function AboutPageContent() {
               className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6"
             >
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-sm mb-4 font-secondary">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-xs mb-4 font-secondary">
                   Our Gallery
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Inside Root Suppliers</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
               </div>
-              <p className="text-gray-500 max-w-md md:text-right font-secondary">
+              <p className="text-gray-500 max-w-md md:text-right text-sm md:text-base font-secondary">
                 A glimpse into our daily operations, vast inventory, and dedicated team.
               </p>
             </motion.div>
@@ -487,8 +487,8 @@ export default function AboutPageContent() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
                 <div className="absolute bottom-8 left-8 text-white">
-                  <p className="font-bold text-xl mb-1">Extensive Inventory</p>
-                  <p className="text-sm text-white/80 font-secondary">Everything you need, always in stock.</p>
+                  <p className="font-bold text-lg mb-1">Extensive Inventory</p>
+                  <p className="text-xs text-white/80 font-secondary">Everything you need, always in stock.</p>
                 </div>
               </motion.div>
 
@@ -577,10 +577,10 @@ export default function AboutPageContent() {
               className="flex flex-col md:flex-row items-center justify-between mb-12 md:mb-16 gap-6"
             >
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-gray-600 font-semibold text-sm mb-4 shadow-sm font-secondary">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-gray-600 font-semibold text-xs mb-4 shadow-sm font-secondary">
                   ✨ Featured
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                   Curated Selection
                 </h2>
               </div>
@@ -614,7 +614,7 @@ export default function AboutPageContent() {
               className="mt-16 text-center"
             >
               <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 max-w-2xl mx-auto">
-                <p className="text-gray-600 mb-6 text-lg font-secondary">
+                <p className="text-gray-600 mb-6 text-base font-secondary">
                   Can&apos;t find what you&apos;re looking for? We have thousands more items in store.
                 </p>
                 <Link
