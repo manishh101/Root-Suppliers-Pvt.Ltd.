@@ -21,10 +21,10 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
       <div className="container-main">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight mb-3">
             Visit Our Store
           </h2>
-          <p className="text-gray-500 max-w-lg mx-auto text-lg">
+          <p className="text-gray-500 max-w-lg mx-auto text-sm md:text-base">
             Find quality construction materials and hardware supplies in person.
           </p>
         </div>

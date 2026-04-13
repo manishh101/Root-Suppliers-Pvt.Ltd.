@@ -280,11 +280,11 @@ h6 {
   }
 
   .section-title {
-    @apply text-2xl md:text-5xl font-primary font-bold text-gray-900 text-center mb-6 tracking-tight;
+    @apply text-2xl md:text-4xl font-primary font-bold text-gray-900 text-center mb-4 tracking-tight;
   }
 
   .section-subtitle {
-    @apply text-sm md:text-xl text-gray-500 text-center max-w-2xl mx-auto mb-16 font-light;
+    @apply text-sm md:text-base text-gray-500 text-center max-w-2xl mx-auto mb-10 font-light;
   }
 
   /* Prose for Blog Content */

@@ -114,12 +114,12 @@ export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps
                       <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16">
                         <div className="max-w-2xl">
                           {slide.title && (
-                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight tracking-tight">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight tracking-tight">
                               {slide.title}
                             </h2>
                           )}
                           {slide.subtitle && (
-                            <p className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-lg">
+                            <p className="text-sm md:text-base text-white/90 mb-6 font-light max-w-lg">
                               {slide.subtitle}
                             </p>
                           )}

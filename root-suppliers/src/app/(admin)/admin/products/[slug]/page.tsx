@@ -439,19 +439,7 @@ export default function EditProductPage({
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO Metadata</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                  <input type="text" {...register("metaTitle")} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red" placeholder="SEO title" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                  <textarea {...register("metaDescription")} rows={3} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red resize-none" placeholder="SEO description" />
-                </div>
-              </div>
-            </div>
+
           </div>
 
           <div className="space-y-6">

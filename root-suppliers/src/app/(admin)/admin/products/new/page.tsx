@@ -312,17 +312,7 @@ export default function NewProductPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">SEO Settings</h2>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                <input type="text" {...register("metaTitle")} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SEO title" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                <textarea {...register("metaDescription")} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none" placeholder="SEO description" />
-              </div>
-            </div>
+
           </div>
 
           <div className="space-y-6">

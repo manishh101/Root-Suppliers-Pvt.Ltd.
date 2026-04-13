@@ -34,11 +34,11 @@ export const CTASection: React.FC = () => {
     >
       <div className="container-main relative z-10">
         <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight tracking-tight">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 leading-tight tracking-tight">
             Ready to Start Your Project?
           </h2>
 
-          <p className="text-white/70 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light">
+          <p className="text-white/70 text-sm md:text-base mb-10 max-w-xl mx-auto font-light">
             Explore our complete range of construction materials and hardware supplies.
           </p>
 
