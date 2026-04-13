@@ -74,10 +74,6 @@ export default function BlogClient({ blog }: BlogClientProps) {
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-gray-300 text-sm md:text-base">
               <div className="flex items-center gap-2 whitespace-nowrap">
-                <User className="w-4 h-4 flex-shrink-0" />
-                <span className="truncate max-w-[200px]">{getAuthorName()}</span>
-              </div>
-              <div className="flex items-center gap-2 whitespace-nowrap">
                 <Calendar className="w-4 h-4 flex-shrink-0" />
                 <span>{blog.publishedAt ? format(new Date(blog.publishedAt), "MMMM d, yyyy") : format(new Date(blog.createdAt), "MMMM d, yyyy")}</span>
               </div>

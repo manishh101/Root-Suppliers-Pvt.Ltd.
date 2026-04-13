@@ -162,12 +162,6 @@ export default function BlogsClient() {
 
                           {/* Meta Info */}
                           <div className="flex flex-wrap items-center gap-3 md:gap-6 text-sm text-gray-500 border-t border-gray-100 pt-6 mt-auto w-full pr-14 md:pr-0">
-                            <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                <User className="w-4 h-4 text-gray-600" />
-                              </div>
-                              <span className="font-medium text-gray-900 truncate">{post.author?.name || "Team"}</span>
-                            </div>
                             <div className="flex items-center gap-4">
                               <span className="flex items-center gap-1.5 whitespace-nowrap">
                                 <Calendar className="w-4 h-4 flex-shrink-0" />
