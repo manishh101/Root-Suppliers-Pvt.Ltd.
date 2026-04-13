@@ -124,7 +124,7 @@ export const AboutSection: React.FC = () => {
                     <item.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
                   </div>
                   
-                  {/* Title - Using secondary font instead of Bank Gothic */}
+                  {/* Title */ }
                   <h4 className="relative z-10 font-semibold text-gray-800 text-sm mb-2 font-secondary tracking-normal">
                     {item.title}
                   </h4>

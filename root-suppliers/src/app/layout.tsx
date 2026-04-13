@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
 import connectDB from "@/lib/db/connect";
@@ -7,19 +7,8 @@ import Settings from "@/lib/db/models/Settings";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { ToastProvider } from "@/components/ui/Toast";
 
-const bankGothic = localFont({
-  src: [
-    {
-      path: './fonts/bank-gothic.woff',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/bank-gothic.ttf',
-      weight: '500',
-      style: 'normal',
-    },
-  ],
+const montserrat = Montserrat({
+  subsets: ['latin'],
   variable: '--font-primary',
   display: 'swap',
 });
@@ -198,7 +187,7 @@ export default async function RootLayout({
         <OrganizationSchema settings={settings} />
         <LocalBusinessSchema settings={settings} />
       </head>
-      <body className={`antialiased ${bankGothic.variable}`}>
+      <body className={`antialiased ${montserrat.variable}`}>
         <SettingsProvider initialSettings={settings}>
           <ToastProvider>
             {children}

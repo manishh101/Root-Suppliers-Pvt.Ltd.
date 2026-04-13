@@ -226,7 +226,7 @@ export default function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-4 lg:px-6 py-2.5 text-sm font-bold text-gray-700 hover:text-primary-600 transition-colors duration-200"
+                    className="px-4 lg:px-6 py-2.5 text-sm font-medium uppercase tracking-wide text-gray-700 hover:text-primary-600 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -393,7 +393,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-[11px] md:text-xs uppercase tracking-widest !font-secondary font-bold text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all border-b border-gray-50 last:border-0"
+                  className="text-[11px] md:text-xs uppercase tracking-widest !font-secondary font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all border-b border-gray-50 last:border-0"
                 >
                   {link.label}
                 </Link>
