@@ -54,7 +54,7 @@ export const TopBrands: React.FC<TopBrandsProps> = ({ brands }) => {
       <div className="container-main">
         {/* Header */}
         <div className="text-center mb-10 md:mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight uppercase">
             Trusted Brands
           </h2>
         </div>

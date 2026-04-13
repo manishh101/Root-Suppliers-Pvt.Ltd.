@@ -61,7 +61,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight uppercase">
               Shop by Category
             </h2>
           </motion.div>

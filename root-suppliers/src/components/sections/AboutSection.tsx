@@ -74,7 +74,7 @@ export const AboutSection: React.FC = () => {
                 className="w-20 h-20 object-contain"
               />
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 capitalize tracking-wide">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-wide">
                   Who Are We?
                 </h2>
                 <div className="w-16 h-1 bg-primary-600 mt-2" />
@@ -104,7 +104,7 @@ export const AboutSection: React.FC = () => {
           {/* Why Choose Us - Right Side */}
           <div>
             <div className="text-center mb-8">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 capitalize tracking-wide">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-wide">
                 Why Choose Us?
               </h2>
               <div className="w-16 h-1 bg-primary-600 mx-auto mt-2" />
