@@ -34,27 +34,27 @@ export const CTASection: React.FC = () => {
     >
       <div className="container-main relative z-10">
         <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 leading-tight tracking-tight">
+          <h2 className="text-lg md:text-2xl font-bold text-white mb-6 leading-tight tracking-wider uppercase">
             Ready to Start Your Project?
           </h2>
 
-          <p className="text-white/70 text-sm md:text-base mb-10 max-w-xl mx-auto font-light">
+          <p className="text-white/70 text-xs md:text-sm mb-10 max-w-xl mx-auto font-light">
             Explore our complete range of construction materials and hardware supplies.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-colors duration-200"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-gray-900 font-bold text-[11px] md:text-xs uppercase tracking-widest !font-secondary rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
               Browse Products
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href={`tel:${settings?.contact?.primaryPhone || "9851235637"}`}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/30 text-white font-semibold rounded-full hover:bg-white/10 transition-colors duration-200"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-white/30 text-white font-bold text-[11px] md:text-xs uppercase tracking-widest !font-secondary rounded-full hover:bg-white/10 transition-colors duration-200"
             >
-              <Phone className="h-5 w-5" />
+              <Phone className="h-4 w-4" />
               Call Us
             </a>
           </div>

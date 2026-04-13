@@ -393,7 +393,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-sm font-bold text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all border-b border-gray-50 last:border-0"
+                  className="text-[11px] md:text-xs uppercase tracking-widest !font-secondary font-bold text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3.5 px-4 rounded-xl transition-all border-b border-gray-50 last:border-0"
                 >
                   {link.label}
                 </Link>
@@ -407,8 +407,8 @@ export default function Header() {
                   <Phone className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium whitespace-nowrap">Call Us Now</p>
-                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-base font-bold text-gray-900 tracking-wide whitespace-nowrap">{settings?.contact?.primaryPhone || '9851222637'}</a>
+                  <p className="text-[10px] md:text-xs text-gray-500 font-medium whitespace-nowrap">Call Us Now</p>
+                  <a href={`tel:${settings?.contact?.primaryPhone || '9851222637'}`} className="text-sm md:text-base font-bold text-gray-900 tracking-wide whitespace-nowrap !font-secondary">{settings?.contact?.primaryPhone || '9851222637'}</a>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
@@ -416,15 +416,15 @@ export default function Header() {
                   <MapPin className="h-5 w-5 text-red-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Visit Our Showroom</p>
-                  <span className="text-sm text-gray-700 font-bold">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
+                  <p className="text-[10px] md:text-xs text-gray-500 font-medium">Visit Our Showroom</p>
+                  <span className="text-xs md:text-sm text-gray-700 font-bold !font-secondary">{settings?.contact?.address || 'Pulchowk, Kharji Chowk'}</span>
                 </div>
               </div>
               <a
                 href={settings?.contact?.googleMapsLink || 'https://maps.app.goo.gl/jRWqSiE9fjLfv45r8'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center px-4 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-md active:scale-[0.98]"
+                className="block text-center px-4 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-[11px] md:text-xs tracking-widest uppercase !font-secondary font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-md active:scale-[0.98]"
               >
                 Get Directions
               </a>
