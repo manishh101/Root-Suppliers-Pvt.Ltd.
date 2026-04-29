@@ -12,53 +12,55 @@ import {
   CalendarCheck
 } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-
-const whyChooseUs = [
-  {
-    icon: BadgeCheck,
-    title: "Quality Products",
-    description: "Premium construction materials from trusted brands",
-    color: "from-blue-500 to-blue-600",
-    bgLight: "bg-blue-50",
-  },
-  {
-    icon: Warehouse,
-    title: "Wide Selection",
-    description: "1000+ products under one roof",
-    color: "from-emerald-500 to-emerald-600",
-    bgLight: "bg-emerald-50",
-  },
-  {
-    icon: Headphones,
-    title: "Expert Guidance",
-    description: "Knowledgeable staff to assist you",
-    color: "from-violet-500 to-violet-600",
-    bgLight: "bg-violet-50",
-  },
-  {
-    icon: Timer,
-    title: "Fast Delivery",
-    description: "Quick and reliable delivery service",
-    color: "from-orange-500 to-orange-600",
-    bgLight: "bg-orange-50",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Warranty Support",
-    description: "Comprehensive warranty assistance",
-    color: "from-cyan-500 to-cyan-600",
-    bgLight: "bg-cyan-50",
-  },
-  {
-    icon: CalendarCheck,
-    title: "15+ Years",
-    description: "Trusted experience since 2010",
-    color: "from-rose-500 to-rose-600",
-    bgLight: "bg-rose-50",
-  },
-];
+import { useSettings } from "@/contexts/SettingsContext";
 
 export const AboutSection: React.FC = () => {
+  const { settings } = useSettings();
+
+  const whyChooseUs = [
+    {
+      icon: BadgeCheck,
+      title: "Quality Products",
+      description: "Premium construction materials from trusted brands",
+      color: "from-blue-500 to-blue-600",
+      bgLight: "bg-blue-50",
+    },
+    {
+      icon: Warehouse,
+      title: "Wide Selection",
+      description: "1000+ products under one roof",
+      color: "from-emerald-500 to-emerald-600",
+      bgLight: "bg-emerald-50",
+    },
+    {
+      icon: Headphones,
+      title: "Expert Guidance",
+      description: "Knowledgeable staff to assist you",
+      color: "from-violet-500 to-violet-600",
+      bgLight: "bg-violet-50",
+    },
+    {
+      icon: Timer,
+      title: "Fast Delivery",
+      description: "Quick and reliable delivery service",
+      color: "from-orange-500 to-orange-600",
+      bgLight: "bg-orange-50",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Warranty Support",
+      description: "Comprehensive warranty assistance",
+      color: "from-cyan-500 to-cyan-600",
+      bgLight: "bg-cyan-50",
+    },
+    {
+      icon: CalendarCheck,
+      title: `${new Date().getFullYear() - parseInt(settings?.site?.establishedYear || "2010")}+ Years`,
+      description: `Trusted experience since ${settings?.site?.establishedYear || "2010"}`,
+      color: "from-rose-500 to-rose-600",
+      bgLight: "bg-rose-50",
+    },
+  ];
   return (
     <section className="py-16 bg-gray-50">
       <div className="container-main">
@@ -67,8 +69,8 @@ export const AboutSection: React.FC = () => {
           <div className="bg-white rounded-xl p-8 shadow-md">
             <div className="flex items-center gap-4 mb-6">
               <CloudinaryImage
-                src="/images/logo.png"
-                alt="Root Suppliers Pvt. Ltd."
+                src={settings?.site?.logo?.url || "/images/logo.png"}
+                alt={settings?.site?.name || "Root Suppliers Pvt. Ltd."}
                 width={80}
                 height={80}
                 className="w-20 h-20 object-contain"
@@ -82,15 +84,17 @@ export const AboutSection: React.FC = () => {
             </div>
 
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              Root Suppliers Pvt. Ltd. is a leading construction materials and hardware
-              supplier based in Biratnagar, Nepal. Since 2010, we have been serving
+              {settings?.site?.name || "Root Suppliers"} Pvt. Ltd. is a leading construction materials and hardware
+              supplier based in Biratnagar, Nepal. Since {settings?.site?.establishedYear || "2010"}, we have been serving
               contractors, builders, and homeowners with premium quality products.
             </p>
-            <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-6">
-              Our tagline &quot;All Construction Solutions Under One Roof&quot; reflects our
-              commitment to being your one-stop destination for all construction needs.
-              From steel and cement to paints and plumbing supplies, we have it all.
-            </p>
+            {settings?.site?.tagline !== "" && (
+              <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-6">
+                Our tagline &quot;{settings?.site?.tagline || "All Construction Solutions Under One Roof"}&quot; reflects our
+                commitment to being your one-stop destination for all construction needs.
+                From steel and cement to paints and plumbing supplies, we have it all.
+              </p>
+            )}
 
             <Link
               href="/about"

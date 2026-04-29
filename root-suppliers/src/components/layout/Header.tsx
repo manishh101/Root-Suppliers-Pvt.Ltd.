@@ -152,14 +152,46 @@ export default function Header() {
                 />
               </Link>
 
-              {/* Tagline - Center */}
               <div className="hidden lg:block text-center flex-1 ml-8 lg:ml-12">
-                <h2 className="text-base lg:text-lg font-bold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
-                  All Construction
-                </h2>
-                <p className="text-base lg:text-lg font-bold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
-                  Solutions Under One Roof
-                </p>
+                {(() => {
+                  const tagline = settings?.site?.tagline;
+                  
+                  // If explicitly empty, don't show anything
+                  if (tagline === "") return null;
+                  
+                  const displayTagline = tagline || "All Construction Solutions Under One Roof";
+
+                  // Custom split for the default tagline to match design
+                  if (displayTagline === "All Construction Solutions Under One Roof") {
+                    return (
+                      <>
+                        <h2 className="text-base lg:text-lg font-bold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
+                          All Construction
+                        </h2>
+                        <p className="text-base lg:text-lg font-bold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
+                          Solutions Under One Roof
+                        </p>
+                      </>
+                    );
+                  }
+                  
+                  // For custom taglines, split roughly in half
+                  const words = displayTagline.split(" ");
+                  const midpoint = Math.ceil(words.length / 2);
+                  const line1 = words.slice(0, midpoint).join(" ");
+                  const line2 = words.slice(midpoint).join(" ");
+                  
+                  return (
+                    <>
+                      <h2 className="text-base lg:text-lg font-bold text-gray-900 uppercase tracking-[0.1em] leading-tight font-primary">
+                        {line1}
+                      </h2>
+                      <p className="text-base lg:text-lg font-bold bg-gradient-to-r from-primary-600 to-red-600 bg-clip-text text-transparent uppercase tracking-[0.1em] font-primary">
+                        {line2}
+                      </p>
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Contact Info - Right */}

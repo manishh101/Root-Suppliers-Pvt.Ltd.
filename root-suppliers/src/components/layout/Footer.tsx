@@ -82,14 +82,16 @@ export const Footer = () => {
               </div>
               <div>
                 <span className="font-secondary font-bold text-lg text-white block tracking-tight capitalize">
-                  Root Suppliers
+                  {settings?.site?.name || "Root Suppliers"}
                 </span>
                 <span className="text-secondary-200 text-xs font-semibold capitalize tracking-wider font-secondary">Pvt. Ltd.</span>
               </div>
             </Link>
-            <p className="text-secondary-200 text-sm mb-6 leading-relaxed">
-              All Construction Solutions Under One Roof. Your trusted hardware partner in Biratnagar since 2010.
-            </p>
+            {settings?.site?.tagline !== "" && (
+              <p className="text-secondary-200 text-sm mb-6 leading-relaxed">
+                {settings?.site?.tagline || "All Construction Solutions Under One Roof"}. Your trusted hardware partner in Biratnagar since {settings?.site?.establishedYear || "2010"}.
+              </p>
+            )}
             <div className="flex items-center gap-3">
               {socialLinks.map((social) => (
                 <a
@@ -199,7 +201,7 @@ export const Footer = () => {
         <div className="container-main py-5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-white text-sm font-primary font-medium tracking-wider">
             <p>
-              © {currentYear} Root Suppliers Pvt. Ltd.
+              © {currentYear} {settings?.site?.name || "Root Suppliers"} Pvt. Ltd.
             </p>
             <div className="flex items-center gap-4">
               <Link href="/privacy-policy" className="hover:text-white/80 transition-colors">

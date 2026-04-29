@@ -7,24 +7,7 @@ import Fade from 'embla-carousel-fade'
 import { ChevronLeft, ChevronRight, ArrowRight, TrendingUp } from 'lucide-react'
 import { CloudinaryImage } from '@/components/ui/CloudinaryImage'
 import { PLACEHOLDER_IMAGES } from '@/lib/cloudinary'
-
-// Default fallback slides
-const defaultSlides = [
-  {
-    image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
-    title: 'Root Suppliers',
-    subtitle: 'All Construction Solutions Under One Roof',
-    ctaText: 'Explore Products',
-    ctaLink: '/products',
-  },
-  {
-    image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
-    title: 'Quality Hardware',
-    subtitle: 'Premium construction tools and building materials',
-    ctaText: 'View Collection',
-    ctaLink: '/categories',
-  },
-]
+import { useSettings } from '@/contexts/SettingsContext'
 
 interface HeroSlide {
   image: { url: string; publicId: string };
@@ -47,6 +30,26 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ topProducts = [], heroSlides }: HeroCarouselProps) {
+  const { settings } = useSettings();
+  
+  // Default fallback slides using settings
+  const defaultSlides = [
+    {
+      image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
+      title: settings?.site?.name || 'Root Suppliers',
+      subtitle: settings?.site?.tagline || 'All Construction Solutions Under One Roof',
+      ctaText: 'Explore Products',
+      ctaLink: '/products',
+    },
+    {
+      image: { url: PLACEHOLDER_IMAGES.HERO, publicId: '' },
+      title: 'Quality Hardware',
+      subtitle: 'Premium construction tools and building materials',
+      ctaText: 'View Collection',
+      ctaLink: '/categories',
+    },
+  ];
+
   // Use provided slides or fallback to defaults
   const slides = heroSlides && heroSlides.length > 0 ? heroSlides : defaultSlides;
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Fade()])

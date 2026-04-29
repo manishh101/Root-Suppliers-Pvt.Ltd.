@@ -70,6 +70,7 @@ const featuredProducts = [
 interface SettingsData {
   site: {
     name: string;
+    tagline: string;
     description: string;
     establishedYear?: string;
   };
@@ -176,11 +177,19 @@ export default function AboutPageContent() {
   const heroImagePublicId = settings?.homepage?.about?.heroImage?.publicId;
 
   const storyTitle = settings?.homepage?.about?.story?.title || "More Than Just a Hardware Store.";
-  const storyContent = settings?.homepage?.about?.story?.content
+  let storyContent = settings?.homepage?.about?.story?.content
     ? `<p>${settings.homepage.about.story.content}</p>`
-    : `<p><strong class="text-gray-900 font-semibold">Root Suppliers Pvt. Ltd.</strong> isn't just about selling tools; it's about enabling dreams. Established in 2010 in the heart of Biratnagar, we started with a simple vision: to bring world-class construction materials to our local community.</p>
+    : `<p><strong class="text-gray-900 font-semibold">${settings?.site?.name || "Root Suppliers"} Pvt. Ltd.</strong> isn't just about selling tools; it's about enabling dreams. Established in ${settings?.site?.establishedYear || "2010"} in the heart of Biratnagar, we started with a simple vision: to bring world-class construction materials to our local community.</p>
        <p>What began as a modest storefront has blossomed into a trusted institution. We've weathered market changes and expanded our horizons, but our core philosophy remains unchanged — <span class="italic text-primary-700">integrity in every transaction</span>.</p>
        <p>Today, we pride ourselves on being a partner in your progress. Whether you're building a family home or a commercial landmark, our team puts their expertise to work for you, ensuring you have the right materials at the right time.</p>`;
+
+  // Ensure dynamic values even if content comes from database
+  if (settings?.site?.name) {
+    storyContent = storyContent.replace(/Root Suppliers/g, settings.site.name);
+  }
+  if (settings?.site?.establishedYear) {
+    storyContent = storyContent.replace(/2010/g, settings.site.establishedYear);
+  }
 
   const storyImage = settings?.homepage?.about?.story?.image?.url || PLACEHOLDER_IMAGES.HERO;
   const storyImagePublicId = settings?.homepage?.about?.story?.image?.publicId;
@@ -223,12 +232,14 @@ export default function AboutPageContent() {
               </div>
 
               <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-tight mb-4 md:mb-6 uppercase">
-                About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">Root Suppliers</span>
+                About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500">{settings?.site?.name || "Root Suppliers"}</span>
               </h1>
               <div className="h-1.5 w-24 md:w-32 bg-gradient-to-r from-primary-600 to-primary-400 mx-auto rounded-full" />
               <p className="text-gray-500 mt-4 md:mt-6 text-xs md:text-sm font-medium max-w-2xl mx-auto leading-relaxed font-secondary">
                 Building the future of Eastern Nepal, one project at a time.
-                <span className="text-primary-600 font-semibold"> All your construction solutions under one roof.</span>
+                {settings?.site?.tagline !== "" && (
+                  <span className="text-primary-600 font-semibold"> {settings?.site?.tagline || "All Construction Solutions Under One Roof"}.</span>
+                )}
               </p>
             </motion.div>
           </div>
