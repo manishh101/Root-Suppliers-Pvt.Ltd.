@@ -259,7 +259,7 @@ export default function AboutPageContent() {
                   <CloudinaryImage
                     src={storyImage}
                     publicId={storyImagePublicId}
-                    alt="Root Suppliers Store"
+                    alt={`${settings?.site?.name || "Our"} Store`}
                     fill
                     className="object-cover"
                   />
@@ -426,7 +426,7 @@ export default function AboutPageContent() {
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-xs mb-4 font-secondary">
                   Our Gallery
                 </span>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside {settings?.site?.name || "Our Store"}</h2>
               </div>
               <p className="text-gray-500 max-w-md md:text-right text-sm md:text-base font-secondary">
                 A glimpse into our daily operations, vast inventory, and dedicated team working hard to serve you.
@@ -475,7 +475,7 @@ export default function AboutPageContent() {
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-semibold text-xs mb-4 font-secondary">
                   Our Gallery
                 </span>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside Root Suppliers</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Inside {settings?.site?.name || "Our Store"}</h2>
               </div>
               <p className="text-gray-500 max-w-md md:text-right text-sm md:text-base font-secondary">
                 A glimpse into our daily operations, vast inventory, and dedicated team.

@@ -39,14 +39,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!product) {
       return {
-        title: "Product Not Found | Root Suppliers",
+        title: "Product Not Found",
       };
     }
 
     // Ensure product exists and has required fields
     if (!product || !product.name) {
       return {
-        title: "Product | Root Suppliers",
+        title: "Product",
       };
     }
 
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const seoDescription = (product.meta?.description && product.meta.description.trim()) || product.description?.substring(0, 160) || '';
 
     return {
-      title: `${seoTitle} | Root Suppliers`,
+      title: `${seoTitle}`,
       description: seoDescription,
       openGraph: {
         title: seoTitle,
@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   } catch {
     return {
-      title: "Product | Root Suppliers",
+      title: "Product",
     };
   }
 }
@@ -95,7 +95,7 @@ async function getProductStructuredData(slug: string) {
       sku: product.sku || product.slug,
       brand: {
         "@type": "Brand",
-        name: "Root Suppliers",
+        name: "Our Company",
       },
       offers: {
         "@type": "Offer",

@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import AboutPageContent from "./AboutPageContent";
 
 export const metadata: Metadata = {
-  title: "About Us | Root Suppliers - Your Trusted Hardware Partner",
+  title: "About Us",
   description:
-    "Learn about Root Suppliers Pvt. Ltd., your trusted hardware and construction materials partner in Biratnagar, Nepal since 2010.",
+    "Learn about our company, your trusted hardware and construction materials partner in Biratnagar, Nepal since 2010.",
   openGraph: {
-    title: "About Us | Root Suppliers",
+    title: "About Us",
     description:
       "Your trusted hardware and construction materials partner in Biratnagar, Nepal since 2010.",
   },

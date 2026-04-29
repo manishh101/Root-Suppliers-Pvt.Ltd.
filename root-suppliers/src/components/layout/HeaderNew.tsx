@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
             <Link href="/" className="flex-shrink-0">
               <CloudinaryImage
                 src="/images/logo.png"
-                alt="Root Suppliers Pvt. Ltd."
+                alt={settings?.site?.name || "Our Company"}
                 width={70}
                 height={70}
                 className="h-16 w-auto"

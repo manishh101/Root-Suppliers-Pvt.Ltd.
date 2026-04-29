@@ -118,7 +118,7 @@ export const VisitUsSection: React.FC<VisitUsSectionProps> = ({ settings: propSe
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Root Suppliers Location"
+              title={`${settings?.site?.name || "Our Company"} Location`}
             />
           </div>
         </div>

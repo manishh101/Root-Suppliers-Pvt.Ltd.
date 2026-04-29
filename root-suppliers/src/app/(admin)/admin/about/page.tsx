@@ -56,7 +56,7 @@ export default function AboutAdminPage() {
   ];
   const defaultStory = {
     title: "More Than Just a Hardware Store.",
-    content: "Root Suppliers Pvt. Ltd. isn't just about selling tools; it's about enabling dreams. Established in 2010 in the heart of Biratnagar, we started with a simple vision: to bring world-class construction materials to our local community.\n\nWhat began as a modest storefront has blossomed into a trusted institution. We've weathered market changes and expanded our horizons, but our core philosophy remains unchanged — integrity in every transaction.\n\nToday, we pride ourselves on being a partner in your progress. Whether you're building a family home or a commercial landmark, our team puts their expertise to work for you, ensuring you have the right materials at the right time."
+    content: "our company isn't just about selling tools; it's about enabling dreams. Established in 2010 in the heart of Biratnagar, we started with a simple vision: to bring world-class construction materials to our local community.\n\nWhat began as a modest storefront has blossomed into a trusted institution. We've weathered market changes and expanded our horizons, but our core philosophy remains unchanged — integrity in every transaction.\n\nToday, we pride ourselves on being a partner in your progress. Whether you're building a family home or a commercial landmark, our team puts their expertise to work for you, ensuring you have the right materials at the right time."
   };
   const defaultMission = {
     title: "Our Mission",

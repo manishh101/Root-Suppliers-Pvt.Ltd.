@@ -2,8 +2,8 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions | Root Suppliers",
-  description: "Terms and Conditions for Root Suppliers Pvt. Ltd.",
+  title: "Terms and Conditions",
+  description: "Terms and Conditions for our company",
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Agreement to Terms</h2>
           <p>
-            By accessing or using the Root Suppliers website, you agree to be bound by these Terms and Conditions
+            By accessing or using the our website, you agree to be bound by these Terms and Conditions
             and our Privacy Policy. If you do not agree, please do not use our services.
           </p>
         </section>
@@ -54,7 +54,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Intellectual Property</h2>
           <p>
             All content on this website, including text, images, logos, and software, is the property of
-            Root Suppliers Pvt. Ltd. and protected by copyright laws. You may not reproduce or reuse any content without
+            our company and protected by copyright laws. You may not reproduce or reuse any content without
             explicit permission.
           </p>
         </section>
@@ -62,7 +62,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Limitation of Liability</h2>
           <p>
-            Root Suppliers Pvt. Ltd. shall not be liable for any direct, indirect, incidental, or consequential damages
+            our company shall not be liable for any direct, indirect, incidental, or consequential damages
             resulting from the use or inability to use our website or products.
           </p>
         </section>

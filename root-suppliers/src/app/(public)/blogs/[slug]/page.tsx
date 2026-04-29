@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!blog) {
     return {
-      title: "Blog Post Not Found | Root Suppliers",
+      title: "Blog Post Not Found",
     };
   }
 
@@ -60,14 +60,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const seoDescription = (blog.meta?.description && blog.meta.description.trim()) || blog.excerpt?.substring(0, 160) || '';
 
   return {
-    title: `${seoTitle} | Root Suppliers`,
+    title: `${seoTitle}`,
     description: seoDescription,
     openGraph: {
       title: seoTitle,
       description: seoDescription,
       type: "article",
       publishedTime: String(blog.publishedAt || blog.createdAt || new Date().toISOString()),
-      authors: [blog.author && typeof blog.author === 'object' ? (blog.author as any).name : 'Root Suppliers'],
+      authors: [blog.author && typeof blog.author === 'object' ? (blog.author as any).name : 'Our Company'],
       images: blog.featuredImage?.url ? [blog.featuredImage.url] : [],
     } as any,
     twitter: {
@@ -92,11 +92,11 @@ function getArticleStructuredData(blog: any) {
     dateModified: blog.updatedAt || blog.publishedAt || blog.createdAt,
     author: {
       "@type": "Person",
-      name: blog.author && typeof blog.author === 'object' ? blog.author.name : 'Root Suppliers',
+      name: blog.author && typeof blog.author === 'object' ? blog.author.name : 'Our Company',
     },
     publisher: {
       "@type": "Organization",
-      name: "Root Suppliers",
+      name: "Our Company",
       logo: {
         "@type": "ImageObject",
         url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rootsuppliers.com.np'}/images/logo.png`,

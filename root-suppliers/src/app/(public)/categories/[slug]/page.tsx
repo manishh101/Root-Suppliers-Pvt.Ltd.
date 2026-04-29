@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!category) {
       return {
-        title: "Category Not Found | Root Suppliers",
+        title: "Category Not Found",
       };
     }
 
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const seoDescription = (category.meta?.description && category.meta.description.trim()) || category.description?.substring(0, 160) || '';
 
     return {
-      title: `${seoTitle} | Root Suppliers`,
+      title: `${seoTitle}`,
       description: seoDescription,
       openGraph: {
         title: seoTitle,
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   } catch {
     return {
-      title: "Category | Root Suppliers",
+      title: "Category",
     };
   }
 }

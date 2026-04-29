@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import BlogsClient from "./BlogsClient";
 
 export const metadata: Metadata = {
-  title: "Blog | Root Suppliers - Industry Insights & Tips",
+  title: "Blog",
   description:
-    "Read our latest blog posts about construction materials, hardware tips, industry trends, and expert advice from Root Suppliers Pvt. Ltd.",
+    "Read our latest blog posts about construction materials, hardware tips, industry trends, and expert advice from our company",
   openGraph: {
-    title: "Blog | Root Suppliers",
+    title: "Blog",
     description:
-      "Industry insights, construction tips, and expert advice from Root Suppliers.",
+      "Industry insights, construction tips, and expert advice from us.",
   },
   keywords: "construction blog, hardware tips, building materials guide, construction industry Nepal",
 };

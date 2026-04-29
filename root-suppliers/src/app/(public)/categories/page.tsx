@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import CategoriesClient from "./CategoriesClient";
 
 export const metadata: Metadata = {
-  title: "Product Categories | Root Suppliers - Browse All Categories",
+  title: "Product Categories",
   description:
-    "Browse our wide range of construction materials, hardware, tools, and equipment categories. Find exactly what you need at Root Suppliers Pvt. Ltd.",
+    "Browse our wide range of construction materials, hardware, tools, and equipment categories. Find exactly what you need at our company",
   openGraph: {
-    title: "Product Categories | Root Suppliers",
+    title: "Product Categories",
     description:
-      "Browse construction materials, hardware, tools, and equipment categories at Root Suppliers.",
+      "Browse construction materials, hardware, tools, and equipment categories with us.",
   },
   keywords: "construction categories, hardware categories, building materials, tools categories, equipment Nepal",
 };

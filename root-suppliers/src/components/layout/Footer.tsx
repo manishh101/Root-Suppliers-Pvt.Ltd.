@@ -75,7 +75,7 @@ export const Footer = () => {
               <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white/10 border border-white/20">
                 <CloudinaryImage
                   src={settings?.site?.logo?.url || "/images/logo.png"}
-                  alt="Root Suppliers"
+                  alt={settings?.site?.name || "Our Company"}
                   fill
                   className="object-contain p-1.5"
                 />

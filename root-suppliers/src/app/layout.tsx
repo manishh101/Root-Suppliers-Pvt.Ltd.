@@ -44,11 +44,11 @@ export async function generateMetadata(): Promise<Metadata> {
       "building supplies",
       "tools",
       "equipment",
-      "Root Suppliers",
+      siteTitle,
     ],
-    authors: [{ name: "Root Suppliers Pvt. Ltd." }],
-    creator: "Root Suppliers Pvt. Ltd.",
-    publisher: "Root Suppliers Pvt. Ltd.",
+    authors: [{ name: `${siteTitle} Pvt. Ltd.` }],
+    creator: `${siteTitle} Pvt. Ltd.`,
+    publisher: `${siteTitle} Pvt. Ltd.`,
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
     ),
@@ -101,8 +101,8 @@ function OrganizationSchema({ settings }: { settings: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: settings?.site?.name || "Root Suppliers Pvt. Ltd.",
-    alternateName: settings?.site?.tagline || "Root Suppliers",
+    name: `${settings?.site?.name || "Root Suppliers"} Pvt. Ltd.`,
+    alternateName: settings?.site?.tagline || "",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np",
     logo: settings?.site?.logo?.url || `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
     description: settings?.seo?.defaultDescription || "Your trusted hardware and construction materials partner in Biratnagar, Nepal. We offer a wide range of construction materials, tools, and equipment.",
@@ -138,7 +138,7 @@ function LocalBusinessSchema({ settings }: { settings: any }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "HardwareStore",
-    name: settings?.site?.name || "Root Suppliers Pvt. Ltd.",
+    name: `${settings?.site?.name || "Root Suppliers"} Pvt. Ltd.`,
     image: settings?.site?.logo?.url || `${process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np"}/images/logo.png`,
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://rootsuppliers.com.np",
     telephone: settings?.contact?.primaryPhone || "+977-9851235637",

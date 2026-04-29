@@ -2,8 +2,8 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Root Suppliers",
-  description: "Privacy Policy for Root Suppliers Pvt. Ltd.",
+  title: "Privacy Policy",
+  description: "Privacy Policy for our company",
 };
 
 export default function PrivacyPolicyPage() {
@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
           <p>
-            Welcome to Root Suppliers Pvt. Ltd. We value your privacy and are committed to protecting your personal data.
+            Welcome to our company We value your privacy and are committed to protecting your personal data.
             This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.
           </p>
         </section>
