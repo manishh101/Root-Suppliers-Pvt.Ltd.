@@ -434,7 +434,7 @@ export default function NewProductPage() {
             <div className="bg-white rounded-xl shadow-sm border p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Pricing & Inventory</h2>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">MRP (₹) *</label>
                 <input type="number" step="0.01" {...register("price", { valueAsNumber: true })} className={`w-full px-4 py-2 border rounded-lg ${errors.price ? "border-red-500" : "border-gray-300"}`} />
               </div>
               <div>

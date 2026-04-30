@@ -293,21 +293,21 @@ export default function ProductsPage() {
                           <Link
                             href={`/products/${product.slug}`}
                             target="_blank"
-                            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                             title="View"
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
                           <Link
                             href={`/admin/products/${product.slug}`}
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />
                           </Link>
                           <button
                             onClick={() => setDeleteConfirm(product.slug)}
-                            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />

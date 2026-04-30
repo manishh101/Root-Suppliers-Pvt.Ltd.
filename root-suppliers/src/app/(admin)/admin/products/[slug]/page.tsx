@@ -519,7 +519,7 @@ export default function EditProductPage({
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">MRP (₹) *</label>
                   <input type="number" step="0.01" {...register("price", { valueAsNumber: true })} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cardinal-red/20 focus:border-cardinal-red ${errors.price ? "border-red-500" : "border-gray-300"}`} />
                   {errors.price && <p className="mt-1 text-sm text-red-500">{errors.price.message}</p>}
                 </div>
