@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSettings } from "@/contexts/SettingsContext";
 
 const navItems = [
   { label: "HOME", href: "/" },
@@ -27,6 +28,7 @@ export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { settings } = useSettings();
 
   useEffect(() => {
     const handleScroll = () => {
