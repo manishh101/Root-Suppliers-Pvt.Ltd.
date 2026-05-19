@@ -81,11 +81,11 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
             <div className="text-right">
               {product.discountPrice ? (
                 <>
-                  <span className="block text-base font-bold text-gray-900">NPR {(product.discountPrice || 0).toLocaleString()}</span>
-                  <span className="text-xs text-gray-400 line-through">NPR {(product.price || 0).toLocaleString()}</span>
+                  <span className="block text-base font-bold text-gray-900">MRP {(product.discountPrice || 0).toLocaleString()}</span>
+                  <span className="text-xs text-gray-400 line-through">MRP {(product.price || 0).toLocaleString()}</span>
                 </>
               ) : (
-                <span className="block text-base font-bold text-gray-900">NPR {(product.price || 0).toLocaleString()}</span>
+                <span className="block text-base font-bold text-gray-900">MRP {(product.price || 0).toLocaleString()}</span>
               )}
             </div>
           </div>
@@ -142,11 +142,11 @@ export function ProductCard({ product, view = "grid", size = "default" }: Produc
           <div>
             {product.discountPrice ? (
               <>
-                <span className={`${isCompact ? 'text-[10px]' : 'text-xs'} text-gray-400 line-through mr-2`}>NPR {(product.price || 0).toLocaleString()}</span>
-                <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>NPR {(product.discountPrice || 0).toLocaleString()}</span>
+                <span className={`${isCompact ? 'text-[10px]' : 'text-xs'} text-gray-400 line-through mr-2`}>MRP {(product.price || 0).toLocaleString()}</span>
+                <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>MRP {(product.discountPrice || 0).toLocaleString()}</span>
               </>
             ) : (
-              <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>NPR {(product.price || 0).toLocaleString()}</span>
+              <span className={`block ${isCompact ? 'text-sm' : 'text-base'} font-bold text-gray-900`}>MRP {(product.price || 0).toLocaleString()}</span>
             )}
           </div>
           {product.brand && <span className={`${isCompact ? 'text-[10px]' : 'text-xs'} text-gray-500 font-medium`}>{product.brand.name}</span>}

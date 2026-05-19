@@ -439,22 +439,22 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
                   <>
                     <div className="flex flex-col">
                       <span className="text-xl md:text-3xl font-bold text-primary-600">
-                        NPR {product.discountPrice?.toLocaleString() || '0'}
+                        MRP {product.discountPrice?.toLocaleString() || '0'}
                       </span>
                       <span className="text-sm md:text-lg text-gray-400 line-through">
-                        NPR {product.price?.toLocaleString() || '0'}
+                        MRP {product.price?.toLocaleString() || '0'}
                       </span>
                     </div>
                     <Badge
                       className="bg-green-600 text-white font-bold h-7 animate-pulse-subtle"
                     >
-                      Save NPR{" "}
+                      Save MRP{" "}
                       {((product.price || 0) - (product.discountPrice || 0)).toLocaleString()}
                     </Badge>
                   </>
                 ) : (
                   <span className="text-2xl md:text-4xl font-bold text-gray-900">
-                    NPR {product.price?.toLocaleString() || '0'}
+                    MRP {product.price?.toLocaleString() || '0'}
                   </span>
                 )}
                 {product.unit && (

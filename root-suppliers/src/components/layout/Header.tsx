@@ -314,7 +314,7 @@ export default function Header() {
                             </div>
                             <div className="text-right">
                               <span className="text-xs font-bold text-secondary-600">
-                                NPR {product.price.toLocaleString()}
+                                MRP {product.price.toLocaleString()}
                               </span>
                             </div>
                           </Link>
@@ -407,7 +407,7 @@ export default function Header() {
                           </div>
                           <div className="text-right">
                             <span className="text-xs font-bold text-primary-600">
-                              NPR {product.price.toLocaleString()}
+                              MRP {product.price.toLocaleString()}
                             </span>
                           </div>
                         </Link>
